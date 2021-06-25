@@ -36,23 +36,22 @@ func main() {
 
 	//Repository Routes
 	router.POST("/repositories", controllers.CreateRepository)
-
 	router.GET("/repositories", controllers.FindRepositories)
-
 	router.GET("/repositories/:id", controllers.FindRepository)
-
 	router.DELETE("/repositories/:id", controllers.DeleteRepository)
 
 	//Resource Routes
 	router.POST("/resources", controllers.CreateResource)
-
 	router.GET("/resources", controllers.FindResources)
-
 	router.GET("/resources/:id", controllers.FindResource)
-
 	router.DELETE("/resources/:id", controllers.DeleteResource)
 
+	//Accession Routes
+	router.GET("/accessions", controllers.FindAccessions)
+	router.POST("/accessions", controllers.CreateAccession)
+	router.POST("/accessions/:id", controllers.FindAccession)
+
+	//Start the router
 	router.Run()
 
-	//Gorm Routes for dev
 }

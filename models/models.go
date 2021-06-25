@@ -43,3 +43,9 @@ type CreateResource struct {
 	RepositoryID int    `json:"repository_id"`
 	Name         string `json:"name"`
 }
+
+type Accession struct {
+	ID				int `json:"id"`
+	RepositoryID	int	`json:repository_id`
+	AccessionID		int `json:"accession_id"`
+}
