@@ -32,16 +32,14 @@ type CreateRepository struct {
 
 type Resource struct {
 	gorm.Model
-	ID           int    `json:"id"`
-	AspaceID     int    `json:"aspace_id"`
-	RepositoryID int    `json:"repository_id"`
-	Name         string `json:"name"`
+	ID           int `json:"id"`
+	ResourceID   int `json:"resource_id"`
+	RepositoryID int `json:"repository_id"`
 }
 
 type CreateResource struct {
-	AspaceID     int    `json:"aspace_id"`
-	RepositoryID int    `json:"repository_id"`
-	Name         string `json:"name"`
+	ResourceID   int `json:"resource_id"`
+	RepositoryID int `json:"repository_id"`
 }
 
 type Accession struct {

@@ -20,7 +20,12 @@ func FindResource(c *gin.Context) { // Get model if exist
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": resource})
+	resourceRecord, err := client.GetResource(resource.RepositoryID, resource.ResourceID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": resourceRecord})
 }
 
 func CreateResource(c *gin.Context) {
@@ -31,8 +36,8 @@ func CreateResource(c *gin.Context) {
 		return
 	}
 
-	// Create book
-	resource := models.Resource{AspaceID: input.AspaceID, RepositoryID: input.RepositoryID, Name: input.Name}
+	// Create a resource
+	resource := models.Resource{ResourceID: input.ResourceID, RepositoryID: input.RepositoryID}
 	models.DB.Create(&resource)
 
 	c.JSON(http.StatusOK, gin.H{"data": resource})
