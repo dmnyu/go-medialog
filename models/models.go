@@ -45,7 +45,13 @@ type CreateResource struct {
 }
 
 type Accession struct {
-	ID				int `json:"id"`
-	RepositoryID	int	`json:repository_id`
-	AccessionID		int `json:"accession_id"`
+	gorm.Model
+	ID           int `json:"id"`
+	RepositoryID int `json:"repository_id"`
+	AccessionID  int `json:"accession_id"`
+}
+
+type CreateAccession struct {
+	RepositoryID int `json:"repository_id"`
+	AccessionID  int `json:"accession_id"`
 }

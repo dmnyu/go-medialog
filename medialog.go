@@ -14,13 +14,6 @@ func main() {
 	models.ConnectDataBase()
 
 	//General Routes
-
-	router.GET("/ping", func(context *gin.Context) {
-		context.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-
 	router.GET("/", func(context *gin.Context) {
 		context.HTML(200,
 			"index.html",
@@ -49,7 +42,7 @@ func main() {
 	//Accession Routes
 	router.GET("/accessions", controllers.FindAccessions)
 	router.POST("/accessions", controllers.CreateAccession)
-	router.POST("/accessions/:id", controllers.FindAccession)
+	router.GET("/accessions/:id", controllers.FindAccession)
 
 	//Start the router
 	router.Run()

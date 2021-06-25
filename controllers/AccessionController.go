@@ -3,30 +3,24 @@ package controllers
 import (
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
-	"github.com/nyudlts/go-aspace"
 	"net/http"
 )
 
-var (
-	client *aspace.ASClient
-	err error
-)
-
-func init() {
-	client, err = aspace.NewClient("go-aspace.yml", "dev", 20)
-	if err != nil {
-		panic(err)
-	}
-}
-
 func CreateAccession(c *gin.Context) {
-	var input models.Accession
+	var input models.CreateAccession
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSONP(http.StatusOK, input)
+	accession := models.Accession{
+		ID:           0,
+		RepositoryID: input.RepositoryID,
+		AccessionID:  input.AccessionID,
+	}
+
+	models.DB.Create(&accession)
+	c.JSON(http.StatusOK, accession)
 }
 
 func FindAccessions(c *gin.Context) {
