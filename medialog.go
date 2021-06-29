@@ -22,6 +22,11 @@ func main() {
 			})
 	})
 
+	//Entry Routes
+	router.GET("/entries/:id", controllers.FindEntry)
+	router.GET("/entries", controllers.FindEntries)
+	router.POST("/entries", controllers.CreateEntry)
+
 	//User Routes
 	router.GET("/users", controllers.FindUsers)
 	router.POST("/users", controllers.CreateUser)

@@ -1,8 +1,14 @@
 package models
 
 import (
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
+
+type Credentials struct {
+	Email string `json:"email"`
+	Pass  string `json:"pass"`
+}
 
 type User struct {
 	gorm.Model
@@ -11,11 +17,6 @@ type User struct {
 	PassMD5 string `json:"pass_md5"`
 	Salt    string `json:"salt"`
 	IsAdmin bool   `json:"is_admin"`
-}
-
-type Credentials struct {
-	Email string `json:"email"`
-	Pass  string `json:"pass"`
 }
 
 type Repository struct {
@@ -52,4 +53,19 @@ type Accession struct {
 type CreateAccession struct {
 	RepositoryID int `json:"repository_id"`
 	AccessionID  int `json:"accession_id"`
+}
+
+type Entry struct {
+	ID           uuid.UUID `json:"id"`
+	RepositoryID int       `json:"repository_id"`
+	ResourceID   int       `json:"resource_id"`
+	AccessionID  int       `json:"accession_id"`
+	MediaID      int       `json:"media_id"`
+	MediaType    string    `json:"media_type"`
+	BoxNumber    string    `json:"box_number"`
+	LabelText    string    `json:"label_text"`
+	OriginalID   string    `json:"original_id"`
+	RefID        string    `json:"ref_id"`
+	MediaNote    string    `json:"media_note"`
+	MediaSize    uint64    `json:"media_size"`
 }
