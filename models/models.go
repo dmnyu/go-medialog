@@ -56,16 +56,19 @@ type CreateAccession struct {
 }
 
 type Entry struct {
-	ID           uuid.UUID `json:"id"`
-	RepositoryID int       `json:"repository_id"`
-	ResourceID   int       `json:"resource_id"`
-	AccessionID  int       `json:"accession_id"`
-	MediaID      int       `json:"media_id"`
-	MediaType    string    `json:"media_type"`
-	BoxNumber    string    `json:"box_number"`
-	LabelText    string    `json:"label_text"`
-	OriginalID   string    `json:"original_id"`
-	RefID        string    `json:"ref_id"`
-	MediaNote    string    `json:"media_note"`
-	MediaSize    uint64    `json:"media_size"`
+	ID            uuid.UUID `json:"id"`
+	RepositoryID  int       `json:"repository_id"`
+	ResourceID    int       `json:"resource_id"`
+	AccessionID   int       `json:"accession_id"`
+	MediaID       int       `json:"media_id"`
+	MediaType     string    `json:"media_type"`
+	BoxNumber     string    `json:"box_number"`
+	LabelText     string    `json:"label_text"`
+	OriginalID    string    `json:"original_id"`
+	RefID         string    `json:"ref_id"`
+	MediaNote     string    `json:"media_note"`
+	StockUnit     string    `json:"stock_unit"`
+	StockSize     int       `json:"stock_size"`
+	IsRefreshed   bool      `json:"is_refreshed"`
+	IsTransferred bool      `json:"is_transferred"`
 }
