@@ -56,6 +56,7 @@ type CreateAccession struct {
 }
 
 type Entry struct {
+	gorm.Model
 	ID            uuid.UUID `json:"id"`
 	RepositoryID  int       `json:"repository_id"`
 	ResourceID    int       `json:"resource_id"`

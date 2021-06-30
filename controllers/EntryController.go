@@ -12,13 +12,18 @@ func CreateEntry(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	models.DB.Create(input)
-	c.JSON(http.StatusOK, input)
+	err := models.DB.Create(&input).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+	c.JSON(http.StatusOK, input.ID)
 }
 
 func FindEntries(c *gin.Context) {
 	entries := []models.Entry{}
-	models.DB.Find(&entries)
+	if err := models.DB.Find(&entries).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
 	c.JSON(http.StatusOK, entries)
 }
 

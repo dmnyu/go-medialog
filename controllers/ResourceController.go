@@ -55,3 +55,9 @@ func DeleteResource(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": true})
 }
+
+func FindRecent() []models.Entry {
+	entries := []models.Entry{}
+	models.DB.Limit(20).Find(&entries)
+	return entries
+}

@@ -15,11 +15,14 @@ func ConnectDataBase() {
 		panic("Failed to connect to database!")
 	}
 
-	database.AutoMigrate(&Repository{})
-	database.AutoMigrate(&Resource{})
-	database.AutoMigrate(&User{})
-	database.AutoMigrate(&Accession{})
-	database.AutoMigrate(&Entry{})
-
 	DB = database
+}
+
+func MigrateDatabase() {
+	ConnectDataBase()
+	DB.AutoMigrate(&Repository{})
+	DB.AutoMigrate(&Resource{})
+	DB.AutoMigrate(&User{})
+	DB.AutoMigrate(&Accession{})
+	DB.AutoMigrate(&Entry{})
 }
