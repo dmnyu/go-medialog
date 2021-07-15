@@ -34,25 +34,31 @@ type CreateRepository struct {
 type Resource struct {
 	gorm.Model
 	ID           int `json:"id"`
-	ResourceID   int `json:"resource_id"`
+	AspaceResourceID   int `json:"resource_id"`
 	RepositoryID int `json:"repository_id"`
+	AspaceResourceTitle string `json:"resource_title"`
+	AspaceResourceIdentifiers string `json:"resource_identifiers"`
 }
 
 type CreateResource struct {
-	ResourceID   int `json:"resource_id"`
-	RepositoryID int `json:"repository_id"`
+	AspaceResourceID 	int `json:"aspace_id"`
+	AspaceRepositoryID int `json:"repository_id"`
 }
 
 type Accession struct {
 	gorm.Model
-	ID           int `json:"id"`
-	RepositoryID int `json:"repository_id"`
-	AccessionID  int `json:"accession_id"`
+	ID           	int 	`json:"id"`
+	RepositoryID 	int 	`json:"repository_id"`
+	AccessionID  	int 	`json:"accession_id"`
+	Title			string 	`json:"accession_title"`
+	Identifier 		string 	`json:"identifier"`
 }
 
 type CreateAccession struct {
-	RepositoryID int `json:"repository_id"`
-	AccessionID  int `json:"accession_id"`
+	AspaceRepositoryID int `json:"repository_id"`
+	AspaceAccessionID  int `json:"accession_id"`
+	AspaceTitle string `json:"aspace_title"`
+	AspaceIdentifiers string `json:"aspace_identifiers"`
 }
 
 type Entry struct {

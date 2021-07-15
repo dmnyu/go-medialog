@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"net/http"
 )
 
@@ -13,35 +14,56 @@ func CreateAccession(c *gin.Context) {
 		return
 	}
 
-	accession := models.Accession{
-		ID:           0,
-		RepositoryID: input.RepositoryID,
-		AccessionID:  input.AccessionID,
+	aspaceAccession, err  := client.GetAccession(input.AspaceRepositoryID, input.AspaceAccessionID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	models.DB.Create(&accession)
+	accession := models.Accession{
+		Model: gorm.Model{},
+		ID: 0,
+		AccessionID: input.AspaceAccessionID,
+		RepositoryID: input.AspaceRepositoryID,
+		Title: aspaceAccession.Title,
+		Identifier: getAccessionIndentifierString(aspaceAccession),
+	}
+
+	if err := models.DB.Create(&accession).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
 	c.JSON(http.StatusOK, accession)
 }
 
 func FindAccessions(c *gin.Context) {
 	var accessions []models.Accession
-	models.DB.Find(&accessions)
+
+	if err  := models.DB.Find(&accessions).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
 	c.JSON(http.StatusOK, accessions)
 }
 
 func FindAccession(c *gin.Context) {
 	var accession models.Accession
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&accession).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
-		return
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 	}
 
-	//call the go-aspace api
-	accessionRecord, err := client.GetAccession(accession.RepositoryID, accession.AccessionID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, "Did not receive a response from aspace instance")
+	c.JSON(http.StatusOK, accession)
+}
+
+func DeleteAccession(c *gin.Context) {
+	var accession = models.Accession{}
+
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&accession).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record Not Found"})
 	}
 
-	c.JSON(http.StatusOK, accessionRecord)
+	if err := models.DB.Delete(&accession); err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error)
+	}
 
+	c.JSON(http.StatusOK, gin.H{"result": true})
 }

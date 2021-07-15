@@ -30,7 +30,7 @@ func FindEntries(c *gin.Context) {
 func FindEntry(c *gin.Context) {
 	entry := models.Entry{}
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&entry).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
 
