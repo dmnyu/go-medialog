@@ -3,29 +3,14 @@ package controllers
 import (
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"net/http"
 )
 
 func CreateAccession(c *gin.Context) {
-	var input models.CreateAccession
-	if err := c.ShouldBindJSON(&input); err != nil {
+	var accession models.Accession
+	if err := c.ShouldBindJSON(&accession); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
-	}
-
-	aspaceAccession, err  := client.GetAccession(input.AspaceRepositoryID, input.AspaceAccessionID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
-	}
-
-	accession := models.Accession{
-		Model: gorm.Model{},
-		ID: 0,
-		AccessionID: input.AspaceAccessionID,
-		RepositoryID: input.AspaceRepositoryID,
-		Title: aspaceAccession.Title,
-		Identifier: getAccessionIndentifierString(aspaceAccession),
 	}
 
 	if err := models.DB.Create(&accession).Error; err != nil {
@@ -66,4 +51,10 @@ func DeleteAccession(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"result": true})
+}
+
+func FindRecentAccessions() []models.Accession {
+	accessions := []models.Accession{}
+	models.DB.Limit(20).Find(&accessions)
+	return accessions
 }

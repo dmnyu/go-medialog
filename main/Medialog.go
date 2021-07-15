@@ -29,15 +29,16 @@ func getRepoCode(i int) string {
 	return "unkown"
 }
 
+var router = gin.Default()
+
 func main() {
 
-	router := gin.Default()
 	router.SetFuncMap(template.FuncMap{
 		"formatAsDate": formatAsDate,
 		"getRepoCode":  getRepoCode,
 	})
 
-	router.LoadHTMLGlob("templates/*")
+	router.LoadHTMLGlob("templates/*.html")
 	router.StaticFile("/favicon.ico", "./resources/favicon.ico")
 	models.ConnectDataBase()
 
@@ -48,6 +49,9 @@ func main() {
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
+
+	loadAPI()
+	loadAccessions()
 
 	//Index
 	router.GET("/", func(c *gin.Context) {
@@ -81,11 +85,6 @@ func main() {
 	router.GET("/resources", controllers.FindResources)
 	router.GET("/resources/:id", controllers.FindResource)
 	router.DELETE("/resources/:id", controllers.DeleteResource)
-
-	//Accession Routes
-	router.GET("/accessions", controllers.FindAccessions)
-	router.POST("/accessions", controllers.CreateAccession)
-	router.GET("/accessions/:id", controllers.FindAccession)
 
 	models.MigrateDatabase()
 	//Start the router
