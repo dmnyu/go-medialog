@@ -14,7 +14,7 @@ var saltChars = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234
 
 func FindUsers(c *gin.Context) {
 	var users []models.User
-	models.DB.Find(&users)
+	DB.Find(&users)
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }
 
@@ -26,7 +26,7 @@ func ValidateCredentials(c *gin.Context) {
 	}
 
 	var user models.User
-	if err := models.DB.Where("email = ?", creds.Email).First(&user).Error; err != nil {
+	if err := DB.Where("email = ?", creds.Email).First(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
@@ -66,7 +66,7 @@ func CreateUser(c *gin.Context) {
 		IsAdmin: false,
 	}
 
-	models.DB.Create(&user)
+	DB.Create(&user)
 
 	//return the response
 	c.JSON(http.StatusOK, gin.H{"data": user})

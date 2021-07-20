@@ -3,14 +3,13 @@ package controllers
 import (
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
-	"github.com/nyudlts/go-aspace"
 	"gorm.io/gorm"
 	"net/http"
 )
 
 func InsertAccession(input models.CreateAccession) (int, error) {
 
-	asAccession, err := client.GetAccession(input.AspaceRepositoryID, input.AspaceID)
+	asAccession, err := FindAspaceAccession(input.AspaceRepositoryID, input.AspaceID)
 	if err !=nil {
 		return http.StatusBadRequest, err
 	}
@@ -27,7 +26,7 @@ func InsertAccession(input models.CreateAccession) (int, error) {
 		UpdatedBy:    	0,
 	}
 
-	if err := models.DB.Create(&accession).Error; err != nil {
+	if err := DB.Create(&accession).Error; err != nil {
 		return http.StatusInternalServerError, err
 	}
 
@@ -57,7 +56,7 @@ func MigrateAccession(c *gin.Context) {
 		return
 	}
 
-	if err := models.DB.Create(&accession).Error; err != nil {
+	if err := DB.Create(&accession).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -67,7 +66,7 @@ func MigrateAccession(c *gin.Context) {
 func FindAccessions(c *gin.Context) {
 	var accessions []models.Accession
 
-	if err  := models.DB.Find(&accessions).Error; err != nil {
+	if err  := DB.Find(&accessions).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -85,7 +84,7 @@ func FindAccessionAPI(c *gin.Context) {
 
 func FindAccession(c *gin.Context) (models.Accession, error) {
 	var accession models.Accession
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&accession).Error; err != nil {
+	if err := DB.Where("id = ?", c.Param("id")).First(&accession).Error; err != nil {
 		return accession, err
 	}
 
@@ -95,11 +94,11 @@ func FindAccession(c *gin.Context) (models.Accession, error) {
 func DeleteAccession(c *gin.Context) {
 	var accession = models.Accession{}
 
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&accession).Error; err != nil {
+	if err := DB.Where("id = ?", c.Param("id")).First(&accession).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record Not Found"})
 	}
 
-	if err := models.DB.Delete(&accession); err != nil {
+	if err := DB.Delete(&accession); err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error)
 	}
 
@@ -108,15 +107,6 @@ func DeleteAccession(c *gin.Context) {
 
 func FindRecentAccessions() []models.Accession {
 	accessions := []models.Accession{}
-	models.DB.Limit(20).Find(&accessions)
+	DB.Limit(20).Find(&accessions)
 	return accessions
-}
-
-func FindAspaceAccessions(repoID int, accID int) (aspace.Accession, error) {
-	accession, err := client.GetAccession(repoID, accID)
-	if err != nil {
-		return accession, err
-	}
-	return accession, nil
-
 }

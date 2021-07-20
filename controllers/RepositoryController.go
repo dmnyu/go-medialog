@@ -9,7 +9,7 @@ import (
 func FindRepositories(c *gin.Context) {
 	var repositories []models.Repository
 
-	if err := models.DB.Find(&repositories); err != nil {
+	if err := DB.Find(&repositories); err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error)
 	}
 
@@ -19,7 +19,7 @@ func FindRepositories(c *gin.Context) {
 func FindRepository(c *gin.Context) { // Get model if exist
 	var repository models.Repository
 
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&repository).Error; err != nil {
+	if err := DB.Where("id = ?", c.Param("id")).First(&repository).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
@@ -37,7 +37,7 @@ func CreateRepository(c *gin.Context) {
 
 	// Create book
 	repository := models.Repository{AspaceID: input.AspaceID, Name: input.Name}
-	if err := models.DB.Create(&repository); err != nil {
+	if err := DB.Create(&repository); err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error)
 	}
 
@@ -47,12 +47,12 @@ func CreateRepository(c *gin.Context) {
 func DeleteRepository(c *gin.Context) {
 	// Get model if exist
 	var repository models.Repository
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&repository).Error; err != nil {
+	if err := DB.Where("id = ?", c.Param("id")).First(&repository).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
 
-	if err := models.DB.Delete(&repository).Error; err != nil {
+	if err := DB.Delete(&repository).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 

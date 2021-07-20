@@ -33,7 +33,7 @@ func loadAccessions() {
 			c.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
-		accession, err := controllers.FindAspaceAccessions(input.AspaceRepositoryID, input.AspaceID)
+		accession, err := controllers.FindAspaceAccession(input.AspaceRepositoryID, input.AspaceID)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, err.Error())
 			return
