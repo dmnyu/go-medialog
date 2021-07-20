@@ -3,10 +3,54 @@ package controllers
 import (
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
+	"github.com/nyudlts/go-aspace"
+	"gorm.io/gorm"
 	"net/http"
 )
 
-func CreateAccession(c *gin.Context) {
+func InsertAccession(input models.CreateAccession) (int, error) {
+
+	asAccession, err := client.GetAccession(input.AspaceRepositoryID, input.AspaceID)
+	if err !=nil {
+		return http.StatusBadRequest, err
+	}
+
+	accession := models.Accession{
+		Model:        	gorm.Model{},
+		AspaceID:     	input.AspaceID,
+		RepositoryID: 	input.AspaceRepositoryID,
+		ResourceID:   	asAccession.GetParentResourceID(),
+		Title:			asAccession.Title,
+		Identifiers:  	asAccession.MergeIDS(),
+		State:        	"not_started",
+		CreatedBy:    	0,
+		UpdatedBy:    	0,
+	}
+
+	if err := models.DB.Create(&accession).Error; err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	return http.StatusOK, nil
+}
+
+func CreateAccessionAPI(c *gin.Context) {
+	var input = models.CreateAccession{}
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	code,err := InsertAccession(input);
+	if err != nil {
+		c.JSON(code, err.Error())
+		return
+	}
+
+	c.JSON(code, nil)
+}
+
+func MigrateAccession(c *gin.Context) {
 	var accession models.Accession
 	if err := c.ShouldBindJSON(&accession); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -30,13 +74,22 @@ func FindAccessions(c *gin.Context) {
 	c.JSON(http.StatusOK, accessions)
 }
 
-func FindAccession(c *gin.Context) {
+func FindAccessionAPI(c *gin.Context) {
+	accession, err := FindAccession(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusOK, accession)
+}
+
+func FindAccession(c *gin.Context) (models.Accession, error) {
 	var accession models.Accession
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&accession).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
+		return accession, err
 	}
 
-	c.JSON(http.StatusOK, accession)
+	return accession, nil
 }
 
 func DeleteAccession(c *gin.Context) {
@@ -57,4 +110,13 @@ func FindRecentAccessions() []models.Accession {
 	accessions := []models.Accession{}
 	models.DB.Limit(20).Find(&accessions)
 	return accessions
+}
+
+func FindAspaceAccessions(repoID int, accID int) (aspace.Accession, error) {
+	accession, err := client.GetAccession(repoID, accID)
+	if err != nil {
+		return accession, err
+	}
+	return accession, nil
+
 }

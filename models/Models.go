@@ -47,15 +47,19 @@ type CreateResource struct {
 
 type Accession struct {
 	gorm.Model
-	ID           	int 	`json:"id"`
-	LegacyID		int 	`json:"legacy_id"`
+	AspaceID		int	`	json:"aspace_id"`
 	RepositoryID 	int 	`json:"repository_id"`
 	ResourceID		int 	`json:"resource_id"`
 	Title			string 	`json:"accession_title"`
-	Identifiers 		string 	`json:"identifier"`
+	Identifiers 	string 	`json:"identifier"`
 	State			string 	`json:"state"`
 	CreatedBy		int 	`json:"created_by"`
 	UpdatedBy 		int 	`json:"updated_by"`
+}
+
+type CreateAccession struct {
+	AspaceID 			int	 `json:"aspace_id" form:"aspace_id"`
+	AspaceRepositoryID	int	`json:"aspace_repository_id" form:"aspace_repository_id"`
 }
 
 type Entry struct {

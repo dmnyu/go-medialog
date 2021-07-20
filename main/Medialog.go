@@ -39,7 +39,7 @@ func main() {
 	})
 
 	router.LoadHTMLGlob("templates/*.html")
-	router.StaticFile("/favicon.ico", "./resources/favicon.ico")
+	router.StaticFile("/favicon.ico", "./public/favicon.ico")
 	models.ConnectDataBase()
 
 	s := &http.Server{
@@ -50,7 +50,7 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	loadAPI()
+	loadAPIRoutes()
 	loadAccessions()
 
 	//Index
@@ -64,29 +64,7 @@ func main() {
 		})
 	})
 
-	//Entry Routes
-	router.GET("/entries/:id", controllers.FindEntry)
-	router.GET("/entries", controllers.FindEntries)
-	router.POST("/entries", controllers.CreateEntry)
-
-	//User Routes
-	router.GET("/users", controllers.FindUsers)
-	router.POST("/users", controllers.CreateUser)
-	router.POST("/users/validate", controllers.ValidateCredentials)
-
-	//Repository Routes
-	router.POST("/repositories", controllers.CreateRepository)
-	router.GET("/repositories", controllers.FindRepositories)
-	router.GET("/repositories/:id", controllers.FindRepository)
-	router.DELETE("/repositories/:id", controllers.DeleteRepository)
-
-	//Resource Routes
-	router.POST("/resources", controllers.CreateResource)
-	router.GET("/resources", controllers.FindResources)
-	router.GET("/resources/:id", controllers.FindResource)
-	router.DELETE("/resources/:id", controllers.DeleteResource)
-
-	models.MigrateDatabase()
+	//models.MigrateDatabase()
 	//Start the router
 	s.ListenAndServe()
 	router.Run()

@@ -1,0 +1,45 @@
+<!--index.html -->
+
+<!-- Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+<br>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Add Accession to Medialog</h3>
+    </div>
+</div>
+<div class="panel panel-body">
+    <form action="/accessions/create" method="POST">
+        <div style="display:none;">
+            <input type="number" name="aspace_repository_id" id="aspace_repository_id" value="{{ .input.AspaceRepositoryID}}" />
+            <input type="number" name="aspace_id" id="aspace_id" value="{{ .input.AspaceID }}" />
+        </div>
+        <br/>
+        <table class="table table-sm">
+            <tr>
+                <td><b>Repository:</b></td>
+                <td>{{ .input.AspaceRepositoryID }}</td>
+            </tr>
+            <tr>
+                <td><b>Aspace Accessions ID:</b></td>
+                <td>{{ .input.AspaceID }}</td>
+            </tr>
+            <tr>
+                <td><b>Identifiers:</b></td>
+                <td>{{ .identifiers }}</td>
+            </tr>
+            <tr>
+                <td><b>Title:</b></td>
+                <td>{{ .accession.Title }}</td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Add to Medialog" class="btn btn-primary" /></td>
+                <td/>
+            </tr>
+        </table>
+    </form>
+
+</div>
+
+{{ template "footer.html" .}}

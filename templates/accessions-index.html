@@ -17,6 +17,7 @@
                 <th>Resource</th>
                 <th>Identifiers</th>
                 <th>Title</th>
+                <th/>
             </tr>
             </thead>
 
@@ -27,11 +28,13 @@
                 <td>{{ $accession.ResourceID }}</td>
                 <td>{{ $accession.Identifiers }}</td>
                 <td>{{ $accession.Title }}</td>
+                <td><a href="/accessions/show/{{ $accession.ID }}" class="btn btn-primary">View</a></td>
             </tr>
             {{ end }}
             </tbody>
         </table>
     </div>
+    <a href="/accessions/new" class="btn btn-primary">Add Accession Record</a>
 </div>
 <!--Embed the footer.html template at this location-->
 {{ template "footer.html" .}}
