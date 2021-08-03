@@ -12,7 +12,7 @@ func CreateEntry(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	err := DB.Create(&input).Error
+	err := models.DB.Create(&input).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
@@ -21,7 +21,7 @@ func CreateEntry(c *gin.Context) {
 
 func FindEntries(c *gin.Context) {
 	entries := []models.Entry{}
-	if err := DB.Find(&entries).Error; err != nil {
+	if err := models.DB.Find(&entries).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 	c.JSON(http.StatusOK, entries)
@@ -29,7 +29,7 @@ func FindEntries(c *gin.Context) {
 
 func FindEntry(c *gin.Context) {
 	entry := models.Entry{}
-	if err := DB.Where("id = ?", c.Param("id")).First(&entry).Error; err != nil {
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&entry).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}

@@ -1,3 +1,50 @@
 {{ template "header.html" .}}
-{{ .accession }}
+<!-- {{ .accession }} -->
+<br>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">
+            [[ a link to the repository goes here ]]
+            <br>
+            [[ a link to the resource goes here ]]
+            <br>
+            <h4>{{ .accession.Identifiers }}: {{ .accession.Title }}</h4>
+        </div>
+    </div>
+    <div class="panel-body">
+        <table width="100%">
+            <tr>
+                <td width="50%" valign="top">
+                    <b>accession state</b>: {{ .accession.State }}<br/>
+                    <b>created by</b> {{ .accession.CreatedBy }} at {{ .accession.CreatedAt }}<br />
+                    <b>updated by</b>  {{ .accession.UpdatedBy }} at {{ .accession.UpdatedAt }}<br />
+                    <b>accession note</b><br />
+                    <p>Ipsum Lorem...</p>
+                </td>
+                <td>
+                    <table class="table table-condensed">
+                        <tr>
+                            <th>type</th>
+                            <th>count</th>
+                            <th>size</th>
+                        </tr>
+                        <!-- summary loop -->
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <!-- end summary loop -->
+                        <tr>
+                            <td/>
+                            <td><b>num entries: </b></td>
+                            <td><b>entry stock size</b></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
 {{ template "footer.html" .}}

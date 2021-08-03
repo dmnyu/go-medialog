@@ -38,7 +38,7 @@ func loadAccessions() {
 			c.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
-		identifiers := accession.MergeIDS()
+		identifiers := accession.MergeIDs()
 
 		c.HTML(http.StatusOK, "accessions-preview.html", gin.H {
 			"input": input,
@@ -60,7 +60,6 @@ func loadAccessions() {
 		code, err := controllers.InsertAccession(input)
 		if err != nil {
 			c.JSON(code, err.Error())
-			return
 		}
 		c.Redirect(http.StatusFound, "/accessions")
 	})
@@ -69,8 +68,8 @@ func loadAccessions() {
 		accession, err  := controllers.FindAccession(c)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
 		}
+
 		c.HTML(http.StatusOK, "accessions-show.html", gin.H {
 			"accession": accession,
 			"title":   "go-medialog - accessions",

@@ -9,14 +9,14 @@ import (
 
 func FindResources(c *gin.Context) {
 	var resources []models.Resource
-	DB.Find(&resources)
+	models.DB.Find(&resources)
 	c.JSON(http.StatusOK, gin.H{"data": resources})
 }
 
 func FindResource(c *gin.Context) { // Get model if exist
 	var resource models.Resource
 
-	if err := DB.Where("id = ?", c.Param("id")).First(&resource).Error; err != nil {
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&resource).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
@@ -53,7 +53,7 @@ func CreateResource(c *gin.Context) {
 		AspaceResourceIdentifiers: aspaceResource.MergeIDs(),
 	}
 
-	if err := DB.Create(&resource).Error; err != nil {
+	if err := models.DB.Create(&resource).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -63,11 +63,11 @@ func CreateResource(c *gin.Context) {
 func DeleteResource(c *gin.Context) {
 	// Get model if exist
 	var resource models.Resource
-	if err := DB.Where("id = ?", c.Param("id")).First(&resource).Error; err != nil {
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&resource).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 	}
 
-	if err := DB.Delete(&resource).Error; err != nil {
+	if err := models.DB.Delete(&resource).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -76,6 +76,6 @@ func DeleteResource(c *gin.Context) {
 
 func FindRecent() []models.Entry {
 	entries := []models.Entry{}
-	DB.Limit(20).Find(&entries)
+	models.DB.Limit(20).Find(&entries)
 	return entries
 }
