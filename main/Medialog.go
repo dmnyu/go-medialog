@@ -41,6 +41,7 @@ func main() {
 	router.LoadHTMLGlob("templates/*.html")
 	router.StaticFile("/favicon.ico", "./public/favicon.ico")
 	models.ConnectDataBase()
+	models.MigrateDatabase()
 
 	s := &http.Server{
 		Addr:           ":8080",
@@ -51,7 +52,8 @@ func main() {
 	}
 
 	loadAPIRoutes()
-	loadAccessions()
+	loadAccessionRoutes()
+	loadRepositoryRoutes()
 
 	//Index
 	router.GET("/", func(c *gin.Context) {
@@ -64,7 +66,7 @@ func main() {
 		})
 	})
 
-	//models.MigrateDatabase()
+	models.MigrateDatabase()
 	//Start the router
 	s.ListenAndServe()
 	router.Run()

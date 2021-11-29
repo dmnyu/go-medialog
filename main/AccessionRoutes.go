@@ -9,7 +9,7 @@ import (
 
 var accRoutes = router.Group("/accessions")
 
-func loadAccessions() {
+func loadAccessionRoutes() {
 	accRoutes.GET("", func(c *gin.Context) {
 
 		var accessions = controllers.FindRecentAccessions()

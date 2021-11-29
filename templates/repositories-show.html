@@ -1,0 +1,17 @@
+{{ template "header.html" .}}
+
+<br>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title">
+      {{ .repository.Name }} ({{ .repository.Slug }})
+    </div>
+  </div>
+  <div class="panel panel-body">
+    created at: {{ .repository.CreatedAt }} <br/>
+    updated at: {{ .repository.UpdatedAt }} <br/>
+  </div>
+</div>
+
+{{ template "footer.html" .}}

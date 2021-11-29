@@ -19,7 +19,6 @@ func InsertAccession(input models.CreateAccession) (int, error) {
 		Model:        	gorm.Model{},
 		AspaceID:     	input.AspaceID,
 		RepositoryID: 	input.AspaceRepositoryID,
-		ResourceID:   	asAccession.GetParentResourceID(),
 		Title:			asAccession.Title,
 		Identifiers:  	asAccession.MergeIDs(),
 		State:        	"not_started",

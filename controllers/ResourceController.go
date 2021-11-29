@@ -46,7 +46,6 @@ func CreateResource(c *gin.Context) {
 
 	resource := models.Resource{
 		Model:                     gorm.Model{},
-		ID:                        0,
 		AspaceResourceID:          input.AspaceResourceID,
 		RepositoryID:              input.AspaceRepositoryID,
 		AspaceResourceTitle:       aspaceResource.Title,

@@ -25,7 +25,7 @@
             {{ range $accession := .accessions }}
             <tr>
                 <td>{{ $accession.RepositoryID | getRepoCode }}</td>
-                <td>{{ $accession.ResourceID }}</td>
+                <td/>
                 <td>{{ $accession.Identifiers }}</td>
                 <td>{{ $accession.Title }}</td>
                 <td><a href="/accessions/show/{{ $accession.ID }}" class="btn btn-primary">View</a></td>

@@ -33,9 +33,9 @@ func loadUserAPIRoutes() {
 }
 
 func loadRepoAPIRoutes() {
-	router.POST("/api/v0/repositories", controllers.CreateRepository)
+	router.POST("/api/v0/repositories", controllers.CreateRepositoryAPI)
 	router.GET("/api/v0/repositories", controllers.FindRepositories)
-	router.GET("/api/v0/repositories/:id", controllers.FindRepository)
+	router.GET("/api/v0/repositories/:id", controllers.FindRepositoryAPI)
 	router.DELETE("/api/v0/repositories/:id", controllers.DeleteRepository)
 }
 

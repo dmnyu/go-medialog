@@ -5,9 +5,10 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="panel-title">
-            [[ a link to the repository goes here ]]
+            {{ .accession.RepositoryID }}
+            {{ .accession.Repository }}
             <br>
-            [[ a link to the resource goes here ]]
+            {{ .accession.Repository }}
             <br>
             <h4>{{ .accession.Identifiers }}: {{ .accession.Title }}</h4>
         </div>
