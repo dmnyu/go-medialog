@@ -1,0 +1,45 @@
+<!--index.html -->
+
+<!-- Embed the header.html template at this location-->
+{{ template "header.html" .}}
+<br>
+<!--
+
+{{ .input }}
+{{ .identifiers }}
+{{ .resource }}
+ -->
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Add Resources to Medialog</h3>
+    </div>
+</div>
+<div class="panel panel-body">
+    <form action="/resources/create" method="POST">
+        <div style="display:none;">
+            <input type="number" name="repository_id" id="aspace_repository_id" value="{{ .input.RepositoryID}}" />
+            <input type="number" name="object_id" id="object_id" value="{{ .input.ObjectID }}" />
+        </div>
+        <br/>
+        <table class="table table-sm">
+            <tr>
+                <td><b>Repository:</b></td>
+                <td>{{ .repository.Name }}</td>
+            </tr>
+            <tr>
+                <td><b>Resource:</b></td>
+                <td><b>{{ .identifiers }}</b> {{ .resource.Title }}</td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Add to Medialog" class="btn btn-primary" />
+                    <a href="/" class="btn">Cancel</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</div>
+
+{{ template "footer.html" .}}

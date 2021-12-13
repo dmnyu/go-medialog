@@ -1,53 +1,55 @@
-package main
+package routes
 
 import (
 	"github.com/dmnyu/go-medialog/controllers"
-	"github.com/dmnyu/go-medialog/models"
+	"github.com/dmnyu/go-medialog/db"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 	"strconv"
 )
 
-var repoRoutes = router.Group("/repositories")
+func LoadRepositoryRoutes(router *gin.Engine) {
+	var repoRoutes = router.Group("/repositories")
 
-func loadRepositoryRoutes() {
-
-	repoRoutes.GET("", func(c *gin.Context){
+	repoRoutes.GET("", func(c *gin.Context) {
 		var repositories = controllers.GetRepositories()
 		c.HTML(http.StatusOK, "repositories-index.html", gin.H{
-			"title": "go-medialog - repositories",
+			"title":        "go-medialog - repositories",
 			"repositories": repositories,
 		})
 	})
 
 	repoRoutes.GET("/view/:id", func(c *gin.Context) {
 		id, err := strconv.Atoi(c.Param("id"))
-
 		if err != nil {
 			c.JSON(http.StatusBadRequest, err.Error())
 		}
-		log.Println(id)
 
-		repository, err := controllers.FindRepository(id)
+		repository, err := controllers.GetRepositoryByID(id)
 		if err != nil {
 			c.JSON(http.StatusNotFound, err.Error())
 		}
 
+		resources, err := controllers.FindResourcesByRepository(id)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, err.Error())
+		}
+
 		c.HTML(http.StatusOK, "repositories-show.html", gin.H{
-			"title": "go-medialog - repositories",
+			"title":      "go-medialog - repositories",
 			"repository": repository,
+			"resources":  resources,
 		})
 	})
 
-	repoRoutes.GET("/new", func(c *gin.Context){
+	repoRoutes.GET("/new", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "repositories-create.html", gin.H{
 			"title": "go-medialog - create a repository",
 		})
 	})
 
 	repoRoutes.POST("/create", func(c *gin.Context) {
-		var input = models.CreateRepository{}
+		var input = db.Repository{}
 		if err := c.Bind(&input); err != nil {
 			c.JSON(http.StatusBadRequest, err.Error())
 		}
@@ -59,12 +61,11 @@ func loadRepositoryRoutes() {
 		c.Redirect(http.StatusFound, "/repositories")
 	})
 
-	repoRoutes.POST("/preview", func(c *gin.Context){
-		var input = models.CreateRepository{}
+	repoRoutes.POST("/preview", func(c *gin.Context) {
+		var input = db.Repository{}
 		if err := c.Bind(&input); err != nil {
 			c.JSON(http.StatusBadRequest, err.Error())
 		}
-
 
 		repository, err := controllers.FindAspaceRepository(input.AspaceID)
 		if err != nil {
@@ -73,8 +74,8 @@ func loadRepositoryRoutes() {
 
 		c.HTML(http.StatusOK, "repositories-preview.html", gin.H{
 			"repository": repository,
-			"input": input,
-			"title": "go-medialog-repositories -- create",
+			"input":      input,
+			"title":      "go-medialog-repositories -- create",
 		})
 
 	})

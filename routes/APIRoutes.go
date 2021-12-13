@@ -1,9 +1,13 @@
-package main
+package routes
 
-import "github.com/dmnyu/go-medialog/controllers"
+/*
+import (
+	"github.com/dmnyu/go-medialog/controllers"
+)
 
 var apiRoutes = router.Group("/api/v0")
 //API Routes
+
 
 func loadAPIRoutes() {
 	loadAccessionsAPIRoutes()
@@ -45,3 +49,5 @@ func loadResourceAPIRoutes() {
 	router.GET("/api/v0/resources/:id", controllers.FindResource)
 	router.DELETE("/api/v0/resources/:id", controllers.DeleteResource)
 }
+
+*/

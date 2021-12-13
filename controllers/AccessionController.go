@@ -1,32 +1,32 @@
 package controllers
 
 import (
-	"github.com/dmnyu/go-medialog/models"
+	"github.com/dmnyu/go-medialog/db"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
 	"net/http"
 )
 
-func InsertAccession(input models.CreateAccession) (int, error) {
+func InsertAccession(input db.CreateAspaceObject) (int, error) {
 
-	asAccession, err := FindAspaceAccession(input.AspaceRepositoryID, input.AspaceID)
-	if err !=nil {
+	asAccession, err := FindAspaceAccession(input.RepositoryID, input.ObjectID)
+	if err != nil {
 		return http.StatusBadRequest, err
 	}
 
-	accession := models.Accession{
-		Model:        	gorm.Model{},
-		AspaceID:     	input.AspaceID,
-		RepositoryID: 	input.AspaceRepositoryID,
-		Title:			asAccession.Title,
-		Identifiers:  	asAccession.MergeIDs(),
-		State:        	"not_started",
-		CreatedBy:    	0,
-		UpdatedBy:    	0,
+	accession := db.Accession{
+		Model:        gorm.Model{},
+		AspaceID:     input.ObjectID,
+		RepositoryID: input.RepositoryID,
+		Title:        asAccession.Title,
+		Identifiers:  asAccession.MergeIDs(),
+		State:        "not_started",
+		CreatedBy:    0,
+		UpdatedBy:    0,
 	}
 
-	if err := models.DB.Create(&accession).Error; err != nil {
+	if err := db.DB.Create(&accession).Error; err != nil {
 		return http.StatusInternalServerError, err
 	}
 
@@ -34,13 +34,13 @@ func InsertAccession(input models.CreateAccession) (int, error) {
 }
 
 func CreateAccessionAPI(c *gin.Context) {
-	var input = models.CreateAccession{}
+	var input = db.CreateAspaceObject{}
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	code,err := InsertAccession(input);
+	code, err := InsertAccession(input)
 	if err != nil {
 		c.JSON(code, err.Error())
 		return
@@ -50,13 +50,13 @@ func CreateAccessionAPI(c *gin.Context) {
 }
 
 func MigrateAccession(c *gin.Context) {
-	var accession models.Accession
+	var accession db.Accession
 	if err := c.ShouldBindJSON(&accession); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := models.DB.Create(&accession).Error; err != nil {
+	if err := db.DB.Create(&accession).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -64,9 +64,9 @@ func MigrateAccession(c *gin.Context) {
 }
 
 func FindAccessions(c *gin.Context) {
-	var accessions []models.Accession
+	var accessions []db.Accession
 
-	if err  := models.DB.Find(&accessions).Error; err != nil {
+	if err := db.DB.Find(&accessions).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -82,9 +82,9 @@ func FindAccessionAPI(c *gin.Context) {
 	c.JSON(http.StatusOK, accession)
 }
 
-func FindAccession(c *gin.Context) (models.Accession, error) {
-	var accession models.Accession
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&accession).Error; err != nil {
+func FindAccession(c *gin.Context) (db.Accession, error) {
+	var accession db.Accession
+	if err := db.DB.Where("id = ?", c.Param("id")).First(&accession).Error; err != nil {
 		log.Println(err)
 		return accession, err
 	}
@@ -93,21 +93,21 @@ func FindAccession(c *gin.Context) (models.Accession, error) {
 }
 
 func DeleteAccession(c *gin.Context) {
-	var accession = models.Accession{}
+	var accession = db.Accession{}
 
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&accession).Error; err != nil {
+	if err := db.DB.Where("id = ?", c.Param("id")).First(&accession).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record Not Found"})
 	}
 
-	if err := models.DB.Delete(&accession); err != nil {
+	if err := db.DB.Delete(&accession); err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error)
 	}
 
 	c.JSON(http.StatusOK, gin.H{"result": true})
 }
 
-func FindRecentAccessions() []models.Accession {
-	accessions := []models.Accession{}
-	models.DB.Limit(20).Find(&accessions)
+func FindRecentAccessions() []db.Accession {
+	accessions := []db.Accession{}
+	db.DB.Limit(20).Find(&accessions)
 	return accessions
 }

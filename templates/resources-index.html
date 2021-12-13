@@ -1,0 +1,12 @@
+{{ template "header.html" .}}
+<br>
+<h1>Resources</h1>
+<table class="table table-striped table-bordered">
+    {{ range $resource := .resources }}
+    <tr>
+        <td><a href="/resources/{{ $resource.ID}}">{{ $resource.AspaceResourceIdentifiers }}</a></td>
+        <td>{{ $resource.AspaceResourceTitle }}</td>
+    </tr>
+    {{ end }}
+</table>
+{{ template "footer.html" .}}

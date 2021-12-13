@@ -1,16 +1,16 @@
 package controllers
 
 import (
-	"github.com/dmnyu/go-medialog/models"
+	"github.com/dmnyu/go-medialog/db"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
 )
 
 func FindRepositories(c *gin.Context) {
-	var repositories []models.Repository
+	var repositories []db.Repository
 
-	if err := models.DB.Find(&repositories); err != nil {
+	if err := db.DB.Find(&repositories); err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error)
 	}
 
@@ -18,9 +18,9 @@ func FindRepositories(c *gin.Context) {
 }
 
 func FindRepositoryAPI(c *gin.Context) { // Get model if exist
-	var repository models.Repository
+	var repository db.Repository
 
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&repository).Error; err != nil {
+	if err := db.DB.Where("id = ?", c.Param("id")).First(&repository).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
@@ -30,15 +30,15 @@ func FindRepositoryAPI(c *gin.Context) { // Get model if exist
 
 func CreateRepositoryAPI(c *gin.Context) {
 	// Validate input
-	var input models.CreateRepository
+	var input db.Repository
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	// Create book
-	repository := models.Repository{AspaceID: input.AspaceID, Slug: input.Slug, Name: input.Name}
-	if err := models.DB.Create(&repository); err != nil {
+	repository := db.Repository{AspaceID: input.AspaceID, Slug: input.Slug, Name: input.Name}
+	if err := db.DB.Create(&repository); err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error)
 	}
 
@@ -47,53 +47,44 @@ func CreateRepositoryAPI(c *gin.Context) {
 
 func DeleteRepository(c *gin.Context) {
 	// Get model if exist
-	var repository models.Repository
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&repository).Error; err != nil {
+	var repository db.Repository
+	if err := db.DB.Where("id = ?", c.Param("id")).First(&repository).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
 		return
 	}
 
-	if err := models.DB.Delete(&repository).Error; err != nil {
+	if err := db.DB.Delete(&repository).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	c.JSON(http.StatusOK, gin.H{"result": true})
 }
 
-func GetRepositories() []models.Repository {
-	repositories := []models.Repository{}
-	models.DB.Find(&repositories)
+func GetRepositories() []db.Repository {
+	repositories := []db.Repository{}
+	db.DB.Find(&repositories)
 	return repositories
 }
 
-func FindRepository(id int) (models.Repository, error) {
-	repository := models.Repository{}
-	if err = models.DB.Find(&repository, "id = ?", id).Error; err != nil {
-		return repository, err
-	}
+func GetRepositoryByID(id int) (db.Repository, error) { return db.FindRepository(id) }
 
-	return repository, nil
-}
-
-func CreateRepository(repo models.CreateRepository) (int, error) {
+func CreateRepository(repo db.Repository) (int, error) {
 	asRepository, err := FindAspaceRepository(repo.AspaceID)
 	if err != nil {
 		return 0, err
 	}
 
-	repository := models.Repository{
+	repository := db.Repository{
 		Model:    gorm.Model{},
-		ID:       0,
 		AspaceID: repo.AspaceID,
 		Slug:     asRepository.Slug,
 		Name:     asRepository.Name,
 	}
 
-	if err := models.DB.Create(&repository).Error; err != nil {
+	if err := db.DB.Create(&repository).Error; err != nil {
 		return http.StatusInternalServerError, err
 	}
 
 	return http.StatusOK, nil
 
 }
-

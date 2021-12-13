@@ -1,4 +1,4 @@
-package models
+package db
 
 import (
 	"github.com/google/uuid"
@@ -21,36 +21,21 @@ type User struct {
 
 type Repository struct {
 	gorm.Model
-	ID       int
 	AspaceID int    `json:"aspace_id"`
 	Slug     string `json:"slug"`
 	Name     string `json:"name"`
 }
 
-type CreateRepository struct {
-	AspaceID int    `json:"aspace_id" form:"aspace_id"`
-	Slug    string `json:"slug" form:"slug"`
-	Name     string `json:"name" form:"name"`
-}
-
 type Resource struct {
 	gorm.Model
-	ID                        int
-	AspaceResourceID          int        `json:"resource_id"`
-	RepositoryID              int        `json:"repository_id"`
-	Repository                Repository `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	AspaceResourceTitle       string     `json:"resource_title"`
-	AspaceResourceIdentifiers string     `json:"resource_identifiers"`
-}
-
-type CreateResource struct {
-	AspaceResourceID   int `json:"aspace_id"`
-	AspaceRepositoryID int `json:"repository_id"`
+	AspaceResourceID          int    `json:"aspace_resource_id"`
+	RepositoryID              int    `json:"repository_id"`
+	AspaceResourceTitle       string `json:"resource_title"`
+	AspaceResourceIdentifiers string `json:"resource_identifiers"`
 }
 
 type Accession struct {
 	gorm.Model
-	ID           int
 	AspaceID     int        `json:"aspace_id"`
 	RepositoryID int        `json:"repository_id"`
 	Repository   Repository `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
@@ -63,9 +48,9 @@ type Accession struct {
 	UpdatedBy    int        `json:"updated_by"`
 }
 
-type CreateAccession struct {
-	AspaceID           int `json:"aspace_id" form:"aspace_id"`
-	AspaceRepositoryID int `json:"aspace_repository_id" form:"aspace_repository_id"`
+type CreateAspaceObject struct {
+	ObjectID     int `json:"object_id" form:"object_id"`
+	RepositoryID int `json:"repository_id" form:"repository_id"`
 }
 
 type Entry struct {
@@ -88,8 +73,8 @@ type Entry struct {
 	StockSize     int        `json:"stock_size"`
 	IsRefreshed   bool       `json:"is_refreshed"`
 	IsTransferred bool       `json:"is_transferred"`
-	MediaModel		int		`json:"media_model"`
-	MediaModelID	int	`json:"media_model_id"`
+	MediaModel    int        `json:"media_model"`
+	MediaModelID  int        `json:"media_model_id"`
 }
 
 type MediaModel int
