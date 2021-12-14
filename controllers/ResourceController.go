@@ -1,72 +1,46 @@
 package controllers
 
 import (
-	"github.com/dmnyu/go-medialog/db"
+	"github.com/dmnyu/go-medialog/database"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 )
 
-func GetResources() []db.Resource {
-	var resources = []db.Resource{}
-	db.DB.Find(&resources)
-	return resources
+func GetResources(c *gin.Context) {
+	resources := database.FindResources()
+	c.HTML(http.StatusOK, "resources-index.html", gin.H{
+		"title":        "go-medialog - resources",
+		"repositories": resources,
+	})
 }
 
-func FindResources(c *gin.Context) {
-	var resources []db.Resource
-	db.DB.Find(&resources)
-	c.JSON(http.StatusOK, gin.H{"data": resources})
-}
-
-func GetResource(c *gin.Context) (db.Resource, error) {
-	resource := db.Resource{}
-	resourceId, err := strconv.Atoi(c.Param("id"))
+func GetResource(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return resource, err
+		c.JSON(http.StatusBadRequest, err)
+		return
 	}
 
-	resource, err = db.FindResource(resourceId)
+	resource, err := database.FindResource(id)
 	if err != nil {
-		return resource, err
+		c.JSON(http.StatusBadRequest, err)
+		return
 	}
 
-	return resource, nil
-}
-
-func FindResourcesByRepository(repositoryID int) ([]db.Resource, error) {
-	var resources []db.Resource
-	if err := db.DB.Where("repository_id = ?", repositoryID).Find(&resources).Error; err != nil {
-		return resources, err
-	}
-	return resources, nil
-}
-
-func CreateResource(resource db.Resource) error {
-
-	if err := db.DB.Create(&resource).Error; err != nil {
-		return err
+	repository, err := database.FindRepository(resource.RepositoryID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
 	}
 
-	return nil
+	c.HTML(http.StatusOK, "resources-index.html", gin.H{
+		"title":      "go-medialog - resources",
+		"repository": repository,
+		"resource":   resource,
+	})
 }
 
-func DeleteResource(c *gin.Context) {
-	// Get model if exist
-	var resource db.Resource
-	if err := db.DB.Where("id = ?", c.Param("id")).First(&resource).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
-	}
+func PreviewResource(c *gin.Context) {}
 
-	if err := db.DB.Delete(&resource).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": true})
-}
-
-func FindRecent() []db.Entry {
-	entries := []db.Entry{}
-	db.DB.Limit(20).Find(&entries)
-	return entries
-}
+func CreateResource(c *gin.Context) {}

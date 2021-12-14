@@ -10,4 +10,4 @@ require (
 	gorm.io/gorm v1.21.11
 )
 
-replace github.com/nyudlts/go-aspace => /home/menneric/go/src/github.com/nyudlts/go-aspace
+replace github.com/nyudlts/go-aspace => /Users/donmennerich/go/src/github.com/nyudlts/go-aspace

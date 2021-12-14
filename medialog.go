@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/dmnyu/go-medialog/controllers"
-	"github.com/dmnyu/go-medialog/db"
-	"github.com/dmnyu/go-medialog/routes"
+	"github.com/dmnyu/go-medialog/database"
 	"github.com/gin-gonic/gin"
 	"html/template"
 	"net/http"
@@ -41,8 +39,6 @@ func main() {
 
 	router.LoadHTMLGlob("templates/*.html")
 	router.StaticFile("/favicon.ico", "./public/favicon.ico")
-	db.ConnectDataBase()
-	db.MigrateDatabase()
 
 	s := &http.Server{
 		Addr:           ":8080",
@@ -52,24 +48,19 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	//loadAPIRoutes()
-	routes.LoadRepositoryRoutes(router)
-	routes.LoadResourceRoutes(router)
-	routes.LoadAccessionRoutes(router)
+	//Load Application Routes
+	loadRoutes(router)
 
 	//Index
 	router.GET("/", func(c *gin.Context) {
-
-		var entries = controllers.FindRecent()
-
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"entries": entries,
-			"title":   "go-medialog",
+			"title": "go-medialog",
 		})
 	})
 
-	db.MigrateDatabase()
 	//Start the router
+	database.ConnectDataBase()
+	database.MigrateDatabase()
 	s.ListenAndServe()
 	router.Run()
 
