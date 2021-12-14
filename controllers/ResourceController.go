@@ -41,6 +41,33 @@ func GetResource(c *gin.Context) {
 	})
 }
 
-func PreviewResource(c *gin.Context) {}
+func PreviewResource(c *gin.Context) {
+	var input = database.CreateAspaceObject{}
+	if err := c.Bind(&input); err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	resource, err := FindAspaceResource(input.RepositoryID, input.ObjectID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	identifier := resource.MergeIDs()
+
+	repository, err := database.FindRepository(input.RepositoryID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.HTML(http.StatusOK, "resources-preview.html", gin.H{
+		"title":      "go-medialog - resources",
+		"repository": repository,
+		"resource":   resource,
+		"identifier": identifier,
+	})
+
+}
 
 func CreateResource(c *gin.Context) {}
