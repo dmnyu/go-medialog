@@ -45,17 +45,15 @@ func GetRepository(c *gin.Context) {
 		c.JSON(http.StatusNotFound, err.Error())
 	}
 
-	/*
-		resources, err := controllers.FindResourcesByRepository(id)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, err.Error())
-		}
-	*/
+	resources, err := database.FindResourcesByRepoID(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+	}
 
 	c.HTML(http.StatusOK, "repositories-show.html", gin.H{
 		"title":      "go-medialog - repositories",
 		"repository": repository,
-		//"resources":  resources,
+		"resources":  resources,
 	})
 }
 

@@ -10,10 +10,10 @@
 
     <div class="card card-body">
         <h3>Add Resource to Medialog</h3>
-        <h4><b>{{ .identifier }}</b> {{ .resource.Title }}</h4>
+        <h4><b>{{ .identifiers }}</b> {{ .resource.Title }}</h4>
         <form action="/resources/create" method="POST">
             <div style="display:none;">
-                <input type="number" name="repository_id" id="aspace_repository_id" value="{{ .input.RepositoryID}}" />
+                <input type="number" name="repository_id" id="repository_id" value="{{ .input.RepositoryID}}" />
                 <input type="number" name="object_id" id="object_id" value="{{ .input.ObjectID }}" />
             </div>
             <input type="submit" value="Confirm" class="btn btn-primary" />
