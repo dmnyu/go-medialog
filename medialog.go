@@ -37,7 +37,7 @@ func main() {
 		"getRepoCode":  getRepoCode,
 	})
 
-	router.LoadHTMLGlob("templates/*.html")
+	router.LoadHTMLGlob("templates/**/*.html")
 	router.StaticFile("/favicon.ico", "./public/favicon.ico")
 
 	s := &http.Server{
