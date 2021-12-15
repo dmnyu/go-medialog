@@ -6,7 +6,7 @@
 <br>
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Recent Medialog Accessions</h3>
+        <h3 class="panel-title">Medialog Accessions</h3>
     </div>
 
     <div class="panel-body">
@@ -28,13 +28,16 @@
                 <td/>
                 <td>{{ $accession.Identifiers }}</td>
                 <td>{{ $accession.Title }}</td>
-                <td><a href="/accessions/show/{{ $accession.ID }}" class="btn btn-primary">View</a></td>
+                <td>
+                    <a href="/accessions/{{ $accession.ID }}/show" class="btn btn-primary">View</a>
+                    <a href="/accessions/{{ $accession.ID }}/edit" class="btn btn-secondary">Edit</a>
+                    <a href="/accessions/{{ $accession.ID }}/delete" class="btn btn-danger">Delete</a>
+                </td>
             </tr>
             {{ end }}
             </tbody>
         </table>
     </div>
-    <a href="/accessions/new" class="btn btn-primary">Add Accession Record</a>
 </div>
 <!--Embed the footer.html template at this location-->
 {{ template "footer.html" .}}

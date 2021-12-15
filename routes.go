@@ -21,6 +21,12 @@ func loadRoutes(router *gin.Engine) {
 	resourceRoutes.POST("/create", func(c *gin.Context) { controllers.CreateResource(c) })
 	resourceRoutes.GET("/:id/edit", func(c *gin.Context) { NullRoute() })
 	resourceRoutes.GET("/:id/delete", func(c *gin.Context) { NullRoute() })
+
+	var accessionRoutes = router.Group("/accessions")
+	accessionRoutes.GET("", func(c *gin.Context) { controllers.GetAccessions(c) })
+	accessionRoutes.POST("/preview", func(c *gin.Context) { controllers.PreviewAccession(c) })
+	accessionRoutes.POST("/create", func(c *gin.Context) { controllers.CreateAccession(c) })
+	accessionRoutes.GET("/:id/show", func(c *gin.Context) { controllers.GetAccession(c) })
 }
 
 func NullRoute() {}

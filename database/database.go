@@ -21,8 +21,7 @@ func ConnectDataBase() {
 func MigrateDatabase() {
 	ConnectDataBase()
 	db.AutoMigrate(&Repository{})
-	//db.AutoMigrate(&Resource{})
-	//db.AutoMigrate(&User{})
-	//db.AutoMigrate(&Accession{})
+	db.AutoMigrate(&Resource{})
+	db.AutoMigrate(&Accession{})
 	//db.AutoMigrate(&Entry{})
 }

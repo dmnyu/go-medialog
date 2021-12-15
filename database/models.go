@@ -36,21 +36,18 @@ type Resource struct {
 
 type Accession struct {
 	gorm.Model
-	AspaceID     int        `json:"aspace_id"`
-	RepositoryID int        `json:"repository_id"`
-	Repository   Repository `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	ResourceID   int        `json:"resource_id"`
-	Resource     Resource   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Title        string     `json:"accession_title"`
-	Identifiers  string     `json:"identifier"`
-	State        string     `json:"state"`
-	CreatedBy    int        `json:"created_by"`
-	UpdatedBy    int        `json:"updated_by"`
+	AspaceID     int    `json:"aspace_id"`
+	RepositoryID int    `json:"repository_id"`
+	ResourceID   int    `json:"resource_id"`
+	Title        string `json:"title"`
+	Identifiers  string `json:"identifier"`
+	State        string `json:"state"`
 }
 
 type CreateAspaceObject struct {
-	ObjectID     int `json:"object_id" form:"object_id"`
 	RepositoryID int `json:"repository_id" form:"repository_id"`
+	ResourceID   int `json:"resource_id" form:"resource_id"`
+	AccessionID  int `json:"accession_id" form:"accession_id"`
 }
 
 type Entry struct {

@@ -52,7 +52,7 @@ func PreviewResource(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	resource, err := FindAspaceResource(input.RepositoryID, input.ObjectID)
+	resource, err := FindAspaceResource(input.RepositoryID, input.ResourceID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return
@@ -73,6 +73,7 @@ func PreviewResource(c *gin.Context) {
 		"identifiers": identifiers,
 		"input":       input,
 	})
+
 }
 
 func CreateResource(c *gin.Context) {
@@ -83,7 +84,7 @@ func CreateResource(c *gin.Context) {
 		return
 	}
 
-	asResource, err := FindAspaceResource(input.RepositoryID, input.ObjectID)
+	asResource, err := FindAspaceResource(input.RepositoryID, input.ResourceID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return
