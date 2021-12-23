@@ -101,11 +101,11 @@ func CreateResource(c *gin.Context) {
 	identifiers := asResource.MergeIDs()
 
 	resource := database.Resource{
-		Model:                     gorm.Model{},
-		AspaceResourceID:          asID,
-		RepositoryID:              input.RepositoryID,
-		AspaceResourceTitle:       asResource.Title,
-		AspaceResourceIdentifiers: identifiers,
+		Model:        gorm.Model{},
+		AspaceID:     asID,
+		RepositoryID: input.RepositoryID,
+		Title:        asResource.Title,
+		Identifiers:  identifiers,
 	}
 
 	id, err := database.InsertResource(resource)

@@ -1,0 +1,36 @@
+{{ template "header.html" . }}
+
+<br />
+<div class="card card-default">
+  <div class="card-header">
+    <small>repository</small>
+    <h3 class="card-title">{{ .repository.Name }}</h3>
+    <small>resource</small>
+    <h3 class="card-title">{{ .resource.Identifiers }} - {{ .resource.Title }}</h3>
+    <small>accession</small>
+    <h3 class="card-title">{{ .accession.Identifiers }} - {{ .accession.Title }}</h3>
+  </div>
+  <div class="card-body>">
+    <h4 class="card-title">Physical Information</h4>
+    <form action="/entries/insert" method="POST">
+      <input type="hidden" name="repository_id" value="{{ .repository.ID }}">
+      <input type="hidden" name="resource_id" value="{{ .resource.ID }}">
+      <input type="hidden" name="accession_id" value="{{ .accession.ID }}">
+      <div class="form-group">
+        <label for="media_id">Media ID</label>
+        <input type="number" class="form-control" id="media_id" name="media_id">
+      </div>
+      <div class="form-group">
+        <label for="stock_size">Stock Size</label>
+        <input type="number" class="form-control" id="stock_size" name="stock_size">
+      </div>
+      <div class="form-group">
+        <label for="media_id">Stock Type</label>
+        <input type="number" class="form-control" id="media_id" name="media_id">
+      </div>
+      <input type="submit" value="Add to Medialog" class="btn btn-primary" />
+    </form>
+  </div>
+</div>
+
+{{ template "footer.html" . }}

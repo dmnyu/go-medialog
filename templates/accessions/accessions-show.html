@@ -5,7 +5,7 @@
 <div class="card card-default">
     <div class="card-header">
         <h2 class="card-title">{{ .repository.Name }} </h2>
-        <h3 class="card-title">{{ .resource.AspaceResourceTitle }}</h3>
+        <h3 class="card-title">{{ .resource.Title }}</h3>
         <h4>{{ .accession.Identifiers }}: {{ .accession.Title }}</h4>
 
     </div>
@@ -31,7 +31,14 @@
         <h4 class="card-title">Media</h4>
     </div>
     <div class="card-body">
-        <a href="#" class="btn btn-primary">Add Entry</a>
+        <div class="form-inline">
+            <form action="/entries/create" method="POST">
+                <input type="hidden" name="accession_id" id="accession_id" value="{{ .accession.ID }}">
+                <input type="hidden" name="repository_id" id="repository_id" value="{{ .repository.ID }}">
+                <input type="hidden" name="resource_id" id="resource_id" value="{{ .resource.ID }}">
+                <input class="btn btn-primary" type="submit" value="Create Entry">
+            </form>
+        </div>
     </div>
 </div>
 

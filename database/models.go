@@ -1,7 +1,6 @@
 package database
 
 import (
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -28,10 +27,10 @@ type Repository struct {
 
 type Resource struct {
 	gorm.Model
-	AspaceResourceID          int    `json:"aspace_resource_id"`
-	RepositoryID              int    `json:"repository_id"`
-	AspaceResourceTitle       string `json:"resource_title"`
-	AspaceResourceIdentifiers string `json:"resource_identifiers"`
+	AspaceID     int    `json:"aspace_resource_id"`
+	RepositoryID int    `json:"repository_id"`
+	Title        string `json:"resource_title"`
+	Identifiers  string `json:"resource_identifiers"`
 }
 
 type Accession struct {
@@ -48,30 +47,6 @@ type CreateAspaceObject struct {
 	RepositoryID int `json:"repository_id" form:"repository_id"`
 	ResourceID   int `json:"resource_id" form:"resource_id"`
 	AccessionID  int `json:"accession_id" form:"accession_id"`
-}
-
-type Entry struct {
-	gorm.Model
-	ID            uuid.UUID  `json:"id"`
-	RepositoryID  int        `json:"repository_id"`
-	Repository    Repository `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	ResourceID    int        `json:"resource_id"`
-	Resource      Resource   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	AccessionID   int        `json:"accession_id"`
-	Accession     Accession  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	MediaID       int        `json:"media_id"`
-	MediaType     string     `json:"media_type"`
-	BoxNumber     string     `json:"box_number"`
-	LabelText     string     `json:"label_text"`
-	OriginalID    string     `json:"original_id"`
-	RefID         string     `json:"ref_id"`
-	MediaNote     string     `json:"media_note"`
-	StockUnit     string     `json:"stock_unit"`
-	StockSize     int        `json:"stock_size"`
-	IsRefreshed   bool       `json:"is_refreshed"`
-	IsTransferred bool       `json:"is_transferred"`
-	MediaModel    int        `json:"media_model"`
-	MediaModelID  int        `json:"media_model_id"`
 }
 
 type MediaModel int
