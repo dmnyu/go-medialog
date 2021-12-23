@@ -48,10 +48,3 @@ type CreateAspaceObject struct {
 	ResourceID   int `json:"resource_id" form:"resource_id"`
 	AccessionID  int `json:"accession_id" form:"accession_id"`
 }
-
-type MediaModel int
-
-const (
-	OpticalDisc MediaModel = iota
-	HardDiskDrive
-)

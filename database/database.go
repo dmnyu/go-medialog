@@ -20,8 +20,22 @@ func ConnectDataBase() {
 
 func MigrateDatabase() {
 	ConnectDataBase()
-	db.AutoMigrate(&Repository{})
-	db.AutoMigrate(&Resource{})
-	db.AutoMigrate(&Accession{})
-	//db.AutoMigrate(&Entry{})
+	if err := db.AutoMigrate(&Repository{}); err != nil {
+		panic(err)
+	}
+	if err := db.AutoMigrate(&Resource{}); err != nil {
+		panic(err)
+	}
+	if err := db.AutoMigrate(&Accession{}); err != nil {
+		panic(err)
+	}
+	if err := db.AutoMigrate(&MediaObject{}); err != nil {
+		panic(err)
+	}
+	if err := db.AutoMigrate(&MediaOpticalDisc{}); err != nil {
+		panic(err)
+	}
+	if err := db.AutoMigrate(&MediaHardDiskDrive{}); err != nil {
+		panic(err)
+	}
 }
