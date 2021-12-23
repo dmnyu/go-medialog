@@ -4,10 +4,9 @@
 
 <div class="card card-default">
     <div class="card-header">
-        <h2 class="card-title">{{ .repository.Name }} </h2>
-        <h3 class="card-title">{{ .resource.Title }}</h3>
-        <h4>{{ .accession.Identifiers }}: {{ .accession.Title }}</h4>
-
+        <h3 class="card-title">{{ .repository.Name }} </h3>
+        <h4 class="card-title">{{ .resource.Identifiers }} {{ .resource.Title }}</h4>
+        <h4 class="card-title">{{ .accession.Identifiers }} {{ .accession.Title }}</h4>
     </div>
     <br/>
     <div class="card-body">
@@ -31,8 +30,18 @@
         <h4 class="card-title">Media</h4>
     </div>
     <div class="card-body">
+    </div>
+</div>
+<br />
+<div class="card card-default">
+    <div class="card-header">
+        <h4 class="card-title">Add Media</h4>
         <div class="form-inline">
-            <form action="/entries/create" method="POST">
+            <form action="/media/create" method="POST">
+                <select id="model_id" name="model_id" class="form-select" aria-label="Default select example">
+                    <option value="0">Optical Disc</option>
+                    <option value="1">Hard Disk Drive</option>
+                </select>
                 <input type="hidden" name="accession_id" id="accession_id" value="{{ .accession.ID }}">
                 <input type="hidden" name="repository_id" id="repository_id" value="{{ .repository.ID }}">
                 <input type="hidden" name="resource_id" id="resource_id" value="{{ .resource.ID }}">

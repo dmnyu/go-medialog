@@ -9,8 +9,8 @@
         <table class="table table-striped table-bordered">
             {{ range $resource := .resources }}
             <tr>
-                <td><a href="/resources/{{ $resource.ID}}/show">{{ $resource.AspaceResourceIdentifiers }}</a></td>
-                <td>{{ $resource.AspaceResourceTitle }}</td>
+                <td><a href="/resources/{{ $resource.ID}}/show">{{ $resource.Identifiers }}</a></td>
+                <td>{{ $resource.Title }}</td>
                 <td>
                     <a href="/accessions/{{ $resource.ID }}/show" class="btn btn-primary">View</a>
                     <a href="/accessions/{{ $resource.ID }}/edit" class="btn btn-secondary">Edit</a>

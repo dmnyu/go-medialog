@@ -5,15 +5,18 @@ import (
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
 func GetResources(c *gin.Context) {
-	resources := database.FindResources()
-	log.Println(resources)
+	resources, err := database.FindResources()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
 	c.HTML(http.StatusOK, "resources-index.html", gin.H{
 		"title":     "go-medialog - resources",
 		"resources": resources,

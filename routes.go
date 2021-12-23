@@ -28,6 +28,8 @@ func loadRoutes(router *gin.Engine) {
 	accessionRoutes.POST("/create", func(c *gin.Context) { controllers.CreateAccession(c) })
 	accessionRoutes.GET("/:id/show", func(c *gin.Context) { controllers.GetAccession(c) })
 
+	var mediaRoutes = router.Group("/media")
+	mediaRoutes.POST("/create", func(c *gin.Context) { controllers.CreateMedia(c) })
 }
 
 func NullRoute() {}

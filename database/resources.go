@@ -1,9 +1,11 @@
 package database
 
-func FindResources() []Resource {
+func FindResources() ([]Resource, error) {
 	resources := []Resource{}
-	db.Find(&resources)
-	return resources
+	if err := db.Find(&resources).Error; err != nil {
+		return []Resource{}, err
+	}
+	return resources, nil
 }
 
 func FindResourcesByRepoID(id int) ([]Resource, error) {
