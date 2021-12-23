@@ -1,4 +1,6 @@
 go-aspace.yml
+.idea/*
+go-medialog
 
 # Binaries for programs and plugins
 *.exe
