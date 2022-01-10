@@ -1,18 +1,16 @@
 {{ template "header.html" .}}
 <br/>
-<div class="card card-default">
-    <div class="card-heading">
-        <h2 class="card-title">{{ .repository.Name }}</h2>
-        <h3 class="card-title"> {{ .resource.ID }} {{ .resource.Identifiers }} - {{ .resource.Title }}</h3>
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">{{ .repository.Name }}</h4>
+        <h5 class="card-title">{{ .resource.Identifiers }} - {{ .resource.Title }}</h5>
     </div>
 </div>
 </br>
 <div class="card card-default">
-    <div class="card-heading">
-        <h4 class="card-title">Accessions</h4>
-    </div>
     <div class="card-body">
-        <h5 class="card-title">Add an Accession</h5>
+        <h4 class="card-title">Accessions</h4>
+        <div class="lead">Add an Accession</div>
         <div class="form-inline">
             <form action="/accessions/preview" method="POST">
                 <label>Accession ID</label>

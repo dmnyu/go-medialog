@@ -1,13 +1,21 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/gin-gonic/gin"
 	"html/template"
 	"net/http"
+	"os"
 	"time"
 )
+
+var migrate bool
+
+func init() {
+	flag.BoolVar(&migrate, "migrate", false, "")
+}
 
 func formatAsDate(t time.Time) string {
 	year, month, day := t.Date()
@@ -31,7 +39,11 @@ func getRepoCode(i int) string {
 var router = gin.Default()
 
 func main() {
-
+	flag.Parse()
+	if migrate == true {
+		database.MigrateDatabase()
+		os.Exit(0)
+	}
 	router.SetFuncMap(template.FuncMap{
 		"formatAsDate": formatAsDate,
 		"getRepoCode":  getRepoCode,
@@ -60,7 +72,6 @@ func main() {
 
 	//Start the router
 	database.ConnectDataBase()
-	database.MigrateDatabase()
 	s.ListenAndServe()
 	router.Run()
 

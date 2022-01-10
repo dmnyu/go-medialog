@@ -51,7 +51,13 @@ func CreateAccession(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	asAccession, err := FindAspaceAccession(input.RepositoryID, input.AccessionID)
+	repository, err := database.FindRepository(input.RepositoryID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	asAccession, err := FindAspaceAccession(repository.AspaceID, input.AccessionID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
@@ -91,7 +97,7 @@ func PreviewAccession(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	accession, err := FindAspaceAccession(input.RepositoryID, input.AccessionID)
+	accession, err := FindAspaceAccession(repository.AspaceID, input.AccessionID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}

@@ -20,7 +20,7 @@ type User struct {
 
 type Repository struct {
 	gorm.Model
-	AspaceID int    `json:"aspace_id"`
+	AspaceID int    `json:"aspace_id" form:"aspace_id"`
 	Slug     string `json:"slug"`
 	Name     string `json:"name"`
 }

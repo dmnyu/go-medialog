@@ -5,6 +5,7 @@ import (
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -55,19 +56,21 @@ func PreviewResource(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	resource, err := FindAspaceResource(input.RepositoryID, input.ResourceID)
+	repository, err := database.FindRepository(input.RepositoryID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	log.Println("{[INFO]", input)
+
+	resource, err := FindAspaceResource(repository.AspaceID, input.ResourceID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 
 	identifiers := resource.MergeIDs()
-
-	repository, err := database.FindRepository(input.RepositoryID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
-		return
-	}
 
 	c.HTML(http.StatusOK, "resources-preview.html", gin.H{
 		"title":       "go-medialog - resources",
@@ -87,7 +90,13 @@ func CreateResource(c *gin.Context) {
 		return
 	}
 
-	asResource, err := FindAspaceResource(input.RepositoryID, input.ResourceID)
+	repository, err := database.FindRepository(input.RepositoryID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	asResource, err := FindAspaceResource(repository.AspaceID, input.ResourceID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return

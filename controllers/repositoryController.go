@@ -4,6 +4,7 @@ import (
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -70,6 +71,8 @@ func PreviewRepository(c *gin.Context) {
 	if err := c.Bind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
+
+	log.Println("[INFO]", input)
 
 	repository, err := FindAspaceRepository(input.AspaceID)
 	if err != nil {
