@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/dmnyu/go-medialog/database"
+	"github.com/dmnyu/go-medialog/routes"
 	"github.com/gin-gonic/gin"
 	"html/template"
 	"net/http"
@@ -52,16 +53,8 @@ func main() {
 	router.LoadHTMLGlob("templates/**/*.html")
 	router.StaticFile("/favicon.ico", "./public/favicon.ico")
 
-	s := &http.Server{
-		Addr:           ":8080",
-		Handler:        router,
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
-		MaxHeaderBytes: 1 << 20,
-	}
-
 	//Load Application Routes
-	loadRoutes(router)
+	routes.LoadRoutes(router)
 
 	//Index
 	router.GET("/", func(c *gin.Context) {
@@ -71,8 +64,7 @@ func main() {
 	})
 
 	//Start the router
-	database.ConnectDataBase()
-	s.ListenAndServe()
+	database.ConnectDatabase()
 	router.Run()
 
 }

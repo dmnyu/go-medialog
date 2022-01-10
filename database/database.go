@@ -8,7 +8,7 @@ import (
 
 var db *gorm.DB
 
-func ConnectDataBase() {
+func ConnectDatabase() {
 	log.Println("[INFO] connecting to database")
 	var err error
 	db, err = gorm.Open(sqlite.Open("gomedialog.db"), &gorm.Config{})
@@ -19,7 +19,7 @@ func ConnectDataBase() {
 }
 
 func MigrateDatabase() {
-	ConnectDataBase()
+	ConnectDatabase()
 	log.Println("[INFO] migrating database")
 	if err := db.AutoMigrate(&Repository{}); err != nil {
 		panic(err)

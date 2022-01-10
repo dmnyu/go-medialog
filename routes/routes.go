@@ -1,11 +1,11 @@
-package main
+package routes
 
 import (
 	"github.com/dmnyu/go-medialog/controllers"
 	"github.com/gin-gonic/gin"
 )
 
-func loadRoutes(router *gin.Engine) {
+func LoadRoutes(router *gin.Engine) {
 	var repoRoutes = router.Group("/repositories")
 	repoRoutes.GET("", func(c *gin.Context) { controllers.GetRepositories(c) })
 	repoRoutes.GET("/:id/show", func(c *gin.Context) { controllers.GetRepository(c) })
