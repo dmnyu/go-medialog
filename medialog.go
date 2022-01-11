@@ -52,7 +52,7 @@ func main() {
 
 	router.LoadHTMLGlob("templates/**/*.html")
 	router.StaticFile("/favicon.ico", "./public/favicon.ico")
-
+	router.SetTrustedProxies([]string{"127.0.0.1"})
 	//Load Application Routes
 	routes.LoadRoutes(router)
 

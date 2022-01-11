@@ -7,7 +7,7 @@ import (
 )
 
 func CreateMedia(c *gin.Context) {
-	var input = database.MediaObject{}
+	var input = database.MediaCore{}
 	if err := c.Bind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
@@ -22,7 +22,7 @@ func CreateMedia(c *gin.Context) {
 }
 
 func createOpticalDisc(c *gin.Context) {
-	var mediaObject = database.MediaObject{}
+	var mediaObject = database.MediaCore{}
 	if err := c.Bind(&mediaObject); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
