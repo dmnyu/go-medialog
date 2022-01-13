@@ -28,3 +28,12 @@ func InsertResource(resource Resource) (int, error) {
 	}
 	return int(resource.ID), nil
 }
+
+func GetNextMediaIDForResource(resourceID int) (int, error) {
+	entry := MediaEntry{}
+	if err := db.Order("media_id desc").Where("resource_id = ?", resourceID).First(&entry).Error; err != nil {
+		return 0, err
+	}
+
+	return entry.MediaID + 1, nil
+}

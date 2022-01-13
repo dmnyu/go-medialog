@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -47,4 +48,73 @@ type CreateAspaceObject struct {
 	RepositoryID int `json:"repository_id" form:"repository_id"`
 	ResourceID   int `json:"resource_id" form:"resource_id"`
 	AccessionID  int `json:"accession_id" form:"accession_id"`
+}
+
+type MediaModel int
+
+const (
+	OpticalDisc MediaModel = iota
+	HardDiskDrive
+)
+
+var SubTypes = map[int][]string{
+	0: {"CD", "DVD"},
+	1: {"3.5 in. Magnetic", "2.5 in. Magnetic", "2.5 in. SSD"},
+}
+
+type Media interface {
+	GetMediaEntry() MediaEntry
+}
+
+//table to store only information needed in tabular views
+type MediaEntry struct {
+	gorm.Model
+	ObjectID     int        `json:"object_id"`
+	ModelID      MediaModel `json:"model_id" form:"model_id"`
+	MediaID      int        `json:"media_id" form:"media_id"`
+	Subtype      string     `json:"subtype" form:"subtype"`
+	HumanSize    string     `json:"human_size" form:"human_size"`
+	RepositoryID int        `json:"repository_id" form:"repository_id"`
+	ResourceID   int        `json:"resource_id" form:"resource_id"`
+	AccessionID  int        `json:"accession_id" form:"accession_id"`
+}
+
+type MediaOpticalDisc struct {
+	gorm.Model
+	ModelID      MediaModel `json:"model_id" form:"model_id"`
+	MediaID      int        `json:"media_id" form:"media_id"`
+	RepositoryID int        `json:"repository_id" form:"repository_id"`
+	ResourceID   int        `json:"resource_id" form:"resource_id"`
+	AccessionID  int        `json:"accession_id" form:"accession_id"`
+	StockUnit    string     `json:"stock_unit" form:"stock_unit"`
+	StockSize    int        `json:"stock_size" form:"stock_size"`
+	SizeInBytes  int64      `json:"size_in_bytes" form:"size_in_bytes"`
+	Subtype      string     `json:"subtype" form:"subtype"`
+	MediaNote    string     `json:"media_note"`
+}
+
+func (o MediaOpticalDisc) GetMediaEntry() MediaEntry {
+	return MediaEntry{
+		ModelID:      0,
+		MediaID:      o.MediaID,
+		ObjectID:     int(o.ID),
+		Subtype:      o.Subtype,
+		HumanSize:    fmt.Sprintf("%d %s", o.StockSize, o.StockUnit),
+		RepositoryID: o.RepositoryID,
+		ResourceID:   o.ResourceID,
+		AccessionID:  o.AccessionID,
+	}
+}
+
+type MediaHardDiskDrive struct {
+	gorm.Model
+	ModelID      MediaModel
+	RepositoryID int
+	ResourceID   int
+	AccessionID  int
+	StockUnit    string
+	StockSize    int
+	SizeInBytes  int64 `json:"size_in_bytes" form:"size_in_bytes"`
+	Subtype      string
+	MediaNote    string
 }

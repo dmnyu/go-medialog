@@ -8,6 +8,12 @@ import (
 
 var db *gorm.DB
 
+type Pagination struct {
+	Limit int    `json:"limit"`
+	Page  int    `json:"page"`
+	Sort  string `json:"sort"`
+}
+
 func ConnectDatabase() {
 	log.Println("[INFO] connecting to database")
 	var err error
@@ -39,10 +45,6 @@ func MigrateDatabase() {
 	}
 
 	if err := db.AutoMigrate(&MediaEntry{}); err != nil {
-		panic(err)
-	}
-
-	if err := db.AutoMigrate(&MediaHardDiskDrive{}); err != nil {
 		panic(err)
 	}
 

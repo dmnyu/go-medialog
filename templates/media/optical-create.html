@@ -1,5 +1,6 @@
 {{ template "header.html" .}}
 <br/>
+{{.entry }}
 <div class="card card-default">
     <div class="card-header">
         <h3 class="card-title">{{ .repository.Name }} </h3>
@@ -9,17 +10,34 @@
         <h4 class="card-title">Create an Optical Disc</h4>
     </div>
     <div class="card-body">
-
-        <form action="/media/optical/create" method="post">
-            <div class="form-group">
-                <label for="subtype">Optical Type</label>
-                <select name="subtype" id="subtype">
-                    {{ range $subtype := .subtypes }}
-                        <option value="{{ $subtype }}">{{ $subtype }}</option>
-                    {{ end }}
-                </select>
+        <form action="/media/create/optical" method="post">
+            <div style="display:none;">
+                <input type="number" name="repository_id" id="repository_id" value="{{ .entry.RepositoryID }}"/>
+                <input type="number" name="resource_id" id="resource_id" value="{{ .entry.ResourceID }}"/>
+                <input type="number" name="accession_id" id="accession_id" value="{{ .entry.AccessionID }}"/>
             </div>
-            <input type="submit" class="btn btn-primary"> <a href="/accessions/{{ .accession.ID }}/show" class="btn btn-danger">Cancel</a>
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="subtype">Optical Type</label>
+                        <select name="subtype" id="subtype">
+                            {{ range $subtype := .subtypes }}
+                            <option value="{{ $subtype }}">{{ $subtype }}</option>
+                            {{ end }}
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <label for="stock_size">Stock Size</label>
+                    <input name="stock_size" id="stock_size" type="number">
+                </div>
+                <div class="col">
+                    <label for="stock_unit">Stock Size</label>
+                    <input name="stock_unit" id="stock_unit" type="text">
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary"> <a href="/accessions/{{ .accession.ID }}/show"
+                                                             class="btn btn-danger">Cancel</a>
         </form>
     </div>
 </div>

@@ -7,7 +7,7 @@ import (
 )
 
 func CreateMedia(c *gin.Context) {
-	var input = database.MediaCore{}
+	var input = database.MediaEntry{}
 	if err := c.Bind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
@@ -15,46 +15,78 @@ func CreateMedia(c *gin.Context) {
 
 	switch input.ModelID {
 	case 0:
-		createOpticalDisc(c)
+		newOpticalDisc(c)
 	case 1:
-		createHardDiskDrive(c)
+		newHardDiskDrive(c)
+	default:
+		c.JSON(http.StatusBadRequest, "Mediatype not supported")
 	}
 }
 
-func createOpticalDisc(c *gin.Context) {
-	var mediaObject = database.MediaCore{}
-	if err := c.Bind(&mediaObject); err != nil {
+func newOpticalDisc(c *gin.Context) {
+	var entry = database.MediaEntry{}
+	if err := c.Bind(&entry); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	repository, err := database.FindRepository(mediaObject.RepositoryID)
+	repository, err := database.FindRepository(entry.RepositoryID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	resource, err := database.FindResource(mediaObject.ResourceID)
+	resource, err := database.FindResource(entry.ResourceID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	accession, err := database.FindAccession(mediaObject.AccessionID)
+	accession, err := database.FindAccession(entry.AccessionID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	subtypes := database.SubTypes[0]
+	subtypes := database.SubTypes[int(entry.ModelID)]
 
 	c.HTML(http.StatusOK, "optical-create.html", gin.H{
-		"repository":  repository,
-		"resource":    resource,
-		"accession":   accession,
-		"mediaObject": mediaObject,
-		"subtypes":    subtypes,
+		"repository": repository,
+		"resource":   resource,
+		"accession":  accession,
+		"entry":      entry,
+		"subtypes":   subtypes,
 	})
 
 }
 
-func createHardDiskDrive(c *gin.Context) {
+func CreateOpticalDisc(c *gin.Context) {
+	var o = database.MediaOpticalDisc{}
+	if err := c.Bind(&o); err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	mediaID, err := database.GetNextMediaIDForResource(o.ResourceID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, mediaID)
+	}
+
+	o.MediaID = mediaID
+	err = database.InsertOpticalDisc(&o)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+	}
+
+	entry := o.GetMediaEntry()
+	entry.ObjectID = int(o.ID)
+
+	err = database.InsertEntry(&entry)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+	}
+
+	c.JSON(200, entry)
+
+}
+
+func newHardDiskDrive(c *gin.Context) {
 	c.JSON(http.StatusOK, "Not Implemented")
 }
