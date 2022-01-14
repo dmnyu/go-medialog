@@ -12,10 +12,14 @@ import (
 	"time"
 )
 
-var migrate bool
+var (
+	migrate        bool
+	goAspaceConfig string
+)
 
 func init() {
 	flag.BoolVar(&migrate, "migrate", false, "")
+	flag.StringVar(&goAspaceConfig, "config", "", "")
 }
 
 func formatAsDate(t time.Time) string {

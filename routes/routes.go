@@ -27,10 +27,14 @@ func LoadRoutes(router *gin.Engine) {
 	accessionRoutes.POST("/preview", func(c *gin.Context) { controllers.PreviewAccession(c) })
 	accessionRoutes.POST("/create", func(c *gin.Context) { controllers.CreateAccession(c) })
 	accessionRoutes.GET("/:id/show", func(c *gin.Context) { controllers.GetAccession(c) })
+	//accessionRoutes.GET("/:id/delete", func(c *gin.Context) { controllers.DeleteAccession(c) })
 
 	var mediaRoutes = router.Group("/media")
 	mediaRoutes.POST("/create", func(c *gin.Context) { controllers.CreateMedia(c) })
 	mediaRoutes.POST("/create/optical", func(c *gin.Context) { controllers.CreateOpticalDisc(c) })
+
+	var entryRoutes = router.Group("/entries")
+	entryRoutes.GET("/:id/delete", func(c *gin.Context) { controllers.DeleteEntry(c) })
 }
 
 func NullRoute() {}

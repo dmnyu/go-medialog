@@ -87,6 +87,23 @@ func CreateOpticalDisc(c *gin.Context) {
 
 }
 
+func deleteOpticalDisc(c *gin.Context, entry database.MediaEntry) {
+	//delete the disc
+	err := database.DeleteOpticalDisc(entry.ObjectID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	//delete the entry
+	err = database.DeleteEntry(int(entry.ID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	c.Redirect(http.StatusFound, "/")
+}
+
 func newHardDiskDrive(c *gin.Context) {
 	c.JSON(http.StatusOK, "Not Implemented")
 }

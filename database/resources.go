@@ -30,10 +30,14 @@ func InsertResource(resource Resource) (int, error) {
 }
 
 func GetNextMediaIDForResource(resourceID int) (int, error) {
-	entry := MediaEntry{}
-	if err := db.Order("media_id desc").Where("resource_id = ?", resourceID).First(&entry).Error; err != nil {
+	entry := []MediaEntry{}
+	if err := db.Order("media_id desc").Select("media_id").Where(&entry, "resource_id = ?", resourceID).Error; err != nil {
 		return 0, err
 	}
 
-	return entry.MediaID + 1, nil
+	if len(entry) == 0 {
+		return 1, nil
+	}
+
+	return entry[0].MediaID + 1, nil
 }

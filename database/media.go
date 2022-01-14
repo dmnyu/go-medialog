@@ -6,3 +6,10 @@ func InsertOpticalDisc(disc *MediaOpticalDisc) error {
 	}
 	return nil
 }
+
+func DeleteOpticalDisc(discID int) error {
+	if err := db.Delete(&MediaOpticalDisc{}, discID).Error; err != nil {
+		return err
+	}
+	return nil
+}

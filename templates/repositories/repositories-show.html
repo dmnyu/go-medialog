@@ -20,7 +20,7 @@
                 {{ range $resource := .resources }}
                 <tr>
                     <td>
-                        {{ $resource.AspaceResourceIdentifiers }} {{ $resource.AspaceResourceTitle }}
+                        {{ $resource.Identifiers }} {{ $resource.Title }}
                     </td>
                     <td>
                         <a href="/resources/{{ $resource.ID }}/show" class="btn btn-primary">View</a>

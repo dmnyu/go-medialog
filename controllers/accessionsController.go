@@ -38,10 +38,16 @@ func GetAccession(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
+	entries, err := database.FindByAccessionID(int(accession.ID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
 	c.HTML(http.StatusOK, "accessions-show.html", gin.H{
 		"accession":  accession,
 		"repository": repository,
 		"resource":   resource,
+		"entries":    entries,
 	})
 }
 
