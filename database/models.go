@@ -64,7 +64,6 @@ var SubTypes = map[int][]string{
 
 //table to store only information needed in tabular views
 type MediaEntry struct {
-	gorm.Model
 	ObjectID     int        `json:"object_id"`
 	ModelID      MediaModel `json:"model_id" form:"model_id"`
 	MediaID      int        `json:"media_id" form:"media_id"`

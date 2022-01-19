@@ -96,12 +96,6 @@ func deleteOpticalDisc(c *gin.Context, entry database.MediaEntry) {
 		return
 	}
 
-	//delete the entry
-	err = database.DeleteEntry(int(entry.ID))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
-	}
-
 	c.Redirect(http.StatusFound, "/")
 }
 

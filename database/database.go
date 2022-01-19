@@ -38,9 +38,5 @@ func MigrateDatabase() {
 		panic(err)
 	}
 
-	if err := db.AutoMigrate(&MediaEntry{}); err != nil {
-		panic(err)
-	}
-
 	log.Println("[INFO] migrations run")
 }
