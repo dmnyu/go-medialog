@@ -3,6 +3,7 @@ module github.com/dmnyu/go-medialog
 go 1.17
 
 require (
+	github.com/elastic/go-elasticsearch/v7 v7.10.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/nyudlts/go-aspace v0.3.8-0.20210618144834-f03f710f3325
 	gorm.io/driver/sqlite v1.2.6

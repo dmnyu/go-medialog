@@ -3,8 +3,10 @@ package controllers
 import (
 	"fmt"
 	"github.com/dmnyu/go-medialog/database"
+	"github.com/dmnyu/go-medialog/index"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -38,9 +40,11 @@ func GetAccession(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	entries, err := database.FindByAccessionID(int(accession.ID))
+	log.Println("[INFO] - Searching Index")
+	entries, err := index.SearchByAccessionID(int(accession.ID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	c.HTML(http.StatusOK, "accessions-show.html", gin.H{

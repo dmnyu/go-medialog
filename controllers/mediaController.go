@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/dmnyu/go-medialog/database"
+	"github.com/dmnyu/go-medialog/index"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -77,13 +78,13 @@ func CreateOpticalDisc(c *gin.Context) {
 
 	entry := o.GetMediaEntry()
 	entry.ObjectID = int(o.ID)
+	entry.MediaID = mediaID
 
-	err = database.InsertEntry(&entry)
+	msg, err := index.AddToIndex(entry)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		c.JSON(http.StatusInternalServerError, err.Error())
 	}
-
-	c.JSON(200, entry)
+	c.JSON(200, msg)
 
 }
 
