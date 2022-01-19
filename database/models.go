@@ -62,10 +62,6 @@ var SubTypes = map[int][]string{
 	1: {"3.5 in. Magnetic", "2.5 in. Magnetic", "2.5 in. SSD"},
 }
 
-type Media interface {
-	GetMediaEntry() MediaEntry
-}
-
 //table to store only information needed in tabular views
 type MediaEntry struct {
 	gorm.Model

@@ -41,20 +41,45 @@ func GetRepository(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 
+	//pagination
+	var p int = 1
+	page := c.Request.URL.Query()["page"]
+
+	if len(page) > 0 {
+		p, err = strconv.Atoi(page[0])
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err.Error())
+		}
+
+		if p == 0 {
+			p = 1
+		}
+	}
+
+	pagination := database.Pagination{
+		Limit: 10,
+		Page:  p,
+		Sort:  "id asc",
+	}
+
+	// get the repository
 	repository, err := database.FindRepository(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, err.Error())
 	}
 
-	resources, err := database.FindResourcesByRepoID(id)
+	//get the resources
+	resources, err := database.FindResourcesByRepoID(id, pagination)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
+	//render the page
 	c.HTML(http.StatusOK, "repositories-show.html", gin.H{
 		"title":      "go-medialog - repositories",
 		"repository": repository,
 		"resources":  resources,
+		"page":       p,
 	})
 }
 

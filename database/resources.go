@@ -8,9 +8,11 @@ func FindResources() ([]Resource, error) {
 	return resources, nil
 }
 
-func FindResourcesByRepoID(id int) ([]Resource, error) {
+func FindResourcesByRepoID(id int, pagination Pagination) ([]Resource, error) {
 	resources := []Resource{}
-	err := db.Where("repository_id = ?", id).Find(&resources).Error
+	offset := (pagination.Page - 1) * pagination.Limit
+	queryBuider := db.Limit(pagination.Limit).Offset(offset).Order(pagination.Sort)
+	err := queryBuider.Where("repository_id = ?", id).Find(&resources).Error
 	return resources, err
 }
 

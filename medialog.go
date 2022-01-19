@@ -52,6 +52,8 @@ func main() {
 	router.SetFuncMap(template.FuncMap{
 		"formatAsDate": formatAsDate,
 		"getRepoCode":  getRepoCode,
+		"add":          add,
+		"subtract":     subtract,
 	})
 
 	router.LoadHTMLGlob("templates/**/*.html")
@@ -72,3 +74,6 @@ func main() {
 	router.Run()
 
 }
+
+func add(a int, b int) int      { return a + b }
+func subtract(a int, b int) int { return a - b }

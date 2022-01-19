@@ -34,7 +34,7 @@ func LoadRoutes(router *gin.Engine) {
 	mediaRoutes.POST("/create/optical", func(c *gin.Context) { controllers.CreateOpticalDisc(c) })
 
 	var entryRoutes = router.Group("/entries")
-	entryRoutes.GET("/:id/delete", func(c *gin.Context) { controllers.DeleteEntry(c) })
+	entryRoutes.GET("/:id/delete", func(c *gin.Context) { NullRoute() })
 }
 
 func NullRoute() {}
