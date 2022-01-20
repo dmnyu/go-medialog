@@ -1,4 +1,4 @@
-package database
+package shared
 
 type Pagination struct {
 	Limit int    `json:"limit"`

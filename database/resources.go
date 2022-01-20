@@ -1,6 +1,9 @@
 package database
 
-import "github.com/dmnyu/go-medialog/models"
+import (
+	"github.com/dmnyu/go-medialog/models"
+	"github.com/dmnyu/go-medialog/shared"
+)
 
 func FindResources() ([]models.Resource, error) {
 	resources := []models.Resource{}
@@ -10,7 +13,7 @@ func FindResources() ([]models.Resource, error) {
 	return resources, nil
 }
 
-func FindResourcesByRepoID(id int, pagination Pagination) ([]models.Resource, error) {
+func FindResourcesByRepoID(id int, pagination shared.Pagination) ([]models.Resource, error) {
 	resources := []models.Resource{}
 	offset := (pagination.Page - 1) * pagination.Limit
 	queryBuider := db.Limit(pagination.Limit).Offset(offset).Order(pagination.Sort)

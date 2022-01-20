@@ -6,10 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/dmnyu/go-medialog/models"
+	"github.com/dmnyu/go-medialog/shared"
 	elasticsearch7 "github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"io/ioutil"
-	"log"
 	"strings"
 )
 
@@ -18,16 +18,18 @@ const index = "media"
 var (
 	es      *elasticsearch7.Client
 	indexes = []string{index}
+	ctx     context.Context
 )
 
 func init() {
 	es, _ = elasticsearch7.NewDefaultClient()
+	ctx = context.Background()
 }
 
 func AddToIndex(entry models.MediaEntry) (string, error) {
 	s, err := json.Marshal(entry)
 	if err != nil {
-		return "Could Not Marshall Entry", err
+		return "Could Not Marshal Entry", err
 	}
 	msg := bytes.NewReader(s)
 	createRequest := esapi.IndexRequest{Index: index, Body: msg}
@@ -38,6 +40,23 @@ func AddToIndex(entry models.MediaEntry) (string, error) {
 	}
 	return resp.String(), nil
 }
+
+func DeleteFromIndex(docID string) (string, error) {
+	resp, err := esapi.DeleteRequest{Index: index, DocumentID: docID}.Do(ctx, es.Transport)
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return string(body), err
+	}
+
+	return string(body), nil
+}
+
 func FindDoc(docID string) (models.MediaEntry, error) {
 	entry := models.MediaEntry{}
 	resp, err := esapi.GetRequest{Index: index, DocumentID: docID}.Do(context.Background(), es.Transport)
@@ -50,7 +69,7 @@ func FindDoc(docID string) (models.MediaEntry, error) {
 	if err != nil {
 		return entry, err
 	}
-	log.Println(string(body))
+
 	esHit := models.ESHit{}
 	err = json.Unmarshal(body, &esHit)
 	if err != nil {
@@ -61,7 +80,7 @@ func FindDoc(docID string) (models.MediaEntry, error) {
 
 }
 
-func SearchByAccessionID(accessionID int) ([]models.ESHit, error) {
+func SearchByAccessionID(accessionID int, pagination shared.Pagination) ([]models.ESHit, error) {
 	q := fmt.Sprintf(`{"query": {"match": {"accession_id": %d}}}`, accessionID)
 
 	resp, err := esapi.SearchRequest{Index: indexes, Body: strings.NewReader(q)}.Do(context.Background(), es.Transport)
@@ -71,7 +90,7 @@ func SearchByAccessionID(accessionID int) ([]models.ESHit, error) {
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
-	log.Println("[DEBUG]", string(body))
+
 	if err != nil {
 		return []models.ESHit{}, err
 	}

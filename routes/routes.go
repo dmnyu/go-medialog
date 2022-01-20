@@ -33,6 +33,7 @@ func LoadRoutes(router *gin.Engine) {
 	mediaRoutes.POST("/create", func(c *gin.Context) { controllers.CreateMedia(c) })
 	mediaRoutes.POST("/create/optical", func(c *gin.Context) { controllers.CreateOpticalDisc(c) })
 	mediaRoutes.GET("/:id/show", func(c *gin.Context) { controllers.ShowMedia(c) })
+	mediaRoutes.GET("/:id/delete", func(c *gin.Context) { controllers.DeleteMedia(c) })
 }
 
 func NullRoute() {}

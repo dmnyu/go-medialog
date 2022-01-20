@@ -5,9 +5,9 @@ import (
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/dmnyu/go-medialog/index"
 	"github.com/dmnyu/go-medialog/models"
+	"github.com/dmnyu/go-medialog/shared"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -26,6 +26,27 @@ func GetAccession(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 
+	//pagination
+	var p = 1
+	page := c.Request.URL.Query()["page"]
+
+	if len(page) > 0 {
+		p, err = strconv.Atoi(page[0])
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err.Error())
+		}
+
+		if p == 0 {
+			p = 1
+		}
+	}
+
+	pagination := shared.Pagination{
+		Limit: 10,
+		Page:  p,
+		Sort:  "id asc",
+	}
+
 	accession, err := database.FindAccession(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
@@ -41,8 +62,7 @@ func GetAccession(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	log.Println("[INFO] - Searching Index")
-	entries, err := index.SearchByAccessionID(int(accession.ID))
+	entries, err := index.SearchByAccessionID(int(accession.ID), pagination)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
@@ -53,6 +73,7 @@ func GetAccession(c *gin.Context) {
 		"repository": repository,
 		"resource":   resource,
 		"entries":    entries,
+		"page":       p,
 	})
 }
 
@@ -88,7 +109,7 @@ func CreateAccession(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err)
 	}
 
-	c.Redirect(http.StatusFound, fmt.Sprintf("/accessions/%d/show", id))
+	c.Redirect(http.StatusFound, fmt.Sprintf("/accessions/%d/show?page=1", id))
 
 }
 

@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/dmnyu/go-medialog/models"
+	"github.com/dmnyu/go-medialog/shared"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -57,7 +58,7 @@ func GetRepository(c *gin.Context) {
 		}
 	}
 
-	pagination := database.Pagination{
+	pagination := shared.Pagination{
 		Limit: 10,
 		Page:  p,
 		Sort:  "id asc",

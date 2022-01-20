@@ -28,7 +28,13 @@
         <h4 class="card-title">Media</h4>
     </div>
     <div class="card-body">
-        <div class="row">
+        <div class="row justify-content-end">
+            <a href="/accessions/{{.accession.ID}}/show?page={{ subtract .page 1}}" class="btn btn-primary btn-sm">prev 10</a>
+            <div class="pl-2">
+                <a href="/accessions/{{.accession.ID}}/show?page={{ add .page 1 }}" class="btn btn-primary btn-sm">next 10</a>
+            </div>
+        </div>
+        <div class="row mt-2">
             <table class="table table-striped table-bordered table-sm">
                 <thead class="thead-dark">
                 <tr>
@@ -49,30 +55,27 @@
                     <td>
                         <a href="/media/{{ $entry.ID }}/show" class="btn btn-primary">View</a>
                         <a href="#" class="btn btn-secondary">Edit</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
+                        <a href="/media/{{ $entry.ID }}/delete" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
                 {{ end }}
                 </tbody>
             </table>
         </div>
-    </div>
-</div>
-<br/>
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title">Add Media</h4>
-        <div class="form-inline">
-            <form action="/media/create" method="POST">
-                <select id="model_id" name="model_id" class="form-select" aria-label="Default select example">
-                    <option value="0">Optical Disc</option>
-                    <option value="1">Hard Disk Drive</option>
-                </select>
-                <input type="hidden" name="accession_id" id="accession_id" value="{{ .accession.ID }}">
-                <input type="hidden" name="repository_id" id="repository_id" value="{{ .repository.ID }}">
-                <input type="hidden" name="resource_id" id="resource_id" value="{{ .resource.ID }}">
-                <input class="btn btn-primary" type="submit" value="Create Entry">
-            </form>
+        <div class="row justify-content-end">
+            <div class="lead">Add Media</div>
+            <div class="form-inline pl-2">
+                <form action="/media/create" method="POST">
+                    <select id="model_id" name="model_id" class="form-select" aria-label="Default select example">
+                        <option value="0">Optical Disc</option>
+                        <option value="1">Hard Disk Drive</option>
+                    </select>
+                    <input type="hidden" name="accession_id" id="accession_id" value="{{ .accession.ID }}">
+                    <input type="hidden" name="repository_id" id="repository_id" value="{{ .repository.ID }}">
+                    <input type="hidden" name="resource_id" id="resource_id" value="{{ .resource.ID }}">
+                    <input class="btn btn-primary btn-sm" type="submit" value="Create Entry">
+                </form>
+            </div>
         </div>
     </div>
 </div>
