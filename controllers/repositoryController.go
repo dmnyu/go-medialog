@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/dmnyu/go-medialog/database"
+	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -10,7 +11,7 @@ import (
 )
 
 func CreateRepository(c *gin.Context) {
-	var input = database.Repository{}
+	var input = models.Repository{}
 	if err := c.Bind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
@@ -20,7 +21,7 @@ func CreateRepository(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 	}
 
-	repository := database.Repository{
+	repository := models.Repository{
 		Model:    gorm.Model{},
 		AspaceID: input.AspaceID,
 		Slug:     asRepository.Slug,
@@ -92,7 +93,7 @@ func GetRepositories(c *gin.Context) {
 }
 
 func PreviewRepository(c *gin.Context) {
-	var input = database.Repository{}
+	var input = models.Repository{}
 	if err := c.Bind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}

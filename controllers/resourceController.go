@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/dmnyu/go-medialog/database"
+	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -51,7 +52,7 @@ func GetResource(c *gin.Context) {
 }
 
 func PreviewResource(c *gin.Context) {
-	var input = database.CreateAspaceObject{}
+	var input = models.CreateAspaceObject{}
 	if err := c.Bind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
@@ -84,7 +85,7 @@ func PreviewResource(c *gin.Context) {
 
 func CreateResource(c *gin.Context) {
 
-	var input = database.CreateAspaceObject{}
+	var input = models.CreateAspaceObject{}
 	if err := c.Bind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
@@ -112,7 +113,7 @@ func CreateResource(c *gin.Context) {
 
 	identifiers := asResource.MergeIDs()
 
-	resource := database.Resource{
+	resource := models.Resource{
 		Model:        gorm.Model{},
 		AspaceID:     asID,
 		RepositoryID: input.RepositoryID,

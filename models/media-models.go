@@ -1,6 +1,13 @@
-package database
+package models
 
 import "gorm.io/gorm"
+
+type MediaModel int
+
+const (
+	OpticalDisc MediaModel = iota
+	HardDiskDrive
+)
 
 type SystemIdentifiers struct {
 	RepositoryID int

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/dmnyu/go-medialog/index"
+	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -56,7 +57,7 @@ func GetAccession(c *gin.Context) {
 }
 
 func CreateAccession(c *gin.Context) {
-	var input = database.CreateAspaceObject{}
+	var input = models.CreateAspaceObject{}
 	if err := c.Bind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
@@ -72,7 +73,7 @@ func CreateAccession(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	accession := database.Accession{
+	accession := models.Accession{
 		Model:        gorm.Model{},
 		AspaceID:     input.AccessionID,
 		RepositoryID: input.RepositoryID,
@@ -92,7 +93,7 @@ func CreateAccession(c *gin.Context) {
 }
 
 func PreviewAccession(c *gin.Context) {
-	var input = database.CreateAspaceObject{}
+	var input = models.CreateAspaceObject{}
 	if err := c.Bind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 	}

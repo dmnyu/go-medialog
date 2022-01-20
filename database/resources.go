@@ -1,30 +1,32 @@
 package database
 
-func FindResources() ([]Resource, error) {
-	resources := []Resource{}
+import "github.com/dmnyu/go-medialog/models"
+
+func FindResources() ([]models.Resource, error) {
+	resources := []models.Resource{}
 	if err := db.Find(&resources).Error; err != nil {
-		return []Resource{}, err
+		return []models.Resource{}, err
 	}
 	return resources, nil
 }
 
-func FindResourcesByRepoID(id int, pagination Pagination) ([]Resource, error) {
-	resources := []Resource{}
+func FindResourcesByRepoID(id int, pagination Pagination) ([]models.Resource, error) {
+	resources := []models.Resource{}
 	offset := (pagination.Page - 1) * pagination.Limit
 	queryBuider := db.Limit(pagination.Limit).Offset(offset).Order(pagination.Sort)
 	err := queryBuider.Where("repository_id = ?", id).Find(&resources).Error
 	return resources, err
 }
 
-func FindResource(id int) (Resource, error) {
-	resource := Resource{}
+func FindResource(id int) (models.Resource, error) {
+	resource := models.Resource{}
 	if err := db.Find(&resource, "id = ?", id).Error; err != nil {
 		return resource, err
 	}
 	return resource, nil
 }
 
-func InsertResource(resource Resource) (int, error) {
+func InsertResource(resource models.Resource) (int, error) {
 	if err := db.Create(&resource).Error; err != nil {
 		return 0, err
 	}
@@ -32,7 +34,7 @@ func InsertResource(resource Resource) (int, error) {
 }
 
 func GetNextMediaIDForResource(resourceID int) (int, error) {
-	entry := []MediaEntry{}
+	entry := []models.MediaEntry{}
 	if err := db.Order("media_id desc").Select("media_id").Where(&entry, "resource_id = ?", resourceID).Error; err != nil {
 		return 0, err
 	}

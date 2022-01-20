@@ -3,12 +3,13 @@ package controllers
 import (
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/dmnyu/go-medialog/index"
+	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func CreateMedia(c *gin.Context) {
-	var input = database.MediaEntry{}
+	var input = models.MediaEntry{}
 	if err := c.Bind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
@@ -25,7 +26,7 @@ func CreateMedia(c *gin.Context) {
 }
 
 func newOpticalDisc(c *gin.Context) {
-	var entry = database.MediaEntry{}
+	var entry = models.MediaEntry{}
 	if err := c.Bind(&entry); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
@@ -46,7 +47,7 @@ func newOpticalDisc(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	subtypes := database.SubTypes[int(entry.ModelID)]
+	subtypes := models.SubTypes[int(entry.ModelID)]
 
 	c.HTML(http.StatusOK, "optical-create.html", gin.H{
 		"repository": repository,
@@ -59,7 +60,7 @@ func newOpticalDisc(c *gin.Context) {
 }
 
 func CreateOpticalDisc(c *gin.Context) {
-	var o = database.MediaOpticalDisc{}
+	var o = models.MediaOpticalDisc{}
 	if err := c.Bind(&o); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
@@ -88,7 +89,7 @@ func CreateOpticalDisc(c *gin.Context) {
 
 }
 
-func deleteOpticalDisc(c *gin.Context, entry database.MediaEntry) {
+func deleteOpticalDisc(c *gin.Context, entry models.MediaEntry) {
 	//delete the disc
 	err := database.DeleteOpticalDisc(entry.ObjectID)
 	if err != nil {
@@ -101,4 +102,20 @@ func deleteOpticalDisc(c *gin.Context, entry database.MediaEntry) {
 
 func newHardDiskDrive(c *gin.Context) {
 	c.JSON(http.StatusOK, "Not Implemented")
+}
+
+func ShowMedia(c *gin.Context) {
+	docID := c.Param("id")
+	entry, err := index.FindDoc(docID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	switch entry.ModelID {
+	case models.OpticalDisc:
+		c.JSON(200, "Optical")
+	default:
+		c.JSON(http.StatusInternalServerError, "Not Implemented Yet")
+
+	}
 }

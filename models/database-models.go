@@ -1,6 +1,7 @@
-package database
+package models
 
 import (
+	"encoding/json"
 	"fmt"
 	"gorm.io/gorm"
 )
@@ -50,28 +51,9 @@ type CreateAspaceObject struct {
 	AccessionID  int `json:"accession_id" form:"accession_id"`
 }
 
-type MediaModel int
-
-const (
-	OpticalDisc MediaModel = iota
-	HardDiskDrive
-)
-
 var SubTypes = map[int][]string{
 	0: {"CD", "DVD"},
 	1: {"3.5 in. Magnetic", "2.5 in. Magnetic", "2.5 in. SSD"},
-}
-
-//table to store only information needed in tabular views
-type MediaEntry struct {
-	ObjectID     int        `json:"object_id"`
-	ModelID      MediaModel `json:"model_id" form:"model_id"`
-	MediaID      int        `json:"media_id" form:"media_id"`
-	Subtype      string     `json:"subtype" form:"subtype"`
-	HumanSize    string     `json:"human_size" form:"human_size"`
-	RepositoryID int        `json:"repository_id" form:"repository_id"`
-	ResourceID   int        `json:"resource_id" form:"resource_id"`
-	AccessionID  int        `json:"accession_id" form:"accession_id"`
 }
 
 type MediaOpticalDisc struct {
@@ -89,6 +71,8 @@ type MediaOpticalDisc struct {
 }
 
 func (o MediaOpticalDisc) GetMediaEntry() MediaEntry {
+	j, _ := json.Marshal(o)
+
 	return MediaEntry{
 		ModelID:      0,
 		MediaID:      o.MediaID,
@@ -98,6 +82,7 @@ func (o MediaOpticalDisc) GetMediaEntry() MediaEntry {
 		RepositoryID: o.RepositoryID,
 		ResourceID:   o.ResourceID,
 		AccessionID:  o.AccessionID,
+		JSON:         string(j),
 	}
 }
 

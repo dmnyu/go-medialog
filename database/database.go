@@ -1,6 +1,7 @@
 package database
 
 import (
+	"github.com/dmnyu/go-medialog/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"log"
@@ -22,19 +23,19 @@ func MigrateDatabase() {
 	ConnectDatabase()
 	log.Println("[INFO] migrating database")
 
-	if err := db.AutoMigrate(&Repository{}); err != nil {
+	if err := db.AutoMigrate(&models.Repository{}); err != nil {
 		panic(err)
 	}
 
-	if err := db.AutoMigrate(&Resource{}); err != nil {
+	if err := db.AutoMigrate(&models.Resource{}); err != nil {
 		panic(err)
 	}
 
-	if err := db.AutoMigrate(&Accession{}); err != nil {
+	if err := db.AutoMigrate(&models.Accession{}); err != nil {
 		panic(err)
 	}
 
-	if err := db.AutoMigrate(&MediaOpticalDisc{}); err != nil {
+	if err := db.AutoMigrate(&models.MediaOpticalDisc{}); err != nil {
 		panic(err)
 	}
 

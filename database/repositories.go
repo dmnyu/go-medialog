@@ -1,20 +1,22 @@
 package database
 
-func FindRepositories() []Repository {
-	repositories := []Repository{}
+import "github.com/dmnyu/go-medialog/models"
+
+func FindRepositories() []models.Repository {
+	repositories := []models.Repository{}
 	db.Find(&repositories)
 	return repositories
 }
 
-func FindRepository(id int) (Repository, error) {
-	repository := Repository{}
+func FindRepository(id int) (models.Repository, error) {
+	repository := models.Repository{}
 	if err := db.Find(&repository, "id = ?", id).Error; err != nil {
 		return repository, err
 	}
 	return repository, nil
 }
 
-func InsertRepository(repo Repository) error {
+func InsertRepository(repo models.Repository) error {
 	if err := db.Create(&repo).Error; err != nil {
 		return err
 	}

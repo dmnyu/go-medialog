@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/dmnyu/go-medialog/database"
+	"github.com/dmnyu/go-medialog/models"
 	elasticsearch7 "github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"io/ioutil"
@@ -16,14 +16,15 @@ import (
 const index = "media"
 
 var (
-	es *elasticsearch7.Client
+	es      *elasticsearch7.Client
+	indexes = []string{index}
 )
 
 func init() {
 	es, _ = elasticsearch7.NewDefaultClient()
 }
 
-func AddToIndex(entry database.MediaEntry) (string, error) {
+func AddToIndex(entry models.MediaEntry) (string, error) {
 	s, err := json.Marshal(entry)
 	if err != nil {
 		return "Could Not Marshall Entry", err
@@ -37,27 +38,48 @@ func AddToIndex(entry database.MediaEntry) (string, error) {
 	}
 	return resp.String(), nil
 }
+func FindDoc(docID string) (models.MediaEntry, error) {
+	entry := models.MediaEntry{}
+	resp, err := esapi.GetRequest{Index: index, DocumentID: docID}.Do(context.Background(), es.Transport)
+	if err != nil {
+		return entry, err
+	}
+	defer resp.Body.Close()
 
-func SearchByAccessionID(accessionID int) ([]ESHits, error) {
-	log.Println("[DEBUG] SEARCH BY ACCESSION CALLED")
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return entry, err
+	}
+	log.Println(string(body))
+	esHit := models.ESHit{}
+	err = json.Unmarshal(body, &esHit)
+	if err != nil {
+		return entry, err
+	}
+
+	return esHit.Source, nil
+
+}
+
+func SearchByAccessionID(accessionID int) ([]models.ESHit, error) {
 	q := fmt.Sprintf(`{"query": {"match": {"accession_id": %d}}}`, accessionID)
 
-	resp, err := esapi.SearchRequest{Index: []string{index}, Body: strings.NewReader(q)}.Do(context.Background(), es.Transport)
+	resp, err := esapi.SearchRequest{Index: indexes, Body: strings.NewReader(q)}.Do(context.Background(), es.Transport)
 	if err != nil {
-		return []ESHits{}, err
+		return []models.ESHit{}, err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	log.Println("[DEBUG]", string(body))
 	if err != nil {
-		return []ESHits{}, err
+		return []models.ESHit{}, err
 	}
 
-	esResponse := ESResponse{}
+	esResponse := models.ESResponse{}
 	err = json.Unmarshal(body, &esResponse)
 	if err != nil {
-		return []ESHits{}, err
+		return []models.ESHit{}, err
 	}
 
 	return esResponse.Hits.Hits, nil
