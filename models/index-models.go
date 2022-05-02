@@ -1,9 +1,9 @@
 package models
 
 type MediaEntry struct {
-	ObjectID     int        `json:"object_id"`
 	ModelID      MediaModel `json:"model_id" form:"model_id"`
 	MediaID      int        `json:"media_id" form:"media_id"`
+	DatabaseID   uint       `json:"database_id"`
 	Subtype      string     `json:"subtype" form:"subtype"`
 	HumanSize    string     `json:"human_size" form:"human_size"`
 	RepositoryID int        `json:"repository_id" form:"repository_id"`

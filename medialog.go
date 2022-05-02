@@ -71,7 +71,9 @@ func main() {
 
 	//Start the router
 	database.ConnectDatabase()
-	router.Run()
+	if err := router.Run(); err != nil {
+		panic(err)
+	}
 
 }
 

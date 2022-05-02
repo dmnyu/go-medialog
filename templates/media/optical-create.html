@@ -28,12 +28,22 @@
                     </div>
                 </div>
                 <div class="col">
+                    <label for="manufacturer">Manufacturer</label>
+                    <input name="manufacturer" id="manufacturer" type="text">
+                </div>
+                <div class="col">
                     <label for="stock_size">Stock Size</label>
                     <input name="stock_size" id="stock_size" type="number">
                 </div>
                 <div class="col">
-                    <label for="stock_unit">Stock Size</label>
-                    <input name="stock_unit" id="stock_unit" type="text">
+                    <div class="form-group">
+                        <label for="stock_unit">Optical Type</label>
+                        <select name="stock_unit" id="stock_unit">
+                            {{ range $unit := .units }}
+                            <option value="{{ $unit }}">{{ $unit }}</option>
+                            {{ end }}
+                        </select>
+                    </div>
                 </div>
             </div>
             <input type="submit" class="btn btn-primary"> <a href="/accessions/{{ .accession.ID }}/show"
@@ -42,4 +52,5 @@
     </div>
 </div>
 <br/>
+{{ .entry }}
 {{ template "footer.html" .}}

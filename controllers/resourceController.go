@@ -71,7 +71,7 @@ func PreviewResource(c *gin.Context) {
 		return
 	}
 
-	identifiers := resource.MergeIDs()
+	identifiers := resource.MergeIDs(".")
 
 	c.HTML(http.StatusOK, "resources-preview.html", gin.H{
 		"title":       "go-medialog - resources",
@@ -111,7 +111,7 @@ func CreateResource(c *gin.Context) {
 		return
 	}
 
-	identifiers := asResource.MergeIDs()
+	identifiers := asResource.MergeIDs(".")
 
 	resource := models.Resource{
 		Model:        gorm.Model{},

@@ -1,11 +1,12 @@
 module github.com/dmnyu/go-medialog
 
-go 1.17
+go 1.18
 
 require (
 	github.com/elastic/go-elasticsearch/v7 v7.16.0
 	github.com/gin-gonic/gin v1.7.7
-	github.com/nyudlts/go-aspace v0.3.8-0.20210618144834-f03f710f3325
+	github.com/nyudlts/bytemath v0.0.0-20220407170247-5070297ba554
+	github.com/nyudlts/go-aspace v0.3.8-0.20220307194423-f6af505dd139
 	gorm.io/driver/sqlite v1.2.6
 	gorm.io/gorm v1.22.4
 )
@@ -20,16 +21,14 @@ require (
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/json-iterator/go v1.1.9 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
-	github.com/lestrrat-go/libxml2 v0.0.0-20200828014403-a52d2c78ffc6 // indirect
-	github.com/mattn/go-isatty v0.0.12 // indirect
+	github.com/lestrrat-go/libxml2 v0.0.0-20201123224832-e6d9de61b80d // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-sqlite3 v1.14.10 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 // indirect
-	golang.org/x/sys v0.0.0-20220110181412-a018aaa089fe // indirect
+	golang.org/x/sys v0.0.0-20220406163625-3f8b81556e12 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
-
-replace github.com/nyudlts/go-aspace => /home/menneric/go/src/github.com/nyudlts/go-aspace

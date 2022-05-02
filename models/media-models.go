@@ -9,6 +9,11 @@ const (
 	HardDiskDrive
 )
 
+var (
+	MediaUnit       = []string{"B", "KB", "MB", "GB", "TB"}
+	OpticalSubTypes = []string{"CD", "CD-R", "CD-RW", "DVD", "DVD-R", "DVD-RW"}
+)
+
 type SystemIdentifiers struct {
 	RepositoryID int
 	ResourceID   int
@@ -19,30 +24,6 @@ type Media interface {
 	getIdentifiers() SystemIdentifiers
 	getSizeInBytes() int64
 	getHumanSize() string
-}
-
-type MediaOptical struct {
-	gorm.Model
-	RepositoryID int
-	ResourceID   int
-	AccessionID  int
-	Manufacturer string
-	StockSize    int
-	StockUnit    string
-	SizeInBytes  int64
-	OpticalType  string
-}
-
-func (o MediaOptical) getIdentifiers() SystemIdentifiers {
-	return SystemIdentifiers{
-		RepositoryID: o.RepositoryID,
-		ResourceID:   o.ResourceID,
-		AccessionID:  o.AccessionID,
-	}
-}
-
-func (o MediaOptical) getSizeInBytes() int64 {
-	return o.SizeInBytes
 }
 
 type MediaHardDrive struct {
