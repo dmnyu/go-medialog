@@ -34,6 +34,12 @@ func LoadRoutes(router *gin.Engine) {
 	mediaRoutes.POST("/create/optical", func(c *gin.Context) { controllers.CreateOpticalDisc(c) })
 	mediaRoutes.GET("/:id/show", func(c *gin.Context) { controllers.ShowMedia(c) })
 	mediaRoutes.GET("/:id/delete", func(c *gin.Context) { controllers.DeleteMedia(c) })
+
+	//API Routes
+	var apiV0Routes = router.Group("/api/v0")
+	apiV0Routes.POST("/create-optical", func(c *gin.Context) { controllers.CreateOpticalDiscAPI(c) })
+	apiV0Routes.POST("/create-resource", func(c *gin.Context) { controllers.CreateResourceAPI(c) })
+	apiV0Routes.POST("/create-accession", func(c *gin.Context) { controllers.CreateAccessionAPI(c) })
 }
 
 func NullRoute() {}
