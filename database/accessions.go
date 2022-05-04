@@ -24,3 +24,18 @@ func InsertAccession(accession models.Accession) (int, error) {
 
 	return int(accession.ID), nil
 }
+
+func DeleteAccession(accession *models.Accession) error {
+	if err := db.Delete(accession).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func FindAccessionsByResourceID(resourceID uint) (*[]models.Accession, error) {
+	accessions := []models.Accession{}
+	if err := db.Where("resource_id = ?", resourceID).Find(&accessions).Error; err != nil {
+		return nil, err
+	}
+	return &accessions, nil
+}

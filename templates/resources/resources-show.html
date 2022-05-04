@@ -7,9 +7,36 @@
     </div>
 </div>
 </br>
+
 <div class="card card-default">
     <div class="card-body">
         <h4 class="card-title">Accessions</h4>
+        <div class="panel-body">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Identifiers</th>
+                    <th>Title</th>
+                    <th/>
+                </tr>
+                </thead>
+
+                <tbody>
+                {{ range $accession := .accessions }}
+                <tr>
+                    <td>{{ $accession.Identifiers }}</td>
+                    <td>{{ $accession.Title }}</td>
+                    <td>
+                        <a href="/accessions/{{ $accession.ID }}/show" class="btn btn-primary">View</a>
+                        <a href="/accessions/{{ $accession.ID }}/edit" class="btn btn-secondary">Edit</a>
+                        <a href="/accessions/{{ $accession.ID }}/delete" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {{ end }}
+                </tbody>
+            </table>
+        </div>
+
         <div class="lead">Add an Accession</div>
         <div class="form-inline">
             <form action="/accessions/preview" method="POST">

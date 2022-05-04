@@ -144,3 +144,23 @@ func PreviewAccession(c *gin.Context) {
 	})
 
 }
+
+func DeleteAccession(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	accession, err := database.FindAccession(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err = database.DeleteAccession(&accession); err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	c.Redirect(http.StatusFound, fmt.Sprintf("/resources/%d/show", accession.ResourceID))
+}

@@ -40,7 +40,13 @@ func GetResource(c *gin.Context) {
 
 	repository, err := database.FindRepository(resource.RepositoryID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	accessions, err := database.FindAccessionsByResourceID(resource.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -48,6 +54,7 @@ func GetResource(c *gin.Context) {
 		"title":      "go-medialog - resources",
 		"repository": repository,
 		"resource":   resource,
+		"accessions": accessions,
 	})
 }
 
