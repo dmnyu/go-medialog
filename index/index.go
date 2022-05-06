@@ -10,6 +10,7 @@ import (
 	elasticsearch7 "github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"io/ioutil"
+	"log"
 	"strings"
 )
 
@@ -41,65 +42,69 @@ func AddToIndex(entry models.MediaEntry) (string, error) {
 	return resp.String(), nil
 }
 
-func DeleteFromIndex(docID string) (string, error) {
+func DeleteFromIndex(docID string) error {
 	resp, err := esapi.DeleteRequest{Index: index, DocumentID: docID}.Do(ctx, es.Transport)
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return string(body), err
+		return err
 	}
-
-	return string(body), nil
+	log.Printf("[INFO] %s", string(body))
+	return nil
 }
 
-func FindDoc(docID string) (models.MediaEntry, error) {
-	entry := models.MediaEntry{}
+func FindDoc(docID string) (*models.MediaEntry, error) {
+
 	resp, err := esapi.GetRequest{Index: index, DocumentID: docID}.Do(context.Background(), es.Transport)
 	if err != nil {
-		return entry, err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return entry, err
+		return nil, err
 	}
 
 	esHit := models.ESHit{}
 	err = json.Unmarshal(body, &esHit)
 	if err != nil {
-		return entry, err
+		return nil, err
 	}
 
-	return esHit.Source, nil
+	log.Printf("[INFO] [INDEX] located document %s", docID)
+
+	return &esHit.Source, nil
 
 }
 
-func SearchByAccessionID(accessionID int, pagination shared.Pagination) ([]models.ESHit, error) {
+func SearchByAccessionID(accessionID int, pagination shared.Pagination) (*[]models.ESHit, error) {
 	q := fmt.Sprintf(`{"query": {"match": {"accession_id": %d}}}`, accessionID)
 
 	resp, err := esapi.SearchRequest{Index: indexes, Body: strings.NewReader(q)}.Do(context.Background(), es.Transport)
 	if err != nil {
-		return []models.ESHit{}, err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
-		return []models.ESHit{}, err
+		return nil, err
 	}
 
 	esResponse := models.ESResponse{}
 	err = json.Unmarshal(body, &esResponse)
 	if err != nil {
-		return []models.ESHit{}, err
+		return nil, err
 	}
 
-	return esResponse.Hits.Hits, nil
+	log.Printf("[INFO] [INDEX] Located %d records for accession %d", len(esResponse.Hits.Hits), accessionID)
+
+	return &esResponse.Hits.Hits, nil
 }

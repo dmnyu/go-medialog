@@ -7,6 +7,7 @@ import (
 	"github.com/dmnyu/go-medialog/routes"
 	"github.com/gin-gonic/gin"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -15,11 +16,13 @@ import (
 var (
 	migrate        bool
 	goAspaceConfig string
+	logFileLoc     string
 )
 
 func init() {
 	flag.BoolVar(&migrate, "migrate", false, "")
 	flag.StringVar(&goAspaceConfig, "config", "", "")
+	flag.StringVar(&logFileLoc, "log-file", "gomedialog.log", "")
 }
 
 func formatAsDate(t time.Time) string {
@@ -45,6 +48,14 @@ var router = gin.Default()
 
 func main() {
 	flag.Parse()
+	logfile, err := os.OpenFile(logFileLoc, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		panic(err)
+	}
+	defer logfile.Close()
+	log.SetOutput(logfile)
+	log.Printf("[INFO] logging to %s", logFileLoc)
+
 	if migrate == true {
 		database.MigrateDatabase()
 		os.Exit(0)

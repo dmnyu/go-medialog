@@ -13,7 +13,7 @@ func InsertOpticalDisc(disc *models.MediaOpticalDisc) error {
 	return nil
 }
 
-func DeleteOpticalDisc(discID int) error {
+func DeleteOpticalDisc(discID uint) error {
 	if err := db.Delete(&models.MediaOpticalDisc{}, discID).Error; err != nil {
 		return err
 	}

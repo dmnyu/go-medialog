@@ -8,20 +8,22 @@ import (
 )
 
 var db *gorm.DB
+var databaseLoc = "gomedialog.db"
 
 func ConnectDatabase() {
-	log.Println("[INFO] connecting to database")
-	var err error
-	db, err = gorm.Open(sqlite.Open("gomedialog.db"), &gorm.Config{})
 
+	log.Printf("[INFO] [DATABASE] connecting to %s", databaseLoc)
+	var err error
+	db, err = gorm.Open(sqlite.Open(databaseLoc), &gorm.Config{})
 	if err != nil {
-		panic("[FATAL] Failed to connect to database!")
+		log.Fatalf("[FATAL] [DATABASE] Failed to connect to %s", databaseLoc)
 	}
+	log.Printf("[INFO] [DATABASE] successfully connected to %s", databaseLoc)
 }
 
 func MigrateDatabase() {
 	ConnectDatabase()
-	log.Println("[INFO] migrating database")
+	log.Printf("[INFO] [DATABASE] migrating %s", databaseLoc)
 
 	if err := db.AutoMigrate(&models.Repository{}); err != nil {
 		panic(err)
@@ -39,5 +41,5 @@ func MigrateDatabase() {
 		panic(err)
 	}
 
-	log.Println("[INFO] migrations run")
+	log.Printf("[INFO] [DATABASE] successfully migrated %s", databaseLoc)
 }
