@@ -35,10 +35,12 @@ func CreateOpticalDisc(c *gin.Context) {
 		if err != nil {
 			log.Printf("[ERROR] [DATABASE] %s", err.Error())
 			c.JSON(http.StatusInternalServerError, err.Error())
+			return
 		}
 	}
 
 	if err := database.InsertOpticalDisc(&optical); err != nil {
+		log.Printf("[ERROR] [DATABASE] %s", err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
@@ -47,6 +49,7 @@ func CreateOpticalDisc(c *gin.Context) {
 	resp, err := index.AddToIndex(entry)
 
 	if err != nil {
+		log.Printf("[ERROR] [INDEX] %s", err.Error())
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -64,10 +67,12 @@ func showOpticalDisc(c *gin.Context, entry *models.MediaEntry) {
 func deleteOpticalDisc(c *gin.Context, docID string, entry *models.MediaEntry) {
 
 	if err := index.DeleteFromIndex(docID); err != nil {
+		log.Printf("[ERROR] [INDEX] %s", err.Error())
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	if err := database.DeleteOpticalDisc(entry.DatabaseID); err != nil {
+		log.Printf("[ERROR] [DATABASE] %s", err.Error())
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
