@@ -48,3 +48,10 @@ func GetNextMediaIDForResource(resourceID int) (int, error) {
 
 	return entry[0].MediaID + 1, nil
 }
+
+func DeleteResource(resource *models.Resource) error {
+	if err := db.Delete(resource).Error; err != nil {
+		return err
+	}
+	return nil
+}

@@ -3,14 +3,15 @@ package routes
 import (
 	"github.com/dmnyu/go-medialog/controllers"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func LoadRoutes(router *gin.Engine) {
 	var repoRoutes = router.Group("/repositories")
 	repoRoutes.GET("", func(c *gin.Context) { controllers.GetRepositories(c) })
 	repoRoutes.GET("/:id/show", func(c *gin.Context) { controllers.GetRepository(c) })
-	repoRoutes.GET("/:id/edit", func(c *gin.Context) { NullRoute() })
-	repoRoutes.GET("/:id/delete", func(c *gin.Context) { NullRoute() })
+	repoRoutes.GET("/:id/edit", func(c *gin.Context) { NullRoute(c) })
+	repoRoutes.GET("/:id/delete", func(c *gin.Context) { NullRoute(c) })
 	repoRoutes.POST("/preview", func(c *gin.Context) { controllers.PreviewRepository(c) })
 	repoRoutes.POST("/create", func(c *gin.Context) { controllers.CreateRepository(c) })
 
@@ -19,8 +20,8 @@ func LoadRoutes(router *gin.Engine) {
 	resourceRoutes.GET("/:id/show", func(c *gin.Context) { controllers.GetResource(c) })
 	resourceRoutes.POST("/preview", func(c *gin.Context) { controllers.PreviewResource(c) })
 	resourceRoutes.POST("/create", func(c *gin.Context) { controllers.CreateResource(c) })
-	resourceRoutes.GET("/:id/edit", func(c *gin.Context) { NullRoute() })
-	resourceRoutes.GET("/:id/delete", func(c *gin.Context) { NullRoute() })
+	resourceRoutes.GET("/:id/edit", func(c *gin.Context) { NullRoute(c) })
+	resourceRoutes.GET("/:id/delete", func(c *gin.Context) { controllers.DeleteResource(c) })
 
 	var accessionRoutes = router.Group("/accessions")
 	accessionRoutes.GET("", func(c *gin.Context) { controllers.GetAccessions(c) })
@@ -42,4 +43,6 @@ func LoadRoutes(router *gin.Engine) {
 	apiV0Routes.POST("/create-accession", func(c *gin.Context) { controllers.CreateAccessionAPI(c) })
 }
 
-func NullRoute() {}
+func NullRoute(c *gin.Context) {
+	c.JSON(http.StatusInternalServerError, "Unsupported Route")
+}

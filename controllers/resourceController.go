@@ -137,3 +137,21 @@ func CreateResource(c *gin.Context) {
 	c.Redirect(http.StatusFound, fmt.Sprintf("/resources/%d/show", id))
 
 }
+
+func DeleteResource(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	resource, err := database.FindResource(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if err := database.DeleteResource(&resource); err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	c.Redirect(http.StatusPermanentRedirect, fmt.Sprintf("/repositories/%d/show", resource.RepositoryID))
+}

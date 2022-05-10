@@ -27,7 +27,7 @@ func CreateAccessionAPI(c *gin.Context) {
 		return
 	}
 
-	accession.Identifiers = asAccession.MergeIDs()
+	accession.Identifiers = asAccession.MergeIDs(".")
 	accession.Title = asAccession.Title
 
 	_, err = database.InsertAccession(accession)

@@ -100,7 +100,7 @@ func CreateAccession(c *gin.Context) {
 		RepositoryID: input.RepositoryID,
 		ResourceID:   input.ResourceID,
 		Title:        asAccession.Title,
-		Identifiers:  asAccession.MergeIDs(),
+		Identifiers:  asAccession.MergeIDs("."),
 		State:        "",
 	}
 
@@ -139,7 +139,7 @@ func PreviewAccession(c *gin.Context) {
 		"repository":  repository,
 		"resource":    resource,
 		"accession":   accession,
-		"identifiers": accession.MergeIDs(),
+		"identifiers": accession.MergeIDs("."),
 		"input":       input,
 	})
 

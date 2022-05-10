@@ -49,6 +49,8 @@ github.com/nyudlts/bytemath v0.0.0-20220407170247-5070297ba554 h1:KnOyvfNvFlIOTT
 github.com/nyudlts/bytemath v0.0.0-20220407170247-5070297ba554/go.mod h1:FnqjOA9VSBFlhm3/Mz4fuL6pFuEK0JkuiStNB7GUcUM=
 github.com/nyudlts/go-aspace v0.3.8-0.20220307194423-f6af505dd139 h1:oRQZrwAqb2Ao97/moKT2NV9OJ5f/vcc2tzz1R509vuQ=
 github.com/nyudlts/go-aspace v0.3.8-0.20220307194423-f6af505dd139/go.mod h1:/E+T2G7pMgH7T9WJsIqGGxSwvL4y4YDOe/ZUIN6pwAY=
+github.com/nyudlts/go-aspace v0.3.8-0.20220510130858-fd2e07d55e2a h1:BYjhyxWPCZvPj45HCRb/kwIrQdwdoiqD+t3tuMHIJB4=
+github.com/nyudlts/go-aspace v0.3.8-0.20220510130858-fd2e07d55e2a/go.mod h1:/E+T2G7pMgH7T9WJsIqGGxSwvL4y4YDOe/ZUIN6pwAY=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

@@ -6,7 +6,7 @@ require (
 	github.com/elastic/go-elasticsearch/v7 v7.16.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/nyudlts/bytemath v0.0.0-20220407170247-5070297ba554
-	github.com/nyudlts/go-aspace v0.3.8-0.20220307194423-f6af505dd139
+	github.com/nyudlts/go-aspace v0.3.8-0.20220510130858-fd2e07d55e2a
 	gorm.io/driver/sqlite v1.2.6
 	gorm.io/gorm v1.22.4
 )
