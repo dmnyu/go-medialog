@@ -50,11 +50,19 @@ func GetResource(c *gin.Context) {
 		return
 	}
 
+	relatedAccessions, err := GetAccessionListForResource(repository.AspaceID, resource.AspaceID)
+	if err != nil {
+		log.Printf("[ERROR] [ASPACE] %s", strings.ReplaceAll(err.Error(), "\n", ""))
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
 	c.HTML(http.StatusOK, "resources-show.html", gin.H{
-		"title":      "go-medialog - resources",
-		"repository": repository,
-		"resource":   resource,
-		"accessions": accessions,
+		"title":             "go-medialog - resources",
+		"repository":        repository,
+		"resource":          resource,
+		"relatedAccessions": relatedAccessions,
+		"accessions":        accessions,
 	})
 }
 

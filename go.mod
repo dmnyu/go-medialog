@@ -6,7 +6,7 @@ require (
 	github.com/elastic/go-elasticsearch/v7 v7.16.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/nyudlts/bytemath v0.0.0-20220407170247-5070297ba554
-	github.com/nyudlts/go-aspace v0.3.8-0.20220511144552-33d07b64d290
+	github.com/nyudlts/go-aspace v0.3.8-0.20220511162907-e576f65ff9a3
 	gorm.io/driver/sqlite v1.2.6
 	gorm.io/gorm v1.22.4
 )
@@ -31,4 +31,8 @@ require (
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 // indirect
 	golang.org/x/sys v0.0.0-20220406163625-3f8b81556e12 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
+)
+
+replace (
+	github.com/nyudlts/go-aspace => /home/donald/GolandProjects/go-aspace
 )

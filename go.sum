@@ -57,6 +57,8 @@ github.com/nyudlts/go-aspace v0.3.8-0.20220511134203-afdd2e0076f9 h1:OINeaaUWH+p
 github.com/nyudlts/go-aspace v0.3.8-0.20220511134203-afdd2e0076f9/go.mod h1:/E+T2G7pMgH7T9WJsIqGGxSwvL4y4YDOe/ZUIN6pwAY=
 github.com/nyudlts/go-aspace v0.3.8-0.20220511144552-33d07b64d290 h1:sjM933+CCWFlxH8/YXSi8zwVO/TrUBF1OcleoCfudeY=
 github.com/nyudlts/go-aspace v0.3.8-0.20220511144552-33d07b64d290/go.mod h1:/E+T2G7pMgH7T9WJsIqGGxSwvL4y4YDOe/ZUIN6pwAY=
+github.com/nyudlts/go-aspace v0.3.8-0.20220511162907-e576f65ff9a3 h1:WFeJ620NEgyKO37uzioBoC9S09pDHOUDEe15DlDt3vs=
+github.com/nyudlts/go-aspace v0.3.8-0.20220511162907-e576f65ff9a3/go.mod h1:/E+T2G7pMgH7T9WJsIqGGxSwvL4y4YDOe/ZUIN6pwAY=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

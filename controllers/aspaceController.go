@@ -42,3 +42,10 @@ func GetResourceList(repositoryID int) ([]aspace.ResourceListEntry, error) {
 	GetClient()
 	return client.GetResourceList(repositoryID)
 }
+
+func GetAccessionListForResource(repositoryID int, resourceID int) ([]aspace.AccessionEntry, error) {
+	if client == nil {
+		GetClient()
+	}
+	return client.GetAccessionList(repositoryID, resourceID)
+}
