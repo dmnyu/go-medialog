@@ -41,6 +41,12 @@ func LoadRoutes(router *gin.Engine) {
 	apiV0Routes.POST("/create-optical", func(c *gin.Context) { controllers.CreateOpticalDiscAPI(c) })
 	apiV0Routes.POST("/create-resource", func(c *gin.Context) { controllers.CreateResourceAPI(c) })
 	apiV0Routes.POST("/create-accession", func(c *gin.Context) { controllers.CreateAccessionAPI(c) })
+
+	//User Routes
+	var userRoutes = router.Group("/users")
+	userRoutes.GET("", func(c *gin.Context) { controllers.GetUsers(c) })
+	userRoutes.GET("/new", func(c *gin.Context) { controllers.NewUser(c) })
+	userRoutes.POST("/create", func(c *gin.Context) { controllers.CreateUser(c) })
 }
 
 func NullRoute(c *gin.Context) {

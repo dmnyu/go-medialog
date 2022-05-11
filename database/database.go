@@ -41,5 +41,9 @@ func MigrateDatabase() {
 		panic(err)
 	}
 
+	if err := db.AutoMigrate(&models.User{}); err != nil {
+		panic(err)
+	}
+
 	log.Printf("[INFO] [DATABASE] successfully migrated %s", databaseLoc)
 }

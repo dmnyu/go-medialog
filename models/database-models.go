@@ -1,8 +1,6 @@
 package models
 
 import (
-	"encoding/json"
-	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -13,11 +11,21 @@ type Credentials struct {
 
 type User struct {
 	gorm.Model
-	ID      int    `json:"id"`
-	Email   string `json:"email"`
-	PassMD5 string `json:"pass_md5"`
-	Salt    string `json:"salt"`
-	IsAdmin bool   `json:"is_admin"`
+	FirstName string `json:"first_name" form:"first_name"`
+	LastName  string `json:"last_name" form:"last_name"`
+	Email     string `json:"email" form:"email" gorm:"uniqueIndex"`
+	PassMD5   string `json:"pass_md5"`
+	Salt      string `json:"salt"`
+	IsAdmin   bool   `json:"is_admin" form:"is_admin"`
+}
+
+type CreateUser struct {
+	FirstName string `json:"first_name" form:"first_name"`
+	LastName  string `json:"last_name" form:"last_name"`
+	Email     string `json:"email" form:"email"`
+	Password1 string `json:"password_1" form:"password_1"`
+	Password2 string `json:"password_2" form:"password_2"`
+	IsAdmin   bool   `json:"is_admin" form:"is_admin"`
 }
 
 type Repository struct {
@@ -54,63 +62,4 @@ type CreateAspaceObject struct {
 var SubTypes = map[int][]string{
 	0: {"CD", "DVD"},
 	1: {"3.5 in. Magnetic", "2.5 in. Magnetic", "2.5 in. SSD"},
-}
-
-type MediaOpticalDisc struct {
-	gorm.Model
-	ModelID      MediaModel `json:"model_id" form:"model_id"`
-	MediaID      int        `json:"media_id" form:"media_id"`
-	RepositoryID int        `json:"repository_id" form:"repository_id"`
-	ResourceID   int        `json:"resource_id" form:"resource_id"`
-	AccessionID  int        `json:"accession_id" form:"accession_id"`
-	StockUnit    string     `json:"stock_unit" form:"stock_unit"`
-	StockSize    int        `json:"stock_size" form:"stock_size"`
-	SizeInBytes  float64    `json:"size_in_bytes" form:"size_in_bytes"`
-	Subtype      string     `json:"subtype" form:"subtype"`
-	Manufacturer string     `json:"manufacturer" form:"manufacturer"`
-	MediaNote    string     `json:"media_note"`
-}
-
-func (o MediaOpticalDisc) GetMediaEntry() MediaEntry {
-	j, _ := json.Marshal(o)
-
-	return MediaEntry{
-		ModelID:      OpticalDisc,
-		MediaID:      o.MediaID,
-		DatabaseID:   o.ID,
-		Subtype:      o.Subtype,
-		HumanSize:    o.GetHumanSize(),
-		RepositoryID: o.RepositoryID,
-		ResourceID:   o.ResourceID,
-		AccessionID:  o.AccessionID,
-		JSON:         string(j),
-	}
-}
-func (o MediaOpticalDisc) GetIdentifiers() SystemIdentifiers {
-	return SystemIdentifiers{
-		RepositoryID: o.RepositoryID,
-		ResourceID:   o.ResourceID,
-		AccessionID:  o.AccessionID,
-	}
-}
-
-func (o MediaOpticalDisc) GetSizeInBytes() float64 {
-	return o.SizeInBytes
-}
-
-func (o MediaOpticalDisc) GetHumanSize() string {
-	return fmt.Sprintf("%d %s", o.StockSize, o.StockUnit)
-}
-
-type MediaHardDiskDrive struct {
-	gorm.Model
-	ModelID      MediaModel
-	RepositoryID int
-	ResourceID   int
-	AccessionID  int
-	StockUnit    string
-	StockSize    int
-	SizeInBytes  int64 `json:"size_in_bytes" form:"size_in_bytes"`
-	Subtype      string
-	MediaNote    string
 }
