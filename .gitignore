@@ -2,6 +2,8 @@ go-aspace.yml
 gomedialog.db
 .idea/*
 go-medialog
+gomedialog.log
+build/*
 
 # Binaries for programs and plugins
 *.exe

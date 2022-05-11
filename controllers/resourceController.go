@@ -59,21 +59,23 @@ func GetResource(c *gin.Context) {
 }
 
 func PreviewResource(c *gin.Context) {
+	log.Println("PREVIEW")
 	var input = models.CreateAspaceObject{}
 	if err := c.Bind(&input); err != nil {
+		log.Println("[ERROR] %s", err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 
 	repository, err := database.FindRepository(input.RepositoryID)
 	if err != nil {
+		log.Println("[ERROR] [DATABASE] %s", err.Error())
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
-	log.Println("{[INFO]", input)
-
 	resource, err := FindAspaceResource(repository.AspaceID, input.ResourceID)
 	if err != nil {
+		log.Println("[ERROR] [ASPACE] %s", err.Error())
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}

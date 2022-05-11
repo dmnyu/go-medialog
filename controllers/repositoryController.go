@@ -76,12 +76,20 @@ func GetRepository(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
+	aspaceResources, err := GetResourceList(repository.AspaceID)
+	if err != nil {
+		log.Printf("[ERROR] [ASPACE] %s", err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
 	//render the page
 	c.HTML(http.StatusOK, "repositories-show.html", gin.H{
-		"title":      "go-medialog - repositories",
-		"repository": repository,
-		"resources":  resources,
-		"page":       p,
+		"aspaceResources": aspaceResources,
+		"title":           "go-medialog - repositories",
+		"repository":      repository,
+		"resources":       resources,
+		"page":            p,
 	})
 }
 

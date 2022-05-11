@@ -37,3 +37,8 @@ func FindAspaceAccession(repositoryID int, accessionID int) (aspace.Accession, e
 	}
 	return accession, nil
 }
+
+func GetResourceList(repositoryID int) ([]aspace.ResourceListEntry, error) {
+	GetClient()
+	return client.GetResourceList(repositoryID)
+}

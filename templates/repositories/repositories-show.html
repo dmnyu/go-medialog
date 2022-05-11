@@ -43,10 +43,14 @@
                 <div class="col">
                 <div class="form-inline">
                     <form action="/resources/preview" method="POST">
-                        <label>Resource ID</label>
+                        <select name="resource_id" id="resource_id">
+                            {{ range $aspaceResource := .aspaceResources }}
+                                <option value="{{ $aspaceResource.ResourceID}}">{{ $aspaceResource.Title }}</option>
+                            {{ end }}
+                        </select>
                         <input type="hidden" name="repository_id" id="repository_id" value="{{ .repository.ID }}">
-                        <input type="number" name="resource_id" id="resource_id">
                         <input class="btn btn-primary" type="submit" value="Add">
+
                     </form>
                 </div>
             </div>
