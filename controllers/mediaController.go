@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+func GetEntries(c *gin.Context) { c.HTML(http.StatusOK, "entries-index.html", gin.H{}) }
+
 func NewMedia(c *gin.Context) {
 	var input = models.MediaEntry{}
 	if err := c.Bind(&input); err != nil {

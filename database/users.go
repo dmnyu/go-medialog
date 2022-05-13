@@ -12,7 +12,15 @@ func FindUsers() (*[]models.User, error) {
 
 func FindUser(id int) (*models.User, error) {
 	var user = models.User{}
-	if err := db.Where("id = ?", &user).First(&user).Error; err != nil {
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func FindUserByEmail(email string) (*models.User, error) {
+	var user = models.User{}
+	if err := db.Where("email = ?", email).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

@@ -11,12 +11,12 @@ type Credentials struct {
 
 type User struct {
 	gorm.Model
-	FirstName string `json:"first_name" form:"first_name"`
-	LastName  string `json:"last_name" form:"last_name"`
-	Email     string `json:"email" form:"email" gorm:"uniqueIndex"`
-	PassMD5   string `json:"pass_md5"`
-	Salt      string `json:"salt"`
-	IsAdmin   bool   `json:"is_admin" form:"is_admin"`
+	FirstName  string `json:"first_name" form:"first_name"`
+	LastName   string `json:"last_name" form:"last_name"`
+	Email      string `json:"email" form:"email" gorm:"uniqueIndex"`
+	PassSHA512 string `json:"pass_md5"`
+	Salt       string `json:"salt"`
+	IsAdmin    bool   `json:"is_admin" form:"is_admin"`
 }
 
 type CreateUser struct {
