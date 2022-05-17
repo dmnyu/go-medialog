@@ -11,7 +11,7 @@ const (
 
 var MediaNames = map[MediaModel]string{
 	OpticalDisc:   "Optical Disc",
-	HardDiskDrive: "Hard Drive",
+	HardDiskDrive: "Hard Disk Drive",
 }
 
 var MediaUnit = []string{"B", "KB", "MB", "GB", "TB"}

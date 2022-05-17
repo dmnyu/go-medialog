@@ -36,20 +36,6 @@ func InsertResource(resource models.Resource) (int, error) {
 	return int(resource.ID), nil
 }
 
-/* this is broken, get the next media id from the index */
-func GetNextMediaIDForResource(resourceID int) (int, error) {
-	entry := []models.MediaEntry{}
-	if err := db.Order("media_id desc").Select("media_id").Where(&entry, "resource_id = ?", resourceID).Error; err != nil {
-		return 0, err
-	}
-
-	if len(entry) == 0 {
-		return 1, nil
-	}
-
-	return entry[0].MediaID + 1, nil
-}
-
 func DeleteResource(resource *models.Resource) error {
 	if err := db.Delete(resource).Error; err != nil {
 		return err

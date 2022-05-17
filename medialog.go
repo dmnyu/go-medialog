@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/dmnyu/go-medialog/controllers"
 	"github.com/dmnyu/go-medialog/database"
+	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
 	"html/template"
 	"log"
@@ -68,6 +69,7 @@ func main() {
 		"getRepoCode":  getRepoCode,
 		"add":          add,
 		"subtract":     subtract,
+		"getMediaType": getMediaType,
 	})
 
 	router.LoadHTMLGlob("templates/**/*.html")
@@ -93,6 +95,9 @@ func main() {
 
 func add(a int, b int) int      { return a + b }
 func subtract(a int, b int) int { return a - b }
+func getMediaType(id models.MediaModel) string {
+	return models.MediaNames[id]
+}
 
 func loadRoutes(router *gin.Engine) {
 	var repoRoutes = router.Group("/repositories")

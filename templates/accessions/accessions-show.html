@@ -40,8 +40,8 @@
                 <tr>
                     <td>Number</td>
                     <td>Type</td>
+                    <td>Subtype</td>
                     <td>Size</td>
-                    <td>docid</td>
                     <td>Actions</td>
                 </tr>
                 </thead>
@@ -49,9 +49,9 @@
                 {{ range $entry := .entries }}
                 <tr>
                     <td>{{ $entry.Source.MediaID }}</td>
+                    <td>{{ getMediaType $entry.Source.ModelID }}</td>
                     <td>{{ $entry.Source.Subtype }}</td>
                     <td>{{ $entry.Source.HumanSize }}</td>
-                    <td>{{ $entry.ID }}</td>
                     <td>
                         <a href="/media/{{ $entry.ID }}/show" class="btn btn-primary">View</a>
                         <a href="#" class="btn btn-secondary">Edit</a>

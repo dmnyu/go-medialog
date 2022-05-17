@@ -73,6 +73,7 @@ func GetAccession(c *gin.Context) {
 		"repository": repository,
 		"resource":   resource,
 		"entries":    entries,
+		"mediaTypes": models.MediaNames,
 		"page":       p,
 	})
 }

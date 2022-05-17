@@ -32,12 +32,13 @@ func CreateOpticalDisc(c *gin.Context) {
 
 	//get the next ID if the media ID is 0
 	if optical.MediaID == 0 {
-		optical.MediaID, err = database.GetNextMediaIDForResource(optical.ResourceID)
+		nextMediaID, err := index.FindNextMediaIDInResource(optical.ResourceID)
 		if err != nil {
 			log.Printf("[ERROR] [DATABASE] %s", err.Error())
 			c.JSON(http.StatusInternalServerError, err.Error())
 			return
 		}
+		optical.MediaID = *nextMediaID
 	}
 
 	if err := database.InsertOpticalDisc(&optical); err != nil {
@@ -55,7 +56,9 @@ func CreateOpticalDisc(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, resp)
+	log.Printf("[INFO] [INDEX] %s", resp)
+
+	c.Redirect(http.StatusPermanentRedirect, fmt.Sprintf("/accessions/%d/show", optical.AccessionID))
 
 }
 
