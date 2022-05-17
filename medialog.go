@@ -59,6 +59,7 @@ func main() {
 
 	if migrate == true {
 		database.MigrateDatabase()
+		log.Printf("[INFO] [APP] shutting down medialog")
 		os.Exit(0)
 	}
 
@@ -120,9 +121,10 @@ func loadRoutes(router *gin.Engine) {
 	var mediaRoutes = router.Group("/media")
 	mediaRoutes.GET("/entries", func(c *gin.Context) { controllers.GetEntries(c) })
 	mediaRoutes.POST("/new", func(c *gin.Context) { controllers.NewMedia(c) })
-	mediaRoutes.POST("/create/optical", func(c *gin.Context) { controllers.CreateOpticalDisc(c) })
 	mediaRoutes.GET("/:id/show", func(c *gin.Context) { controllers.ShowMedia(c) })
 	mediaRoutes.GET("/:id/delete", func(c *gin.Context) { controllers.DeleteMedia(c) })
+	mediaRoutes.POST("/create/optical", func(c *gin.Context) { controllers.CreateOpticalDisc(c) })
+	mediaRoutes.POST("/create/hard-disk-drive", func(c *gin.Context) { controllers.CreateHardDiskDrive(c) })
 
 	//API Routes
 	var apiV0Routes = router.Group("/api/v0")

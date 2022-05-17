@@ -15,7 +15,7 @@ func newOpticalDisc(c *gin.Context, entry models.MediaEntry) {
 
 	c.HTML(http.StatusOK, "optical-create.html", gin.H{
 		"entry":    entry,
-		"subtypes": models.OpticalSubTypes,
+		"subtypes": models.OpticalSubtypes,
 		"units":    models.MediaUnit,
 	})
 
@@ -24,10 +24,11 @@ func newOpticalDisc(c *gin.Context, entry models.MediaEntry) {
 func CreateOpticalDisc(c *gin.Context) {
 	var optical = models.MediaOpticalDisc{}
 	if err := c.Bind(&optical); err != nil {
+		log.Printf("[ERROR] [APP] cannot create hard drive struct from request: %s", err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	optical.SizeInBytes = bytemath.ConvertToBytes(float64(optical.StockSize), bytemath.MB)
+	optical.SizeInBytes = int64(bytemath.ConvertToBytes(float64(optical.StockSize), models.ByteMathSuffix[optical.StockUnit]))
 
 	//get the next ID if the media ID is 0
 	if optical.MediaID == 0 {

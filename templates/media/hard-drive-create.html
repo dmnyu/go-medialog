@@ -6,10 +6,10 @@
         <h4 class="card-title">{{ .resource.Identifiers }} {{ .resource.Title }}</h4>
         <h5 class="card-title">{{ .accession.Identifiers }} {{ .accession.Title }}</h5>
         <br>
-        <h4 class="card-title">Create an Optical Disc</h4>
+        <h4 class="card-title">Create a Hard Disk Drive entry</h4>
     </div>
     <div class="card-body">
-        <form action="/media/create/optical" method="post">
+        <form action="/media/create/hard-disk-drive" method="post">
             <div style="display:none;">
                 <input type="number" name="repository_id" id="repository_id" value="{{ .entry.RepositoryID }}"/>
                 <input type="number" name="resource_id" id="resource_id" value="{{ .entry.ResourceID }}"/>
@@ -18,7 +18,7 @@
             <div class="form-row">
                 <div class="col">
                     <div class="form-group">
-                        <label for="subtype">Optical Type</label>
+                        <label for="subtype">Hard Drive Type</label>
                         <select name="subtype" id="subtype">
                             {{ range $subtype := .subtypes }}
                             <option value="{{ $subtype }}">{{ $subtype }}</option>
@@ -36,7 +36,7 @@
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <label for="stock_unit">Stock Unit</label>
+                        <label for="stock_unit">Stock Unite</label>
                         <select name="stock_unit" id="stock_unit">
                             {{ range $unit := .units }}
                             <option value="{{ $unit }}">{{ $unit }}</option>

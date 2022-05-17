@@ -4,30 +4,27 @@ import (
 	"github.com/dmnyu/go-medialog/index"
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
 func GetEntries(c *gin.Context) { c.HTML(http.StatusOK, "entries-index.html", gin.H{}) }
 
 func NewMedia(c *gin.Context) {
-	var input = models.MediaEntry{}
-	if err := c.Bind(&input); err != nil {
+	var entry = models.MediaEntry{}
+	if err := c.Bind(&entry); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	switch input.ModelID {
+	switch entry.ModelID {
 	case models.OpticalDisc:
-		newOpticalDisc(c, input)
+		newOpticalDisc(c, entry)
 	case models.HardDiskDrive:
-		newHardDiskDrive(c)
+		newHardDiskDrive(c, entry)
 	default:
 		c.JSON(http.StatusBadRequest, "Mediatype not supported")
 	}
-}
-
-func newHardDiskDrive(c *gin.Context) {
-	c.JSON(http.StatusOK, "Not Implemented")
 }
 
 func DeleteMedia(c *gin.Context) {
@@ -35,14 +32,16 @@ func DeleteMedia(c *gin.Context) {
 	entry, err := index.FindDoc(docID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
+		log.Printf("[ERROR] [INDEX] can not locate document %s in index", docID)
 	}
 
 	switch entry.ModelID {
 	case models.OpticalDisc:
 		deleteOpticalDisc(c, docID, entry)
+	case models.HardDiskDrive:
+		deleteHardDiskDrive(c, docID, entry)
 	default:
 		c.JSON(http.StatusInternalServerError, "Not Implemented Yet")
-
 	}
 }
 

@@ -10,7 +10,6 @@ import (
 	elasticsearch7 "github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"io/ioutil"
-	"log"
 	"strings"
 )
 
@@ -43,18 +42,10 @@ func AddToIndex(entry models.MediaEntry) (string, error) {
 }
 
 func DeleteFromIndex(docID string) error {
-	resp, err := esapi.DeleteRequest{Index: index, DocumentID: docID}.Do(ctx, es.Transport)
+	_, err := esapi.DeleteRequest{Index: index, DocumentID: docID}.Do(ctx, es.Transport)
 	if err != nil {
 		return err
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-	log.Printf("[INFO] %s", string(body))
 	return nil
 }
 
@@ -76,8 +67,6 @@ func FindDoc(docID string) (*models.MediaEntry, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	log.Printf("[INFO] [INDEX] located document %s", docID)
 
 	return &esHit.Source, nil
 
@@ -104,7 +93,38 @@ func SearchByAccessionID(accessionID int, pagination shared.Pagination) (*[]mode
 		return nil, err
 	}
 
-	log.Printf("[INFO] [INDEX] Located %d records for accession %d", len(esResponse.Hits.Hits), accessionID)
-
 	return &esResponse.Hits.Hits, nil
+}
+
+func FindNextMediaIDInResource(resourceID int) (*int, error) {
+	//construct query
+	q := fmt.Sprintf(`{"query": {"match": {"resource_id": %d}}}`, resourceID)
+
+	//make request
+	resp, err := esapi.SearchRequest{Index: indexes, Body: strings.NewReader(q)}.Do(context.Background(), es.Transport)
+	if err != nil {
+		return nil, err
+	}
+
+	//get response body
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	//Unmarshal response
+	esResponse := models.ESResponse{}
+	if err := json.Unmarshal(body, &esResponse); err != nil {
+		return nil, err
+	}
+
+	//get the next mediaID for the resource
+	nextMediaId := 0
+	for _, hit := range esResponse.Hits.Hits {
+		if hit.Source.MediaID > nextMediaId {
+			nextMediaId = hit.Source.MediaID
+		}
+	}
+	nextMediaId++
+	return &nextMediaId, nil
 }

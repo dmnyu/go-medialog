@@ -25,25 +25,32 @@ func MigrateDatabase() {
 	ConnectDatabase()
 	log.Printf("[INFO] [DATABASE] migrating %s", databaseLoc)
 
+	//core models
 	if err := db.AutoMigrate(&models.Repository{}); err != nil {
-		panic(err)
+		log.Fatalf("[FATAL] [DATABASE] %s", err.Error())
 	}
 
 	if err := db.AutoMigrate(&models.Resource{}); err != nil {
-		panic(err)
+		log.Fatalf("[FATAL] [DATABASE] %s", err.Error())
 	}
 
 	if err := db.AutoMigrate(&models.Accession{}); err != nil {
-		panic(err)
-	}
-
-	if err := db.AutoMigrate(&models.MediaOpticalDisc{}); err != nil {
-		panic(err)
+		log.Fatalf("[FATAL] [DATABASE] %s", err.Error())
 	}
 
 	if err := db.AutoMigrate(&models.User{}); err != nil {
-		panic(err)
+		log.Fatalf("[FATAL] [DATABASE] %s", err.Error())
 	}
 
-	log.Printf("[INFO] [DATABASE] successfully migrated %s", databaseLoc)
+	//media models
+	if err := db.AutoMigrate(&models.MediaOpticalDisc{}); err != nil {
+		log.Fatalf("[FATAL] [DATABASE] %s", err.Error())
+	}
+
+	if err := db.AutoMigrate(&models.MediaHardDrive{}); err != nil {
+		log.Fatalf("[FATAL] [DATABASE] %s", err.Error())
+	}
+
+	log.Printf("[INFO] [DATABASE] migration of %s complete", databaseLoc)
+
 }
