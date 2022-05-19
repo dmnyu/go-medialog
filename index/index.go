@@ -10,7 +10,6 @@ import (
 	elasticsearch7 "github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"io/ioutil"
-	"log"
 	"strings"
 )
 
@@ -130,10 +129,9 @@ func FindNextMediaIDInResource(resourceID int) (*int, error) {
 	return &nextMediaId, nil
 }
 
-func KeywordSearch(query string) (*[]models.MediaEntry, error) {
+func KeywordSearch(query string) (*[]models.ESHit, error) {
 	q := fmt.Sprintf(`{"query":{"match":{"json":{"query":"%s"}}}}`, query)
 
-	log.Printf("[DEBUG] [INDEX] query: %s", q)
 	//make request
 	resp, err := esapi.SearchRequest{Index: indexes, Body: strings.NewReader(q)}.Do(context.Background(), es.Transport)
 	if err != nil {
@@ -145,7 +143,7 @@ func KeywordSearch(query string) (*[]models.MediaEntry, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("[DEBUG] [INDEX] body: %s", (string(body)))
+
 	//Unmarshal response
 	esResponse := models.ESResponse{}
 	err = json.Unmarshal(body, &esResponse)
@@ -153,10 +151,5 @@ func KeywordSearch(query string) (*[]models.MediaEntry, error) {
 		return nil, err
 	}
 
-	var mediaEntries = []models.MediaEntry{}
-	for _, hit := range esResponse.Hits.Hits {
-		mediaEntries = append(mediaEntries, hit.Source)
-	}
-
-	return &mediaEntries, nil
+	return &esResponse.Hits.Hits, nil
 }

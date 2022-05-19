@@ -44,3 +44,7 @@ type ESResponse struct {
 	Shards   ESShard         `json:"_shards"`
 	Hits     ESHitsContainer `json:"hits"`
 }
+
+type IndexQuery struct {
+	Query string `json:"query" form:"query"`
+}

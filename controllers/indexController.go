@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/dmnyu/go-medialog/index"
+	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -11,12 +12,8 @@ func NewSearch(c *gin.Context) {
 	c.HTML(http.StatusOK, "search-index.html", gin.H{})
 }
 
-type IndexQuery struct {
-	Query string `json:"query" form:"query"`
-}
-
 func SearchIndex(c *gin.Context) {
-	var query = IndexQuery{}
+	var query = models.IndexQuery{}
 	if err := c.Bind(&query); err != nil {
 		log.Printf("[ERROR] [APP] %s", err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())

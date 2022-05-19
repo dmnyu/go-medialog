@@ -25,15 +25,25 @@
                         <td>resource id</td>
                         <td>accession id</td>
                         <td>media id</td>
+                        <td>type</td>
+                        <td>subtype</td>
+                        <td>size</td>
+                        <td></td>
                     </tr>
                 </thead>
                 <tbody>
                 {{ range $entry := .entries }}
                     <tr>
-                        <td>{{ $entry.RepositoryID }}</td>
-                        <td>{{ $entry.ResourceID }}</td>
-                        <td>{{ $entry.AccessionID }}</td>
-                        <td>{{ $entry.MediaID }}</td>
+                        <td>{{ $entry.Source.RepositoryID }}</td>
+                        <td>{{ $entry.Source.ResourceID }}</td>
+                        <td>{{ $entry.Source.AccessionID }}</td>
+                        <td>{{ $entry.Source.MediaID }}</td>
+                        <td>{{ $entry.Source.ModelID }}</td>
+                        <td>{{ $entry.Source.Subtype }}</td>
+                        <td>{{ $entry.Source.HumanSize }}</td>
+                        <td>
+                            <a href="/media/{{ $entry.ID}}/show" class="btn btn-primary">view</a>
+                        </td>
                     </tr>
                 {{ end }}
             </table>
