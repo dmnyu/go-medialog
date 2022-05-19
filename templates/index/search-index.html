@@ -1,0 +1,16 @@
+{{  template "header.html" . }}
+<br />
+<card>
+    <div class="card card-default">
+        <div class="card-header">
+            <h2 class="card-title">Search Medialog</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" action="/search">
+                <input type="text" id="query" name="query">
+                <input type="submit" class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+</card>
+{{  template "footer.html" . }}

@@ -144,6 +144,11 @@ func loadRoutes(router *gin.Engine) {
 	userRoutes.POST("/create", func(c *gin.Context) { controllers.CreateUser(c) })
 	userRoutes.GET("/login", func(c *gin.Context) { controllers.UserLogin(c) })
 	userRoutes.POST("/authenticate", func(c *gin.Context) { controllers.UserAuthenticate(c) })
+
+	//Search Routes
+	var searchRoutes = router.Group("/search")
+	searchRoutes.GET("", func(c *gin.Context) { controllers.NewSearch(c) })
+	searchRoutes.POST("", func(c *gin.Context) { controllers.SearchIndex(c) })
 }
 
 func NullRoute(c *gin.Context) {
