@@ -42,3 +42,14 @@ func DeleteResource(resource *models.Resource) error {
 	}
 	return nil
 }
+
+func GetResourceIdentifiers() *map[int]string {
+	resources := []models.Resource{}
+	db.Find(&resources)
+
+	var resourceMap = map[int]string{}
+	for _, resource := range resources {
+		resourceMap[int(resource.ID)] = resource.Identifiers
+	}
+	return &resourceMap
+}

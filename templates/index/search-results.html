@@ -1,18 +1,5 @@
 {{  template "header.html" . }}
 <br />
-<card>
-    <div class="card card-default">
-        <div class="card-header">
-            <h2 class="card-title">Search Medialog</h2>
-        </div>
-        <div class="card-body">
-            <form method="post" action="/search">
-                <input type="text" id="query" name="query">
-                <input type="submit" class="btn btn-primary">
-            </form>
-        </div>
-    </div>
-    <br>
     <div class="card card-default">
         <div class="card-header">
             <h2 class="card-title">Search Results</h2>
@@ -34,11 +21,11 @@
                 <tbody>
                 {{ range $entry := .entries }}
                     <tr>
-                        <td>{{ $entry.Source.RepositoryID }}</td>
-                        <td>{{ $entry.Source.ResourceID }}</td>
-                        <td>{{ $entry.Source.AccessionID }}</td>
+                        <td>{{ getRepoName $entry.Source.RepositoryID }}</td>
+                        <td>{{ getResourceIdentifier $entry.Source.ResourceID }}</td>
+                        <td>{{ getAccessionIdentifier $entry.Source.AccessionID }}</td>
                         <td>{{ $entry.Source.MediaID }}</td>
-                        <td>{{ $entry.Source.ModelID }}</td>
+                        <td>{{ getMediaType $entry.Source.ModelID }}</td>
                         <td>{{ $entry.Source.Subtype }}</td>
                         <td>{{ $entry.Source.HumanSize }}</td>
                         <td>

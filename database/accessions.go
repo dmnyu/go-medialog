@@ -39,3 +39,14 @@ func FindAccessionsByResourceID(resourceID uint) (*[]models.Accession, error) {
 	}
 	return &accessions, nil
 }
+
+func GetAccessionIdentifiers() *map[int]string {
+	accessions := []models.Accession{}
+	db.Find(&accessions)
+
+	var accessionMap = map[int]string{}
+	for _, accession := range accessions {
+		accessionMap[int(accession.ID)] = accession.Identifiers
+	}
+	return &accessionMap
+}

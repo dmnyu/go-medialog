@@ -26,25 +26,6 @@ func init() {
 	flag.StringVar(&logFileLoc, "log-file", "gomedialog.log", "")
 }
 
-func formatAsDate(t time.Time) string {
-	year, month, day := t.Date()
-	return fmt.Sprintf("%d-%d-%d", year, month, day)
-}
-
-func getRepoCode(i int) string {
-	switch i {
-	case 2:
-		return "tamwag"
-	case 3:
-		return "fales"
-	case 6:
-		return "archives"
-	case 100:
-		return "abudhabi"
-	}
-	return "unkown"
-}
-
 var router = gin.Default()
 
 func main() {
@@ -65,11 +46,13 @@ func main() {
 	}
 
 	router.SetFuncMap(template.FuncMap{
-		"formatAsDate": formatAsDate,
-		"getRepoCode":  getRepoCode,
-		"add":          add,
-		"subtract":     subtract,
-		"getMediaType": getMediaType,
+		"formatAsDate":           formatAsDate,
+		"getRepoName":            getRepoName,
+		"add":                    add,
+		"subtract":               subtract,
+		"getMediaType":           getMediaType,
+		"getAccessionIdentifier": getAccessionIdentifier,
+		"getResourceIdentifier":  getResourceIdentifier,
 	})
 
 	router.LoadHTMLGlob("templates/**/*.html")
@@ -93,12 +76,46 @@ func main() {
 
 }
 
-func add(a int, b int) int      { return a + b }
+//global functions
+
+func formatAsDate(t time.Time) string {
+	year, month, day := t.Date()
+	return fmt.Sprintf("%d-%d-%d", year, month, day)
+}
+
+func getRepoName(i int) string {
+	switch i {
+	case 1:
+		return "tamwag"
+	case 2:
+		return "fales"
+	case 3:
+		return "nyu archives"
+	case 100:
+		return "abudhabi"
+	}
+	return "unknown"
+}
+
+func add(a int, b int) int { return a + b }
+
 func subtract(a int, b int) int { return a - b }
+
 func getMediaType(id models.MediaModel) string {
 	return models.MediaNames[id]
 }
 
+func getAccessionIdentifier(accessionID int) string {
+	accessionIDs := *database.GetAccessionIdentifiers()
+	return accessionIDs[accessionID]
+}
+
+func getResourceIdentifier(resourceID int) string {
+	resourceIDs := *database.GetResourceIdentifiers()
+	return resourceIDs[resourceID]
+}
+
+//Routes
 func loadRoutes(router *gin.Engine) {
 	var repoRoutes = router.Group("/repositories")
 	repoRoutes.GET("", func(c *gin.Context) { controllers.GetRepositories(c) })
