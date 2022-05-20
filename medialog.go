@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/dmnyu/go-medialog/controllers"
 	"github.com/dmnyu/go-medialog/database"
+	"github.com/dmnyu/go-medialog/index"
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
 	"html/template"
@@ -16,6 +17,7 @@ import (
 
 var (
 	migrate        bool
+	reindex        bool
 	goAspaceConfig string
 	logFileLoc     string
 	accessionIDs   map[int]string
@@ -24,6 +26,7 @@ var (
 
 func init() {
 	flag.BoolVar(&migrate, "migrate", false, "")
+	flag.BoolVar(&reindex, "reindex", false, "")
 	flag.StringVar(&goAspaceConfig, "config", "", "")
 	flag.StringVar(&logFileLoc, "log-file", "gomedialog.log", "")
 }
@@ -44,6 +47,12 @@ func main() {
 	if migrate == true {
 		database.MigrateDatabase()
 		log.Printf("[INFO] [APP] shutting down medialog")
+		os.Exit(0)
+	}
+
+	if reindex == true {
+		database.ConnectDatabase()
+		index.Reindex()
 		os.Exit(0)
 	}
 
