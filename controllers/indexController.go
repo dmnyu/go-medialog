@@ -15,12 +15,11 @@ func NewSearch(c *gin.Context) {
 func SearchIndex(c *gin.Context) {
 	var query = models.IndexQuery{}
 	if err := c.Bind(&query); err != nil {
-		log.Printf("[ERROR] [APP] %s", err.Error())
+		log.Printf("[ERROR] [MEDIALOG] %s", err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	log.Println("[DEBUG] [CONTROLLER] %s", query.Query)
 	entries, err := index.KeywordSearch(query.Query)
 	if err != nil {
 		log.Printf("[ERROR] [INDEX] %s", err.Error())

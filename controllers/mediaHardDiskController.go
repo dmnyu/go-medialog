@@ -24,7 +24,7 @@ func newHardDiskDrive(c *gin.Context, entry models.MediaEntry) {
 func CreateHardDiskDrive(c *gin.Context) {
 	var hardDiskDrive = models.MediaHardDrive{}
 	if err := c.Bind(&hardDiskDrive); err != nil {
-		log.Printf("[ERROR] [APP] cannot create hard drive struct from request: %s", err.Error())
+		log.Printf("[ERROR] [MEDIALOG] cannot create hard drive struct from request: %s", err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 

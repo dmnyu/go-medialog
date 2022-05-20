@@ -18,6 +18,8 @@ var (
 	migrate        bool
 	goAspaceConfig string
 	logFileLoc     string
+	accessionIDs   map[int]string
+	resourceIDs    map[int]string
 )
 
 func init() {
@@ -70,6 +72,7 @@ func main() {
 
 	//Start the router
 	database.ConnectDatabase()
+
 	if err := router.Run(); err != nil {
 		panic(err)
 	}
@@ -105,14 +108,16 @@ func getMediaType(id models.MediaModel) string {
 	return models.MediaNames[id]
 }
 
-func getAccessionIdentifier(accessionID int) string {
-	accessionIDs := *database.GetAccessionIdentifiers()
-	return accessionIDs[accessionID]
-}
+func getAccessionIdentifier(accessionID int) string { return accessionIDs[accessionID] }
 
 func getResourceIdentifier(resourceID int) string {
 	resourceIDs := *database.GetResourceIdentifiers()
 	return resourceIDs[resourceID]
+}
+
+func getIdentifiers() {
+	accessionIDs = *database.GetAccessionIdentifiers()
+	resourceIDs = *database.GetResourceIdentifiers()
 }
 
 //Routes
@@ -165,7 +170,10 @@ func loadRoutes(router *gin.Engine) {
 	//Search Routes
 	var searchRoutes = router.Group("/search")
 	searchRoutes.GET("", func(c *gin.Context) { controllers.NewSearch(c) })
-	searchRoutes.POST("", func(c *gin.Context) { controllers.SearchIndex(c) })
+	searchRoutes.POST("", func(c *gin.Context) {
+		getIdentifiers()
+		controllers.SearchIndex(c)
+	})
 }
 
 func NullRoute(c *gin.Context) {

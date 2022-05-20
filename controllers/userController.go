@@ -34,13 +34,13 @@ func NewUser(c *gin.Context) {
 func CreateUser(c *gin.Context) {
 	var createUser = models.CreateUser{}
 	if err := c.Bind(&createUser); err != nil {
-		log.Printf("[ERROR] [APP] %s", err.Error())
+		log.Printf("[ERROR] [MEDIALOG] %s", err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
 	if createUser.Password1 != createUser.Password2 {
-		log.Println("[ERROR] [APP] passwords do not match")
+		log.Println("[ERROR] [MEDIALOG] passwords do not match")
 		c.JSON(http.StatusBadRequest, "passwords do not match")
 		return
 	}
@@ -67,7 +67,7 @@ func UserLogin(c *gin.Context) { c.HTML(http.StatusOK, "users-login.html", gin.H
 func UserAuthenticate(c *gin.Context) {
 	var createUser = models.CreateUser{}
 	if err := c.Bind(&createUser); err != nil {
-		log.Printf("[ERROR] [APP] %s", err.Error())
+		log.Printf("[ERROR] [MEDIALOG] %s", err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}

@@ -24,7 +24,7 @@ func newOpticalDisc(c *gin.Context, entry models.MediaEntry) {
 func CreateOpticalDisc(c *gin.Context) {
 	var optical = models.MediaOpticalDisc{}
 	if err := c.Bind(&optical); err != nil {
-		log.Printf("[ERROR] [APP] cannot create hard drive struct from request: %s", err.Error())
+		log.Printf("[ERROR] [MEDIALOG] cannot create hard drive struct from request: %s", err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 

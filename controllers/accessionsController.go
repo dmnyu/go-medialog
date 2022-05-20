@@ -57,6 +57,8 @@ func GetAccession(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
+	//reposourceIDs := *database.GetResourceIdentifiers()
+
 	resource, err := database.FindResource(accession.ResourceID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())

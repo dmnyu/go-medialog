@@ -1,6 +1,8 @@
 package database
 
-import "github.com/dmnyu/go-medialog/models"
+import (
+	"github.com/dmnyu/go-medialog/models"
+)
 
 func FindAccessions() []models.Accession {
 	accessions := []models.Accession{}
@@ -41,6 +43,7 @@ func FindAccessionsByResourceID(resourceID uint) (*[]models.Accession, error) {
 }
 
 func GetAccessionIdentifiers() *map[int]string {
+
 	accessions := []models.Accession{}
 	db.Find(&accessions)
 
