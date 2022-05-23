@@ -66,8 +66,35 @@ func GetResource(c *gin.Context) {
 	})
 }
 
+func AddResource(c *gin.Context) {
+	repo_id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		log.Printf("[ERROR] [MEDIALOG] %s", err.Error())
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	repository, err := database.FindRepository(repo_id)
+	if err != nil {
+		log.Printf("[ERROR] [DATABASE] %s", err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	aspaceResources, err := GetResourceList(repository.AspaceID)
+	if err != nil {
+		log.Printf("[ERROR] [ASPACE] %s", err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.HTML(http.StatusOK, "resources-new.html", gin.H{
+		"repository":       repository,
+		"aspace_resources": aspaceResources,
+	})
+}
+
 func PreviewResource(c *gin.Context) {
-	log.Println("PREVIEW")
 	var input = models.CreateAspaceObject{}
 	if err := c.Bind(&input); err != nil {
 		log.Println("[ERROR] %s", err.Error())

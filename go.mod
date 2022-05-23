@@ -32,7 +32,3 @@ require (
 	golang.org/x/sys v0.0.0-20220406163625-3f8b81556e12 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
-
-replace (
-	github.com/nyudlts/go-aspace => /home/donald/GolandProjects/go-aspace
-)

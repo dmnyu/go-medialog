@@ -8,6 +8,7 @@ import (
 	"github.com/dmnyu/go-medialog/shared"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -166,4 +167,40 @@ func DeleteAccession(c *gin.Context) {
 	}
 
 	c.Redirect(http.StatusFound, fmt.Sprintf("/resources/%d/show", accession.ResourceID))
+}
+
+func AddAccession(c *gin.Context) {
+	resource_id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		log.Printf("[ERROR] [MEDIALOG] %s", err.Error())
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	resource, err := database.FindResource(resource_id)
+	if err != nil {
+		log.Printf("[ERROR] [DATABASE] %s", err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	repository, err := database.FindRepository(resource.RepositoryID)
+	if err != nil {
+		log.Printf("[ERROR] [DATABASE] %s", err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	aspaceAccessions, err := GetAccessionListForResource(repository.AspaceID, resource.AspaceID)
+	if err != nil {
+		log.Printf("[ERROR] [ASPACE] %s", err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.HTML(http.StatusOK, "accessions-new.html", gin.H{
+		"repository":         repository,
+		"resource":           resource,
+		"related_accessions": aspaceAccessions,
+	})
 }

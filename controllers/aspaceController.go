@@ -7,11 +7,12 @@ var (
 	err    error
 )
 
-func GetClient() {
-	client, err = aspace.NewClient("go-aspace.yml", "dev", 20)
+func GetClient() error {
+	client, err = aspace.NewClient("config/go-aspace.yml", "dev", 20)
 	if err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }
 
 func FindAspaceRepository(repositoryID int) (aspace.Repository, error) {

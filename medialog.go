@@ -41,20 +41,38 @@ func main() {
 	}
 	defer logfile.Close()
 	log.SetOutput(logfile)
-	log.Println("[INFO] [APP] starting go-medialog ☮ ☮")
+	log.Println("[INFO] [APP] starting go-medialog ☮")
 	log.Printf("[INFO] [APP] logging to %s", logFileLoc)
 
 	if migrate == true {
-		database.MigrateDatabase()
+		if err := database.MigrateDatabase(); err != nil {
+			log.Printf("[FATAL] [DATABASE] database migration failed")
+			os.Exit(2)
+		}
 		log.Printf("[INFO] [APP] shutting down medialog")
 		os.Exit(0)
 	}
 
 	if reindex == true {
-		database.ConnectDatabase()
-		index.Reindex()
-		os.Exit(0)
+		if err := index.Reindex(); err != nil {
+			log.Printf("[FATAL] [INDEX] shutting down medialog")
+			os.Exit(3)
+		}
 	}
+
+	//connect to the database
+	if err := database.ConnectDatabase(); err != nil {
+		log.Printf("[FATAL] [DATABASE] database connection failed")
+		os.Exit(1)
+	}
+	log.Printf("[INFO] [DATABASE] connected to database")
+
+	//test archivesspace connection
+	if err := controllers.GetClient(); err != nil {
+		log.Printf("[FATAL] [ASPACE] archivesspace connection failed")
+		os.Exit(4)
+	}
+	log.Printf("[INFO] [ASPACE] connected to archivesspace instance")
 
 	router.SetFuncMap(template.FuncMap{
 		"formatAsDate":           formatAsDate,
@@ -72,16 +90,6 @@ func main() {
 	//Load Application Routes
 	loadRoutes(router)
 
-	//Index
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"title": "go-medialog",
-		})
-	})
-
-	//Start the router
-	database.ConnectDatabase()
-
 	if err := router.Run(); err != nil {
 		panic(err)
 	}
@@ -95,6 +103,7 @@ func formatAsDate(t time.Time) string {
 	return fmt.Sprintf("%d-%d-%d", year, month, day)
 }
 
+//turn this into a function
 func getRepoName(i int) string {
 	switch i {
 	case 1:
@@ -119,10 +128,7 @@ func getMediaType(id models.MediaModel) string {
 
 func getAccessionIdentifier(accessionID int) string { return accessionIDs[accessionID] }
 
-func getResourceIdentifier(resourceID int) string {
-	resourceIDs := *database.GetResourceIdentifiers()
-	return resourceIDs[resourceID]
-}
+func getResourceIdentifier(resourceID int) string { return resourceIDs[resourceID] }
 
 func getIdentifiers() {
 	accessionIDs = *database.GetAccessionIdentifiers()
@@ -131,6 +137,12 @@ func getIdentifiers() {
 
 //Routes
 func loadRoutes(router *gin.Engine) {
+
+	//Main Index
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{"title": "go-medialog"})
+	})
+
 	var repoRoutes = router.Group("/repositories")
 	repoRoutes.GET("", func(c *gin.Context) { controllers.GetRepositories(c) })
 	repoRoutes.GET("/:id/show", func(c *gin.Context) { controllers.GetRepository(c) })
@@ -146,6 +158,7 @@ func loadRoutes(router *gin.Engine) {
 	resourceRoutes.POST("/create", func(c *gin.Context) { controllers.CreateResource(c) })
 	resourceRoutes.GET("/:id/edit", func(c *gin.Context) { NullRoute(c) })
 	resourceRoutes.GET("/:id/delete", func(c *gin.Context) { controllers.DeleteResource(c) })
+	resourceRoutes.GET("/:id/new", func(c *gin.Context) { controllers.AddResource(c) })
 
 	var accessionRoutes = router.Group("/accessions")
 	accessionRoutes.GET("", func(c *gin.Context) { controllers.GetAccessions(c) })
@@ -153,6 +166,7 @@ func loadRoutes(router *gin.Engine) {
 	accessionRoutes.POST("/create", func(c *gin.Context) { controllers.CreateAccession(c) })
 	accessionRoutes.GET("/:id/show", func(c *gin.Context) { controllers.GetAccession(c) })
 	accessionRoutes.GET("/:id/delete", func(c *gin.Context) { controllers.DeleteAccession(c) })
+	accessionRoutes.GET("/:id/new", func(c *gin.Context) { controllers.AddAccession(c) })
 
 	var mediaRoutes = router.Group("/media")
 	mediaRoutes.GET("/entries", func(c *gin.Context) { controllers.GetEntries(c) })

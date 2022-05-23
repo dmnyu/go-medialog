@@ -1,0 +1,28 @@
+{{ template "header.html" . }}
+
+<br>
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">{{ .repository.Name }}</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">Add a resource</div>
+            <div class="col">
+                <div class="form-inline">
+                    <form action="/resources/preview" method="POST">
+                        <select name="resource_id" id="resource_id">
+                            {{ range $aspaceResource := .aspace_resources }}
+                            <option value="{{ $aspaceResource.ResourceID}}">{{ $aspaceResource.Title }}</option>
+                            {{ end }}
+                        </select>
+                        <input type="hidden" name="repository_id" id="repository_id" value="{{ .repository.ID }}">
+                        <input class="btn btn-primary" type="submit" value="Add">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ template "footer.html" . }}

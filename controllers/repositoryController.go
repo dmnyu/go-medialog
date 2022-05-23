@@ -6,7 +6,6 @@ import (
 	"github.com/dmnyu/go-medialog/shared"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -31,9 +30,10 @@ func CreateRepository(c *gin.Context) {
 
 	if err := database.InsertRepository(repository); err != nil {
 		c.JSON(http.StatusInternalServerError, err)
+		return
 	}
 
-	c.Redirect(http.StatusFound, "/repositories")
+	c.Redirect(http.StatusPermanentRedirect, "/repositories")
 
 }
 
@@ -76,20 +76,12 @@ func GetRepository(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	aspaceResources, err := GetResourceList(repository.AspaceID)
-	if err != nil {
-		log.Printf("[ERROR] [ASPACE] %s", err.Error())
-		c.JSON(http.StatusInternalServerError, err.Error())
-		return
-	}
-
 	//render the page
 	c.HTML(http.StatusOK, "repositories-show.html", gin.H{
-		"aspaceResources": aspaceResources,
-		"title":           "go-medialog - repositories",
-		"repository":      repository,
-		"resources":       resources,
-		"page":            p,
+		"title":      "go-medialog - repositories",
+		"repository": repository,
+		"resources":  resources,
+		"page":       p,
 	})
 }
 
@@ -105,13 +97,13 @@ func PreviewRepository(c *gin.Context) {
 	var input = models.Repository{}
 	if err := c.Bind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
+		return
 	}
-
-	log.Println("[INFO]", input)
 
 	repository, err := FindAspaceRepository(input.AspaceID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
+		return
 	}
 
 	c.HTML(http.StatusOK, "repositories-preview.html", gin.H{

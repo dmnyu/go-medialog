@@ -47,16 +47,6 @@ github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742 h1:Esafd1046DLD
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/nyudlts/bytemath v0.0.0-20220407170247-5070297ba554 h1:KnOyvfNvFlIOTT4F+k/Qj+aorSIiXoDjRSGucqHQdlQ=
 github.com/nyudlts/bytemath v0.0.0-20220407170247-5070297ba554/go.mod h1:FnqjOA9VSBFlhm3/Mz4fuL6pFuEK0JkuiStNB7GUcUM=
-github.com/nyudlts/go-aspace v0.3.8-0.20220307194423-f6af505dd139 h1:oRQZrwAqb2Ao97/moKT2NV9OJ5f/vcc2tzz1R509vuQ=
-github.com/nyudlts/go-aspace v0.3.8-0.20220307194423-f6af505dd139/go.mod h1:/E+T2G7pMgH7T9WJsIqGGxSwvL4y4YDOe/ZUIN6pwAY=
-github.com/nyudlts/go-aspace v0.3.8-0.20220510130858-fd2e07d55e2a h1:BYjhyxWPCZvPj45HCRb/kwIrQdwdoiqD+t3tuMHIJB4=
-github.com/nyudlts/go-aspace v0.3.8-0.20220510130858-fd2e07d55e2a/go.mod h1:/E+T2G7pMgH7T9WJsIqGGxSwvL4y4YDOe/ZUIN6pwAY=
-github.com/nyudlts/go-aspace v0.3.8-0.20220510173736-ec2b50b9c0c5 h1:UH1OHoCZpNe+BXdU6h8gIkFrVTHd4PtECIw7LXraoYE=
-github.com/nyudlts/go-aspace v0.3.8-0.20220510173736-ec2b50b9c0c5/go.mod h1:/E+T2G7pMgH7T9WJsIqGGxSwvL4y4YDOe/ZUIN6pwAY=
-github.com/nyudlts/go-aspace v0.3.8-0.20220511134203-afdd2e0076f9 h1:OINeaaUWH+pFWERsgfEm+4RmaeQ8HYSPn7YZVCjtHp8=
-github.com/nyudlts/go-aspace v0.3.8-0.20220511134203-afdd2e0076f9/go.mod h1:/E+T2G7pMgH7T9WJsIqGGxSwvL4y4YDOe/ZUIN6pwAY=
-github.com/nyudlts/go-aspace v0.3.8-0.20220511144552-33d07b64d290 h1:sjM933+CCWFlxH8/YXSi8zwVO/TrUBF1OcleoCfudeY=
-github.com/nyudlts/go-aspace v0.3.8-0.20220511144552-33d07b64d290/go.mod h1:/E+T2G7pMgH7T9WJsIqGGxSwvL4y4YDOe/ZUIN6pwAY=
 github.com/nyudlts/go-aspace v0.3.8-0.20220511162907-e576f65ff9a3 h1:WFeJ620NEgyKO37uzioBoC9S09pDHOUDEe15DlDt3vs=
 github.com/nyudlts/go-aspace v0.3.8-0.20220511162907-e576f65ff9a3/go.mod h1:/E+T2G7pMgH7T9WJsIqGGxSwvL4y4YDOe/ZUIN6pwAY=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=

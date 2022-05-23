@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func Reindex() {
+func Reindex() error {
 	//delete all from index
 	/*
 			q := `"{query": { "match_all": {}}}`
@@ -26,7 +26,7 @@ func Reindex() {
 	for _, disk := range *database.FindOpticaDiscs() {
 		resp, err := AddToIndex(disk.GetMediaEntry())
 		if err != nil {
-			log.Printf("[ERROR] [INDEX] %s", err)
+			return err
 		}
 		log.Printf("[INFO] [INDEX] %s", resp)
 	}
@@ -36,8 +36,10 @@ func Reindex() {
 	for _, hdd := range *database.FindHardDiskDrives() {
 		resp, err := AddToIndex(hdd.GetMediaEntry())
 		if err != nil {
-			log.Printf("[ERROR] [INDEX] %s", err)
+			return err
 		}
 		log.Printf("[INFO] [INDEX] %s", resp)
 	}
+
+	return nil
 }

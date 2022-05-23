@@ -9,54 +9,38 @@
 </br>
 
 <div class="card card-default">
-    <div class="card-body">
+    <div class="card-header">
         <h4 class="card-title">Accessions</h4>
-        <div class="panel-body">
-            <table class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>Identifiers</th>
-                    <th>Title</th>
-                    <th/>
-                </tr>
-                </thead>
-
-                <tbody>
-                {{ range $accession := .accessions }}
-                <tr>
-                    <td>{{ $accession.Identifiers }}</td>
-                    <td>{{ $accession.Title }}</td>
-                    <td>
-                        <a href="/accessions/{{ $accession.ID }}/show" class="btn btn-primary">View</a>
-                        <a href="/accessions/{{ $accession.ID }}/edit" class="btn btn-secondary">Edit</a>
-                        <a href="/accessions/{{ $accession.ID }}/delete" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
-                {{ end }}
-                </tbody>
-            </table>
-        </div>
-
-        <div class="lead">Add an Accession</div>
-            <div class="form-inline">
-                <form action="/accessions/preview" method="POST">
-                    <select name="accession_id" id="accession_id">
-                        {{ range $relatedAccession := .relatedAccessions }}
-                            <option value="{{ $relatedAccession.AccessionID}}">{{ $relatedAccession.Identifier }} {{ $relatedAccession.Title }}</option>
-                        {{ end }}
-                    </select>
-                    <input type="hidden" name="repository_id" id="repository_id" value="{{ .repository.ID }}">
-                    <input type="hidden" name="resource_id" id="resource_id" value="{{ .resource.ID }}">
-                    <input class="btn btn-primary" type="submit" value="Add">
-                </form>
-            </div>
-        </div>
     </div>
-</br>
-<div class="card card-default">
     <div class="card-body">
-        <h4 class="card-title">Media</h4>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Identifiers</th>
+                <th>Title</th>
+                <th/>
+            </tr>
+            </thead>
+            <tbody>
+            {{ range $accession := .accessions }}
+            <tr>
+                <td>{{ $accession.Identifiers }}</td>
+                <td>{{ $accession.Title }}</td>
+                <td>
+                    <a href="/accessions/{{ $accession.ID }}/show" class="btn btn-primary">View</a>
+                    <a href="/accessions/{{ $accession.ID }}/edit" class="btn btn-secondary">Edit</a>
+                    <a href="/accessions/{{ $accession.ID }}/delete" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {{ end }}
+            </tbody>
+        </table>
+        <div class="row">
+            <a href="/accessions/{{ .resource.ID }}/new" class="btn btn-primary">Add Accession</a>
+        </div>
     </div>
 </div>
+
+
 
 {{ template "footer.html" .}}
