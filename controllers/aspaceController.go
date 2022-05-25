@@ -3,12 +3,17 @@ package controllers
 import "github.com/nyudlts/go-aspace"
 
 var (
-	client *aspace.ASClient
-	err    error
+	client    *aspace.ASClient
+	err       error
+	AspaceEnv string
 )
 
+func SetEnvironment(env string) {
+	AspaceEnv = env
+}
+
 func GetClient() error {
-	client, err = aspace.NewClient("config/go-aspace.yml", "dev", 20)
+	client, err = aspace.NewClient("config/go-aspace.yml", AspaceEnv, 20)
 	if err != nil {
 		return err
 	}

@@ -20,6 +20,7 @@ var (
 	reindex        bool
 	goAspaceConfig string
 	logFileLoc     string
+	databaseLoc    string
 	accessionIDs   map[int]string
 	resourceIDs    map[int]string
 )
@@ -29,6 +30,8 @@ func init() {
 	flag.BoolVar(&reindex, "reindex", false, "")
 	flag.StringVar(&goAspaceConfig, "config", "", "")
 	flag.StringVar(&logFileLoc, "log-file", "gomedialog.log", "")
+	flag.StringVar(&controllers.AspaceEnv, "environment", "dev", "")
+	flag.StringVar(&database.DatabaseLoc, "database", "gomedialog.db", "")
 }
 
 var router = gin.Default()
@@ -73,7 +76,7 @@ func main() {
 			os.Exit(3)
 		}
 
-		log.Printf("[INFO] [APP] shutting down medialog")
+		log.Printf("[INFO] [MEDIALOG] shutting down medialog")
 		os.Exit(0)
 
 	}
@@ -127,7 +130,7 @@ func formatAsDate(t time.Time) string {
 	return fmt.Sprintf("%d-%d-%d", year, month, day)
 }
 
-//turn this into a function
+//turn this into a function that uses the db
 func getRepoName(i int) string {
 	switch i {
 	case 1:

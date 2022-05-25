@@ -58,7 +58,7 @@ func CreateOpticalDisc(c *gin.Context) {
 
 	log.Printf("[INFO] [INDEX] %s", resp)
 
-	c.Redirect(http.StatusPermanentRedirect, fmt.Sprintf("/accessions/%d/show", optical.AccessionID))
+	c.Redirect(http.StatusFound, fmt.Sprintf("/accessions/%d/show", optical.AccessionID))
 
 }
 

@@ -131,6 +131,7 @@ func FindNextMediaIDInResource(resourceID int) (*int, error) {
 }
 
 func KeywordSearch(query string) (*[]models.ESHit, error) {
+	//format the query
 	q := fmt.Sprintf(`{"query":{"match":{"json":{"query":"%s"}}}}`, query)
 
 	//make request

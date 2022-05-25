@@ -8,12 +8,12 @@ import (
 )
 
 var db *gorm.DB
-var databaseLoc = "gomedialog.db"
+var DatabaseLoc = "gomedialog.db"
 
 func ConnectDatabase() error {
 
 	var err error
-	db, err = gorm.Open(sqlite.Open(databaseLoc), &gorm.Config{})
+	db, err = gorm.Open(sqlite.Open(DatabaseLoc), &gorm.Config{})
 	if err != nil {
 		return err
 	}
@@ -22,7 +22,7 @@ func ConnectDatabase() error {
 
 func MigrateDatabase() error {
 	ConnectDatabase()
-	log.Printf("[INFO] [DATABASE] migrating %s", databaseLoc)
+	log.Printf("[INFO] [DATABASE] migrating %s", DatabaseLoc)
 
 	//core models
 	if err := db.AutoMigrate(&models.Repository{}); err != nil {

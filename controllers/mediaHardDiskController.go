@@ -58,7 +58,7 @@ func CreateHardDiskDrive(c *gin.Context) {
 	}
 
 	log.Printf("[INFO] [INDEX] %s", resp)
-	c.Redirect(http.StatusPermanentRedirect, fmt.Sprintf("/accessions/%d/show", hardDiskDrive.AccessionID))
+	c.Redirect(http.StatusFound, fmt.Sprintf("/accessions/%d/show", hardDiskDrive.AccessionID))
 
 }
 

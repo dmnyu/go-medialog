@@ -33,7 +33,7 @@ func CreateRepository(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusPermanentRedirect, "/repositories")
+	c.Redirect(http.StatusFound, "/repositories")
 
 }
 
