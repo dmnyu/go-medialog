@@ -6,19 +6,6 @@ import (
 )
 
 func Reindex() error {
-	//delete all from index
-	/*
-			q := `"{query": { "match_all": {}}}`
-			resp, err := es.DeleteByQuery(indexes, strings.NewReader(q))
-			if err != nil {
-				panic(err)
-			}
-
-
-		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
-		log.Println(string(body))
-	*/
 
 	//index each mediatype
 	//optical disks

@@ -10,6 +10,7 @@ import (
 	elasticsearch7 "github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"io/ioutil"
+	"log"
 	"strings"
 )
 
@@ -152,4 +153,34 @@ func KeywordSearch(query string) (*[]models.ESHit, error) {
 	}
 
 	return &esResponse.Hits.Hits, nil
+}
+
+func DeleteAll() error {
+
+	var buf = bytes.Buffer{}
+	// Elastic query
+	query := map[string]interface{}{
+		"query": map[string]interface{}{
+			"match_all": map[string]interface{}{},
+		},
+	}
+
+	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		return err
+	}
+
+	body := strings.NewReader(buf.String())
+
+	resp, err := es.DeleteByQuery(indexes, body)
+	if err != nil {
+		return err
+	}
+
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	log.Printf("[INFO] [INDEX] %s", string(respBody))
+	return nil
 }

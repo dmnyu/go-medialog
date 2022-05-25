@@ -44,6 +44,7 @@ func main() {
 	log.Println("[INFO] [APP] starting go-medialog ☮")
 	log.Printf("[INFO] [APP] logging to %s", logFileLoc)
 
+	//migrate the database if `migrate` flag is set
 	if migrate == true {
 		if err := database.MigrateDatabase(); err != nil {
 			log.Printf("[FATAL] [DATABASE] database migration failed")
@@ -53,11 +54,28 @@ func main() {
 		os.Exit(0)
 	}
 
+	//reindex if `reindex` flag is set
 	if reindex == true {
+
+		if err := database.ConnectDatabase(); err != nil {
+			log.Printf("[FATAL] [DATABASE] database connection failed")
+			os.Exit(1)
+		}
+
+		//delete the index entries
+		if err := index.DeleteAll(); err != nil {
+			log.Printf("[FATAL] [INDEX] shutting down medialog")
+			os.Exit(3)
+		}
+
 		if err := index.Reindex(); err != nil {
 			log.Printf("[FATAL] [INDEX] shutting down medialog")
 			os.Exit(3)
 		}
+
+		log.Printf("[INFO] [APP] shutting down medialog")
+		os.Exit(0)
+
 	}
 
 	//connect to the database
@@ -74,6 +92,9 @@ func main() {
 	}
 	log.Printf("[INFO] [ASPACE] connected to archivesspace instance")
 
+	//test index connection
+
+	//load functions
 	router.SetFuncMap(template.FuncMap{
 		"formatAsDate":           formatAsDate,
 		"getRepoName":            getRepoName,
@@ -84,12 +105,15 @@ func main() {
 		"getResourceIdentifier":  getResourceIdentifier,
 	})
 
+	//configure router
 	router.LoadHTMLGlob("templates/**/*.html")
 	router.StaticFile("/favicon.ico", "./public/favicon.ico")
 	router.SetTrustedProxies([]string{"127.0.0.1"})
+
 	//Load Application Routes
 	loadRoutes(router)
 
+	//run the application
 	if err := router.Run(); err != nil {
 		panic(err)
 	}
