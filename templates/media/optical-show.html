@@ -1,0 +1,48 @@
+{{ template "header.html" .}}
+<br>
+
+<div class="card card-default">
+  <div class="card-header">
+    {{ template "RepResAcc.html" . }}
+  </div>
+  <div class="card-body">
+    <table class="table table-default">
+      <tr>
+        <td>ID</td><td>{{ .optical.MediaID }}</td>
+      </tr>
+      <tr>
+        <td>Stock Size</td><td>{{ .optical.StockSize }} {{ .optical.StockUnit }}</td>
+      </tr>
+      <tr>
+        <td>Subtype</td><td>{{ .optical.Subtype }}</td>
+      </tr>
+      <tr>
+        <td>Orginal ID</td><td>{{ .optical.OriginalID }}</td>
+      </tr>
+      <tr>
+        <td>Ref ID</td><td>{{ .optical.RefID }}</td>
+      </tr>
+      <tr>
+        <td>Box</td><td>{{ .optical.BoxNumber }}</td>
+      </tr>
+      <tr>
+        <td>Manufacturer</td><td>{{ .optical.Manufacturer }}</td>
+      </tr>
+      <tr>
+        <td>Diameter</td><td>{{ .optical.Diameter }}</td>
+      </tr>
+      <tr>
+        <td>Label Text</td><td>{{ .optical.LabelText }}</td>
+      </tr>
+      <tr>
+        <td>Media Note</td><td>{{ .optical.MediaNote }}</td>
+      </tr>
+      <tr>
+        <td>Disposition Note</td><td>{{ .optical.DispositionNote }}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+
+{{ template "footer.html" .}}
