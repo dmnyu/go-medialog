@@ -1,4 +1,4 @@
-go-aspace.yml
+config/go-aspace.yml
 gomedialog.db
 .idea/*
 go-medialog

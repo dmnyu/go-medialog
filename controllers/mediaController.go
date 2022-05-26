@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/dmnyu/go-medialog/database"
 	"github.com/dmnyu/go-medialog/index"
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
@@ -59,4 +60,43 @@ func ShowMedia(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, "Not Implemented Yet")
 
 	}
+}
+
+type RepResAcc struct {
+	RepositoryID         int
+	RepositoryName       string
+	ResourceID           int
+	ResourceIdentifiers  string
+	ResourceTitle        string
+	AccessionID          int
+	AccessionIdentifiers string
+	AccessionTitle       string
+}
+
+func GetRepResAcc(m *models.MediaEntry) (*RepResAcc, error) {
+	repository, err := database.FindRepository(m.RepositoryID)
+	if err != nil {
+		return nil, err
+	}
+
+	resource, err := database.FindResource(m.ResourceID)
+	if err != nil {
+		return nil, err
+	}
+
+	accession, err := database.FindAccession(m.AccessionID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &RepResAcc{
+		RepositoryID:         int(repository.ID),
+		RepositoryName:       repository.Name,
+		ResourceID:           int(resource.ID),
+		ResourceIdentifiers:  resource.Identifiers,
+		ResourceTitle:        resource.Title,
+		AccessionID:          int(accession.ID),
+		AccessionIdentifiers: accession.Identifiers,
+		AccessionTitle:       accession.Title,
+	}, nil
 }

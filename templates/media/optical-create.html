@@ -5,44 +5,129 @@
         <h3 class="card-title">{{ .repository.Name }} </h3>
         <h4 class="card-title">{{ .resource.Identifiers }} {{ .resource.Title }}</h4>
         <h5 class="card-title">{{ .accession.Identifiers }} {{ .accession.Title }}</h5>
-        <br>
-        <h4 class="card-title">Create an Optical Disc</h4>
     </div>
     <div class="card-body">
+        <h4 class="card-title">Create an Optical Disc</h4>
         <form action="/media/create/optical" method="post">
             <div style="display:none;">
-                <input type="number" name="repository_id" id="repository_id" value="{{ .entry.RepositoryID }}"/>
-                <input type="number" name="resource_id" id="resource_id" value="{{ .entry.ResourceID }}"/>
-                <input type="number" name="accession_id" id="accession_id" value="{{ .entry.AccessionID }}"/>
+                <input type="number" name="repository_id" id="repository_id" value="{{ .repository.ID }}"/>
+                <input type="number" name="resource_id" id="resource_id" value="{{ .resource.ID }}"/>
+                <input type="number" name="accession_id" id="accession_id" value="{{ .accession.ID }}"/>
             </div>
+
             <div class="form-row">
-                <div class="col">
-                    <div class="form-group">
+                <div class="col-sm">
+                    <label for="subtype">ID</label>
+                </div>
+                <div class="col-sm">
+                    <input type="number" id="media_id" name="media_id"/>
+                </div>
+            </div>
+
+            <div class="form-row">
+                    <div class="col-sm">
                         <label for="subtype">Optical Type</label>
+                    </div>
+                    <div class="col-sm">
                         <select name="subtype" id="subtype">
                             {{ range $subtype := .subtypes }}
                             <option value="{{ $subtype }}">{{ $subtype }}</option>
                             {{ end }}
                         </select>
                     </div>
-                </div>
-                <div class="col">
+            </div>
+
+            <div class="form-row">
+                <div class="col-sm">
                     <label for="manufacturer">Manufacturer</label>
+                </div>
+                <div class="col-sm">
                     <input name="manufacturer" id="manufacturer" type="text">
                 </div>
-                <div class="col">
+            </div>
+
+            <div class="form-row">
+                <div class="col-sm">
                     <label for="stock_size">Stock Size</label>
+                </div>
+                <div class="col-sm">
                     <input name="stock_size" id="stock_size" type="number">
                 </div>
-                <div class="col">
-                    <div class="form-group">
+
+                <div class="col-sm">
                         <label for="stock_unit">Stock Unit</label>
-                        <select name="stock_unit" id="stock_unit">
-                            {{ range $unit := .units }}
+                </div>
+                <div class="col-sm">
+                    <select name="stock_unit" id="stock_unit">
+                        {{ range $unit := .units }}
                             <option value="{{ $unit }}">{{ $unit }}</option>
-                            {{ end }}
-                        </select>
-                    </div>
+                        {{ end }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-sm">
+                    <label for="content_type">Content Type</label>
+                </div>
+                <div class="col-sm">
+                    <select name="content_type" id="content_type">
+                        {{ range $contentType := .contentTypes }}
+                        <option value="{{ $contentType }}">{{ $contentType }}</option>
+                        {{ end }}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-sm">
+                    <label for="original_id">Original ID</label>
+                </div>
+                <div class="col-sm">
+                    <input name="original_id" id="original_id" type="text">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-sm">
+                    <label for="ref_id">Ref ID</label>
+                </div>
+                <div class="col-sm">
+                    <input name="ref_id" id="ref_id" type="text">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-sm">
+                    <label for="box_number">Box Number</label>
+                </div>
+                <div class="col-sm">
+                    <input name="box_number" id="box_number" type="text">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-sm">
+                    <label for="label_text">Label Text</label>
+                </div>
+                <div class="col-sm">
+                    <textarea id="label_text" name="label_text" cols="60" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-sm">
+                    <label for="media_note">Media Note</label>
+                </div>
+                <div class="col-sm">
+                    <textarea id="media_note" name="media_note" cols="60" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-sm">
+                    <label for="disposition_note">Disposition Note</label>
+                </div>
+                <div class="col-sm">
+                    <textarea id="disposition_note" name="disposition_note" cols="60" rows="5"></textarea>
                 </div>
             </div>
             <input type="submit" class="btn btn-primary">
