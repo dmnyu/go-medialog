@@ -175,6 +175,7 @@ func loadRoutes(router *gin.Engine) {
 	repoRoutes.GET("/:id/show", func(c *gin.Context) { controllers.GetRepository(c) })
 	repoRoutes.GET("/:id/edit", func(c *gin.Context) { NullRoute(c) })
 	repoRoutes.GET("/:id/delete", func(c *gin.Context) { NullRoute(c) })
+	repoRoutes.GET("/new", func(c *gin.Context) { controllers.AddRepository(c) })
 	repoRoutes.POST("/preview", func(c *gin.Context) { controllers.PreviewRepository(c) })
 	repoRoutes.POST("/create", func(c *gin.Context) { controllers.CreateRepository(c) })
 

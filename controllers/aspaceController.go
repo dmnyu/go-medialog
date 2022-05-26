@@ -55,3 +55,22 @@ func GetAccessionListForResource(repositoryID int, resourceID int) ([]aspace.Acc
 	}
 	return client.GetAccessionList(repositoryID, resourceID)
 }
+
+func GetASpaceRepositories() (*map[int]string, error) {
+	GetClient()
+	repositoryIDs, err := client.GetRepositories()
+	if err != nil {
+		return nil, err
+	}
+
+	repositories := map[int]string{}
+	for _, repoID := range repositoryIDs {
+		repository, err := client.GetRepository(repoID)
+		if err != nil {
+			return nil, err
+		}
+		repositories[repoID] = repository.Name
+	}
+
+	return &repositories, nil
+}

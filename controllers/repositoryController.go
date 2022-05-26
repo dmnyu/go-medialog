@@ -6,6 +6,7 @@ import (
 	"github.com/dmnyu/go-medialog/shared"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -89,6 +90,18 @@ func GetRepositories(c *gin.Context) {
 	repositories := database.FindRepositories()
 	c.HTML(http.StatusOK, "repositories-index.html", gin.H{
 		"title":        "go-medialog - repositories",
+		"repositories": repositories,
+	})
+}
+
+func AddRepository(c *gin.Context) {
+	repositories, err := GetASpaceRepositories()
+	if err != nil {
+		log.Printf("[ERROR] [ASPACE] %s", err)
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.HTML(http.StatusOK, "repositories-new.html", gin.H{
 		"repositories": repositories,
 	})
 }

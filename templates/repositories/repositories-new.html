@@ -1,0 +1,17 @@
+{{ template "header.html" . }}
+<div class="row">
+    <div class="lead">add a repository</div>
+</div>
+<div class="row">
+    <div class="form-inline">
+        <form action="/repositories/preview" method="POST">
+            <select name="aspace_id" id="aspace_id">
+                {{ range $key, $value := .repositories }}
+                <option value="{{ $key}}">{{ $value }}</option>
+                {{ end }}
+            </select>
+            <input type="submit"/>
+        </form>
+    </div>
+</div>
+{{ template "footer.html" . }}
