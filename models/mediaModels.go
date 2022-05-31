@@ -9,9 +9,24 @@ const (
 	HardDiskDrive
 )
 
+var MediaSubTypes = map[MediaModel][]string{}
+
 var MediaNames = map[MediaModel]string{
 	OpticalDisc:   "Optical Disc",
 	HardDiskDrive: "Hard Disk Drive",
+}
+
+type MediaType struct {
+	Name     string
+	Subtypes []string
+}
+
+func GetMediaTypes() map[MediaModel]MediaType {
+	mediaTypes := map[MediaModel]MediaType{}
+	for k, v := range MediaSubTypes {
+		mediaTypes[k] = MediaType{MediaNames[k], v}
+	}
+	return mediaTypes
 }
 
 var MediaUnit = []string{"B", "KB", "MB", "GB", "TB"}

@@ -7,8 +7,11 @@ import (
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/dmnyu/go-medialog/index"
 	"github.com/dmnyu/go-medialog/models"
+	"github.com/dmnyu/go-medialog/shared"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/yaml.v2"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -16,36 +19,69 @@ import (
 )
 
 var (
-	migrate        bool
-	reindex        bool
-	goAspaceConfig string
-	logFileLoc     string
-	databaseLoc    string
-	accessionIDs   map[int]string
-	resourceIDs    map[int]string
+	migrate         bool
+	reindex         bool
+	config          string
+	accessionIDs    map[int]string
+	resourceIDs     map[int]string
+	logFileLocation string
+	router          = gin.Default()
 )
 
 func init() {
 	flag.BoolVar(&migrate, "migrate", false, "")
 	flag.BoolVar(&reindex, "reindex", false, "")
-	flag.StringVar(&goAspaceConfig, "config", "", "")
-	flag.StringVar(&logFileLoc, "log-file", "gomedialog.log", "")
-	flag.StringVar(&controllers.AspaceEnv, "environment", "dev", "")
-	flag.StringVar(&database.DatabaseLoc, "database", "gomedialog.db", "")
+	flag.StringVar(&config, "config", "config/go-medialog.yml", "")
 }
 
-var router = gin.Default()
+type GoMedialogConfig struct {
+	Log          string `yaml:"log"`
+	Database     string `yaml:"database"`
+	AspaceConfig string `yaml:"aspace_config"`
+	AspaceEnv    string `yaml:"aspace_env"`
+}
+
+func configure() {
+
+	//ensure the config file exists
+	if err := shared.FileExists(config); err != nil {
+		panic(err)
+	}
+
+	configBytes, err := ioutil.ReadFile(config)
+	if err != nil {
+		panic(err)
+	}
+
+	goMedialogConfig := GoMedialogConfig{}
+
+	if err := yaml.Unmarshal(configBytes, &goMedialogConfig); err != nil {
+		panic(err)
+	}
+
+	logFileLocation = goMedialogConfig.Log
+
+	//set the database
+	database.DatabaseLoc = goMedialogConfig.Database
+
+	//setup aspace
+	controllers.AspaceConfig = goMedialogConfig.AspaceConfig
+	controllers.AspaceEnv = goMedialogConfig.AspaceEnv
+
+}
 
 func main() {
 	flag.Parse()
-	logfile, err := os.OpenFile(logFileLoc, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	configure()
+
+	logfile, err := os.OpenFile(logFileLocation, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		panic(err)
 	}
 	defer logfile.Close()
 	log.SetOutput(logfile)
+	log.Printf("[INFO] [APP] logging to %s", logFileLocation)
 	log.Println("[INFO] [APP] starting go-medialog ☮")
-	log.Printf("[INFO] [APP] logging to %s", logFileLoc)
 
 	//migrate the database if `migrate` flag is set
 	if migrate == true {

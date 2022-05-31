@@ -6,6 +6,10 @@ import (
 	"gorm.io/gorm"
 )
 
+func init() {
+	MediaSubTypes[HardDiskDrive] = HardDriveSubtypes
+}
+
 var HardDriveSubtypes = []string{"5.25 inch magnetic", "3.5 inch magnetic", "3.5 inch SSD"}
 
 type MediaHardDrive struct {

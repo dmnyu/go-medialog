@@ -3,9 +3,10 @@ package controllers
 import "github.com/nyudlts/go-aspace"
 
 var (
-	client    *aspace.ASClient
-	err       error
-	AspaceEnv string
+	client       *aspace.ASClient
+	err          error
+	AspaceEnv    string
+	AspaceConfig string
 )
 
 func SetEnvironment(env string) {
