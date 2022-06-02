@@ -30,44 +30,53 @@ func init() {
 	transport = es.Transport
 }
 
-func AddToIndex(entry models.MediaEntry) (string, error) {
-	s, err := json.Marshal(entry)
+func AddToIndex(entry models.MediaEntry, docID *string) (*models.ESTXResponse, error) {
+	createEntry, err := json.Marshal(entry)
 	if err != nil {
-		return "Could Not Marshal Entry", err
+		return nil, err
 	}
-	msg := bytes.NewReader(s)
-	createRequest := esapi.IndexRequest{Index: index, Body: msg}
-	resp, err := createRequest.Do(context.Background(), es.Transport)
+
+	createRequest := esapi.IndexRequest{Index: index, Body: bytes.NewReader(createEntry)}
+	if docID != nil {
+		createRequest.DocumentID = *docID
+	}
+
+	resp, err := createRequest.Do(ctx, transport)
+	if err != nil {
+		return nil, err
+	}
 	defer resp.Body.Close()
-	if err != nil {
-		return resp.String(), err
-	}
-	return resp.String(), nil
-}
 
-func UpdateDocument(entry models.MediaEntry, docID string) (*models.ESCreateResponse, error) {
-
-	if err := DeleteFromIndex(docID); err != nil {
-		return nil, err
-	}
-
-	msg, err := AddToIndex(entry)
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	response := models.ESCreateResponse{}
-	json.Unmarshal([]byte(msg), &response)
-
-	return &response, nil
+	createResponse := models.ESTXResponse{}
+	if err := json.Unmarshal(body, &createResponse); err != nil {
+		return nil, err
+	}
+	createResponse.Json = string(body)
+	return &createResponse, nil
 }
 
-func DeleteFromIndex(docID string) error {
-	_, err := esapi.DeleteRequest{Index: index, DocumentID: docID}.Do(ctx, es.Transport)
+func DeleteFromIndex(docID string) (*models.ESTXResponse, error) {
+	deleteRequest, err := esapi.DeleteRequest{Index: index, DocumentID: docID}.Do(ctx, es.Transport)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	defer deleteRequest.Body.Close()
+	body, err := ioutil.ReadAll(deleteRequest.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	deleteResponse := models.ESTXResponse{}
+	if err := json.Unmarshal(body, &deleteResponse); err != nil {
+		return nil, err
+	}
+	deleteResponse.Json = string(body)
+	return &deleteResponse, nil
 }
 
 func FindDoc(docID string) (*models.MediaEntry, error) {

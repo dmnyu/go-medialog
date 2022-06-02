@@ -1,12 +1,12 @@
 {{ template "header.html" .}}
-<br>
+<br xmlns="http://www.w3.org/1999/html">
 
 <div class="card card-default">
     <div class="card-header">
         {{ template "RepResAcc.html" . }}
     </div>
     <div class="card-body">
-        <form action="/media/update/optical/{{ .docID }}" method="post"/>
+        <form action="/media/{{ .docID }}/update/optical" method="post"/>
         <div style="display:none;">
             <input type="hidden" name="id" id="id" value=".optical.ID">
             <input type="hidden" name="repository_id" id="repository_id" value="{{ .optical.RepositoryID }}"/>
@@ -137,7 +137,7 @@
                 <label for="label_text">Label Text</label>
             </div>
             <div class="col-sm">
-                <textarea id="label_text" name="label_text" cols="60" rows="5" value="{{ .optical.LabelText }}"></textarea>
+                <textarea id="label_text" name="label_text" cols="60" rows="5">{{ .optical.LabelText }}</textarea>
             </div>
         </div>
         <div class="form-row">
@@ -145,7 +145,7 @@
                 <label for="media_note">Media Note</label>
             </div>
             <div class="col-sm">
-                <textarea id="media_note" name="media_note" cols="60" rows="5" value="{{ .optical.MediaNote }}"></textarea>
+                <textarea id="media_note" name="media_note" cols="60" rows="5">{{ .optical.MediaNote }}</textarea>
             </div>
         </div>
         <div class="form-row">
@@ -153,10 +153,10 @@
                 <label for="disposition_note">Disposition Note</label>
             </div>
             <div class="col-sm">
-                <textarea id="disposition_note" name="disposition_note" cols="60" rows="5" value="{{ .optical.DispositionNote }}"></textarea>
+                <textarea id="disposition_note" name="disposition_note" cols="60" rows="5">{{ .optical.DispositionNote }}</textarea>
             </div>
         </div>
-            <input type="submit"/>
+            <input type="submit" class="btn btn-primary" value="Save"/>
         </form>
     </div>
 </div>

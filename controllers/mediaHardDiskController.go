@@ -50,7 +50,7 @@ func CreateHardDiskDrive(c *gin.Context) {
 	}
 
 	//insert into index
-	resp, err := index.AddToIndex(hardDiskDrive.GetMediaEntry())
+	resp, err := index.AddToIndex(hardDiskDrive.GetMediaEntry(), nil)
 	if err != nil {
 		log.Printf("[ERROR] [INDEX]] %s", err.Error())
 		c.JSON(http.StatusInternalServerError, err.Error())
@@ -65,12 +65,14 @@ func CreateHardDiskDrive(c *gin.Context) {
 func deleteHardDiskDrive(c *gin.Context, docID string, entry *models.MediaEntry) {
 
 	//remove entry from index
-	if err := index.DeleteFromIndex(docID); err != nil {
+	deleteMsg, err := index.DeleteFromIndex(docID)
+	if err != nil {
 		log.Printf("[ERROR] [INDEX] %s", err.Error())
 		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
 
-	log.Printf("[INFO] [INDEX] removed document %s from index", docID)
+	log.Printf("[INFO] [INDEX] %s", deleteMsg)
 
 	//remove entry from database
 	if err := database.DeleteHardDiskDrive(entry.DatabaseID); err != nil {

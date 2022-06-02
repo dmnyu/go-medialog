@@ -11,7 +11,7 @@ func Reindex() error {
 	//optical disks
 	log.Printf("[INFO] [INDEX] indexing optical discs")
 	for _, disk := range *database.FindOpticaDiscs() {
-		resp, err := AddToIndex(disk.GetMediaEntry())
+		resp, err := AddToIndex(disk.GetMediaEntry(), nil)
 		if err != nil {
 			return err
 		}
@@ -21,7 +21,7 @@ func Reindex() error {
 	//hard drives
 	log.Printf("[INFO] [INDEX] indexing hard disk drives")
 	for _, hdd := range *database.FindHardDiskDrives() {
-		resp, err := AddToIndex(hdd.GetMediaEntry())
+		resp, err := AddToIndex(hdd.GetMediaEntry(), nil)
 		if err != nil {
 			return err
 		}

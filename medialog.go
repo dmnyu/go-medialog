@@ -161,7 +161,6 @@ func main() {
 }
 
 //global functions
-
 func formatAsDate(t time.Time) string {
 	year, month, day := t.Date()
 	return fmt.Sprintf("%d-%d-%d", year, month, day)
@@ -199,9 +198,7 @@ func getIdentifiers() {
 	resourceIDs = *database.GetResourceIdentifiers()
 }
 
-func isEqual(a string, b string) bool {
-	return a == b
-}
+func isEqual(a string, b string) bool { return a == b }
 
 //Routes
 func loadRoutes(router *gin.Engine) {
@@ -243,8 +240,12 @@ func loadRoutes(router *gin.Engine) {
 	mediaRoutes.GET("/:id/show", func(c *gin.Context) { controllers.ShowMedia(c) })
 	mediaRoutes.GET("/:id/edit", func(c *gin.Context) { controllers.EditMedia(c) })
 	mediaRoutes.GET("/:id/delete", func(c *gin.Context) { controllers.DeleteMedia(c) })
+
+	//Optical Disc Routes
 	mediaRoutes.POST("/create/optical", func(c *gin.Context) { controllers.CreateOpticalDisc(c) })
-	mediaRoutes.POST("/update/optical/:id", func(c *gin.Context) { controllers.UpdateOpticalDisc(c) })
+	mediaRoutes.POST("/:id/update/optical", func(c *gin.Context) { controllers.UpdateOpticalDisc(c) })
+
+	//Hard Disk Drive routes
 	mediaRoutes.POST("/create/hard-disk-drive", func(c *gin.Context) { controllers.CreateHardDiskDrive(c) })
 
 	//API Routes
