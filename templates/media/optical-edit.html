@@ -1,0 +1,165 @@
+{{ template "header.html" .}}
+<br>
+
+<div class="card card-default">
+    <div class="card-header">
+        {{ template "RepResAcc.html" . }}
+    </div>
+    <div class="card-body">
+        <form action="/media/update/optical/{{ .docID }}" method="post"/>
+        <div style="display:none;">
+            <input type="hidden" name="id" id="id" value=".optical.ID">
+            <input type="hidden" name="repository_id" id="repository_id" value="{{ .optical.RepositoryID }}"/>
+            <input type="number" name="resource_id" id="resource_id" value="{{ .optical.ResourceID }}"/>
+            <input type="number" name="accession_id" id="accession_id" value="{{ .optical.AccessionID }}"/>
+            <input type="number" name="model_id" id="model_id" value="{{ .optical.ModelID }}"/>
+            <input type="number" name="media_id" id="media_id" value="{{ .optical.MediaID }}"/>
+        </div>
+
+        <div class="form-row">
+            <div class="col-sm">
+                <label for="subtype">ID</label>
+            </div>
+            <div class="col-sm">
+                {{ .optical.MediaID }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-sm">
+                <label for="subtype">Optical Type</label>
+            </div>
+            <div class="col-sm">
+
+                {{ $objSubtype := .optical.Subtype }}
+                <select name="subtype" id="subtype">
+                    {{ range $subtype := .subtypes }}
+                        {{ if isEqual $objSubtype $subtype }}
+                            <option value="{{ $subtype }}" selected>{{ $subtype }}</option>
+                        {{ else }}
+                            <option value="{{ $subtype }}" >{{ $subtype }}</option>
+                        {{ end }}
+                    {{ end }}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-sm">
+                <label for="manufacturer">Manufacturer</label>
+            </div>
+            <div class="col-sm">
+                <input name="manufacturer" id="manufacturer" type="text" value="{{ .optical.Manufacturer }}">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-sm">
+                <label for="manufacturer">Diameter</label>
+            </div>
+            <div class="col-sm">
+                <input name="diameter" id="diameter" type="number"  step="0.01" value="{{ .optical.Diameter }}">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-sm">
+                <label for="stock_size">Stock Size</label>
+            </div>
+            <div class="col-sm">
+                <input name="stock_size" id="stock_size" type="number" value="{{ .optical.StockSize }}">
+            </div>
+
+            <div class="col-sm">
+                <label for="stock_unit">Stock Unit</label>
+            </div>
+            {{ $objStockUnit := .optical.StockUnit }}
+            <div class="col-sm">
+                <select name="stock_unit" id="stock_unit">
+                    {{ range $unit := .units }}
+                        {{ if isEqual $unit $objStockUnit }}
+                            <option selected value="{{ $unit }}">{{ $unit }}</option>
+                        {{ else }}
+                            <option value="{{ $unit }}">{{ $unit }}</option>
+                        {{ end }}
+                    {{ end }}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-sm">
+                <label for="content_type">Content Type</label>
+            </div>
+            <div class="col-sm">
+                {{ $objContentType := .optical.ContentType }}
+                <select name="content_type" id="content_type">
+                    {{ range $contentType := .contentTypes }}
+                        {{ if isEqual $contentType $objContentType }}
+                            <option selected value="{{ $contentType }}">{{ $contentType }}</option>
+                        {{ else }}
+                            <option value="{{ $contentType }}">{{ $contentType }}</option>
+                        {{ end }}
+                    {{ end }}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-sm">
+                <label for="original_id">Original ID</label>
+            </div>
+            <div class="col-sm">
+                <input name="original_id" id="original_id" type="text" value="{{ .optical.OriginalID }}">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-sm">
+                <label for="ref_id">Ref ID</label>
+            </div>
+            <div class="col-sm">
+                <input name="ref_id" id="ref_id" type="text" value="{{ .optical.RefID }}">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-sm">
+                <label for="box_number">Box Number</label>
+            </div>
+            <div class="col-sm">
+                <input name="box_number" id="box_number" type="text" value="{{ .optical.RefID }}">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-sm">
+                <label for="label_text">Label Text</label>
+            </div>
+            <div class="col-sm">
+                <textarea id="label_text" name="label_text" cols="60" rows="5" value="{{ .optical.LabelText }}"></textarea>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-sm">
+                <label for="media_note">Media Note</label>
+            </div>
+            <div class="col-sm">
+                <textarea id="media_note" name="media_note" cols="60" rows="5" value="{{ .optical.MediaNote }}"></textarea>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-sm">
+                <label for="disposition_note">Disposition Note</label>
+            </div>
+            <div class="col-sm">
+                <textarea id="disposition_note" name="disposition_note" cols="60" rows="5" value="{{ .optical.DispositionNote }}"></textarea>
+            </div>
+        </div>
+            <input type="submit"/>
+        </form>
+    </div>
+</div>
+
+
+{{ template "footer.html" .}}

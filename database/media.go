@@ -32,6 +32,14 @@ func FindOpticaDiscs() *[]models.MediaOpticalDisc {
 	return &discs
 }
 
+func UpdateOpticalDisc(disc *models.MediaOpticalDisc) error {
+	if err := db.Save(disc).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func InsertHardDiskDrive(hd *models.MediaHardDrive) error {
 	if err := db.Create(hd).Error; err != nil {
 		return err

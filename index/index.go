@@ -9,6 +9,7 @@ import (
 	"github.com/dmnyu/go-medialog/shared"
 	elasticsearch7 "github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
+	"github.com/elastic/go-elasticsearch/v7/estransport"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -17,14 +18,16 @@ import (
 const index = "media"
 
 var (
-	es      *elasticsearch7.Client
-	indexes = []string{index}
-	ctx     context.Context
+	es        *elasticsearch7.Client
+	indexes   = []string{index}
+	ctx       context.Context
+	transport estransport.Interface
 )
 
 func init() {
 	es, _ = elasticsearch7.NewDefaultClient()
 	ctx = context.Background()
+	transport = es.Transport
 }
 
 func AddToIndex(entry models.MediaEntry) (string, error) {
@@ -40,6 +43,23 @@ func AddToIndex(entry models.MediaEntry) (string, error) {
 		return resp.String(), err
 	}
 	return resp.String(), nil
+}
+
+func UpdateDocument(entry models.MediaEntry, docID string) (*models.ESCreateResponse, error) {
+
+	if err := DeleteFromIndex(docID); err != nil {
+		return nil, err
+	}
+
+	msg, err := AddToIndex(entry)
+	if err != nil {
+		return nil, err
+	}
+
+	response := models.ESCreateResponse{}
+	json.Unmarshal([]byte(msg), &response)
+
+	return &response, nil
 }
 
 func DeleteFromIndex(docID string) error {

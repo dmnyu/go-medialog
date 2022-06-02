@@ -142,6 +142,7 @@ func main() {
 		"getMediaType":           getMediaType,
 		"getAccessionIdentifier": getAccessionIdentifier,
 		"getResourceIdentifier":  getResourceIdentifier,
+		"isEqual":                isEqual,
 	})
 
 	//configure router
@@ -198,6 +199,10 @@ func getIdentifiers() {
 	resourceIDs = *database.GetResourceIdentifiers()
 }
 
+func isEqual(a string, b string) bool {
+	return a == b
+}
+
 //Routes
 func loadRoutes(router *gin.Engine) {
 
@@ -236,8 +241,10 @@ func loadRoutes(router *gin.Engine) {
 	mediaRoutes.GET("/entries", func(c *gin.Context) { controllers.GetEntries(c) })
 	mediaRoutes.POST("/new", func(c *gin.Context) { controllers.NewMedia(c) })
 	mediaRoutes.GET("/:id/show", func(c *gin.Context) { controllers.ShowMedia(c) })
+	mediaRoutes.GET("/:id/edit", func(c *gin.Context) { controllers.EditMedia(c) })
 	mediaRoutes.GET("/:id/delete", func(c *gin.Context) { controllers.DeleteMedia(c) })
 	mediaRoutes.POST("/create/optical", func(c *gin.Context) { controllers.CreateOpticalDisc(c) })
+	mediaRoutes.POST("/update/optical/:id", func(c *gin.Context) { controllers.UpdateOpticalDisc(c) })
 	mediaRoutes.POST("/create/hard-disk-drive", func(c *gin.Context) { controllers.CreateHardDiskDrive(c) })
 
 	//API Routes

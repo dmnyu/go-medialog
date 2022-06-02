@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/dmnyu/go-medialog/index"
 	"github.com/dmnyu/go-medialog/models"
@@ -55,10 +56,28 @@ func ShowMedia(c *gin.Context) {
 
 	switch entry.ModelID {
 	case models.OpticalDisc:
-		showOpticalDisc(c, entry)
+		showOpticalDisc(c, entry, docID)
 	default:
 		c.JSON(http.StatusInternalServerError, "Not Implemented Yet")
+	}
+}
 
+func EditMedia(c *gin.Context) {
+	docID := c.Param("id")
+	entry, err := index.FindDoc(docID)
+	if err != nil {
+		log.Printf("[ERROR] [INDEX] %s", err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	switch entry.ModelID {
+	case models.OpticalDisc:
+		editOpticalDisc(c, entry, docID)
+	default:
+		log.Printf("[ERROR] [MEDIALOG] no route available for type %d", models.OpticalDisc)
+		c.JSON(http.StatusInternalServerError, fmt.Sprintf("no route available for type %d", models.OpticalDisc))
+		return
 	}
 }
 

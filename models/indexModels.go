@@ -24,6 +24,17 @@ type ESTotal struct {
 	Relation string `json:"relation"`
 }
 
+type ESCreateResponse struct {
+	Index       string  `json:"_index"`
+	Type        string  `json:"_type"`
+	ID          string  `json:"_id"`
+	Version     int     `json:"_version"`
+	Result      string  `json:"result"`
+	Shards      ESShard `json:"_shards"`
+	SeqNum      int     `json:"_seq_num"`
+	PrimaryTerm int     `json:"_primary_term"`
+}
+
 type ESHit struct {
 	Index  string     `json:"_index"`
 	Type   string     `json:"_type"`

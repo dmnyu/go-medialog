@@ -17,6 +17,9 @@
         <td>Subtype</td><td>{{ .optical.Subtype }}</td>
       </tr>
       <tr>
+        <td>Content Type</td><td>{{ .optical.ContentType }}</td>
+      </tr>
+      <tr>
         <td>Orginal ID</td><td>{{ .optical.OriginalID }}</td>
       </tr>
       <tr>
@@ -41,6 +44,7 @@
         <td>Disposition Note</td><td>{{ .optical.DispositionNote }}</td>
       </tr>
     </table>
+    <a href="/media/{{ .docID }}/edit" class="btn btn-primary">Edit</a>
   </div>
 </div>
 

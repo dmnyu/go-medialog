@@ -86,7 +86,7 @@ func CreateOpticalDisc(c *gin.Context) {
 
 }
 
-func showOpticalDisc(c *gin.Context, entry *models.MediaEntry) {
+func showOpticalDisc(c *gin.Context, entry *models.MediaEntry, docID string) {
 	repResAcc, err := GetRepResAcc(entry)
 	if err != nil {
 		log.Printf("[ERROR] [DATABASE] %s", err.Error())
@@ -103,8 +103,73 @@ func showOpticalDisc(c *gin.Context, entry *models.MediaEntry) {
 
 	c.HTML(http.StatusOK, "optical-show.html", gin.H{
 		"optical":   optical,
+		"docID":     docID,
 		"repResAcc": repResAcc,
 	})
+}
+
+func editOpticalDisc(c *gin.Context, entry *models.MediaEntry, docID string) {
+	repResAcc, err := GetRepResAcc(entry)
+	if err != nil {
+		log.Printf("[ERROR] [DATABASE] %s", err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	optical, err := database.FindOpticalDisc(int(entry.DatabaseID))
+	if err != nil {
+		log.Printf("[ERROR] [DATABASE] %s", err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.HTML(http.StatusOK, "optical-edit.html", gin.H{
+		"optical":      optical,
+		"docID":        docID,
+		"repResAcc":    repResAcc,
+		"subtypes":     models.OpticalSubtypes,
+		"units":        models.MediaUnit,
+		"contentTypes": models.OpticalContentTypes,
+	})
+}
+
+func UpdateOpticalDisc(c *gin.Context) {
+	var optical = models.MediaOpticalDisc{}
+	if err := c.Bind(&optical); err != nil {
+		log.Printf("[ERROR] [MEDIALOG] cannot create optical struct from request: %s", err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	docID := c.Param("id")
+	entry, err := index.FindDoc(docID)
+	if err != nil {
+		log.Printf("[ERROR] [INDEX] %s", err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	optical.ID = entry.DatabaseID
+
+	if err := database.UpdateOpticalDisc(&optical); err != nil {
+		log.Printf("[ERROR] [DATABASE] cannot update: %s", err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	mediaEntry := optical.GetMediaEntry()
+
+	updateResp, err := index.UpdateDocument(mediaEntry, docID)
+	if err != nil {
+		log.Printf("[ERROR] [INDEX] %s", err.Error())
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	log.Printf("[INFO] [INDEX] %s", updateResp)
+
+	newDocID := updateResp.ID
+	c.Redirect(http.StatusFound, fmt.Sprintf("/media/%s/show", newDocID))
 }
 
 func deleteOpticalDisc(c *gin.Context, docID string, entry *models.MediaEntry) {
