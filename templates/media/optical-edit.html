@@ -128,7 +128,7 @@
                 <label for="box_number">Box Number</label>
             </div>
             <div class="col-sm">
-                <input name="box_number" id="box_number" type="text" value="{{ .optical.RefID }}">
+                <input name="box_number" id="box_number" type="text" value="{{ .optical.BoxNumber }}">
             </div>
         </div>
 
@@ -140,6 +140,7 @@
                 <textarea id="label_text" name="label_text" cols="60" rows="5">{{ .optical.LabelText }}</textarea>
             </div>
         </div>
+
         <div class="form-row">
             <div class="col-sm">
                 <label for="media_note">Media Note</label>
@@ -148,6 +149,7 @@
                 <textarea id="media_note" name="media_note" cols="60" rows="5">{{ .optical.MediaNote }}</textarea>
             </div>
         </div>
+
         <div class="form-row">
             <div class="col-sm">
                 <label for="disposition_note">Disposition Note</label>
@@ -155,8 +157,10 @@
             <div class="col-sm">
                 <textarea id="disposition_note" name="disposition_note" cols="60" rows="5">{{ .optical.DispositionNote }}</textarea>
             </div>
+
         </div>
-            <input type="submit" class="btn btn-primary" value="Save"/>
+        <input type="submit" class="btn btn-primary" value="Update"/>
+        <a href="/media/{{ .docID }}/show" class="btn btn-danger">Cancel</a>
         </form>
     </div>
 </div>
