@@ -42,12 +42,6 @@ func GetAccession(c *gin.Context) {
 		}
 	}
 
-	pagination := shared.Pagination{
-		Limit: 10,
-		Page:  p,
-		Sort:  "id asc",
-	}
-
 	accession, err := database.FindAccession(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
@@ -58,14 +52,18 @@ func GetAccession(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	//reposourceIDs := *database.GetResourceIdentifiers()
-
 	resource, err := database.FindResource(accession.ResourceID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	entries, err := index.SearchByAccessionID(int(accession.ID), pagination)
+	pagination := shared.Pagination{
+		Limit: 10,
+		Page:  p,
+		Sort:  "id asc",
+	}
+
+	entries, err := index.FindByType(int(accession.ID), index.Accession, pagination)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return

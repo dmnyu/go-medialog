@@ -24,6 +24,20 @@ var (
 	transport estransport.Interface
 )
 
+type ObjectID int
+
+const (
+	Repository ObjectID = iota
+	Resource
+	Accession
+)
+
+var ObjectIds = map[ObjectID]string{
+	Repository: "repository_id",
+	Resource:   "resource_id",
+	Accession:  "accession_id",
+}
+
 func init() {
 	es, _ = elasticsearch7.NewDefaultClient()
 	ctx = context.Background()
@@ -57,6 +71,7 @@ func AddToIndex(entry models.MediaEntry, docID *string) (*models.ESTXResponse, e
 		return nil, err
 	}
 	createResponse.Json = string(body)
+
 	return &createResponse, nil
 }
 
@@ -102,9 +117,10 @@ func FindDoc(docID string) (*models.MediaEntry, error) {
 
 }
 
-func SearchByAccessionID(accessionID int, pagination shared.Pagination) (*[]models.ESHit, error) {
-	q := fmt.Sprintf(`{"query": {"match": {"accession_id": %d}}}`, accessionID)
+func FindByType(id int, objectTypeID ObjectID, pagination shared.Pagination) (*[]models.ESHit, error) {
 
+	q := fmt.Sprintf(`{"query": {"match": {"%s": %d}}}`, ObjectIds[objectTypeID], id)
+	log.Printf("%v", q)
 	resp, err := esapi.SearchRequest{Index: indexes, Body: strings.NewReader(q)}.Do(context.Background(), es.Transport)
 	if err != nil {
 		return nil, err
