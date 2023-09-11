@@ -5,9 +5,24 @@
         <div class="card-header">
             <h2 class="card-title">Users</h2>
         </div>
+        <table class="table">
+            <th>
+                <td>ID</td>
+                <td>Email</td>
+                <td>Admin?</td>
+                <td>Actions</td>
+            </th>
         <div class="card-body">
-            HI
+            {{ range $user := .users }}
+                <tr>
+                    <td>{{$user.Model.ID}}</td>
+                    <td>{{$user.Email}}</td>
+                    <td>{{$user.IsAdmin}}</td>
+                    <td>DELETE</td>
+                </tr>
+            {{end}}
         </div>
+        </table>
     </div>
 </card>
 {{  template "footer.html" . }}

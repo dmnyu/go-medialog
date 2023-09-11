@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	github.com/elastic/go-elasticsearch/v7 v7.16.0
+	github.com/gin-contrib/sessions v0.0.5
 	github.com/gin-gonic/gin v1.7.7
 	github.com/nyudlts/bytemath v0.0.0-20220407170247-5070297ba554
 	github.com/nyudlts/go-aspace v0.3.8-0.20220511162907-e576f65ff9a3
@@ -13,7 +14,6 @@ require (
 )
 
 require (
-	github.com/gin-contrib/sessions v0.0.5 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect

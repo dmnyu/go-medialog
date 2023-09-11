@@ -34,6 +34,13 @@ func NewUser(c *gin.Context) {
 	c.HTML(http.StatusOK, "users-new.html", gin.H{})
 }
 
+func CreateAdmin(user *models.User) error {
+	if err := database.CreateUser(user); err != nil {
+		return err
+	}
+	return nil
+}
+
 func CreateUser(c *gin.Context) {
 	var createUser = models.CreateUser{}
 	if err := c.Bind(&createUser); err != nil {
@@ -53,8 +60,8 @@ func CreateUser(c *gin.Context) {
 	user.LastName = createUser.LastName
 	user.Email = createUser.Email
 	user.IsAdmin = createUser.IsAdmin
-	user.Salt = randomStringRunes(16)
-	user.PassSHA512 = getSHA512Hash(createUser.Password1 + user.Salt)
+	user.Salt = GenerateStringRunes(16)
+	user.PassSHA512 = GetSHA512Hash(createUser.Password1 + user.Salt)
 
 	if err := database.CreateUser(&user); err != nil {
 		log.Printf("[ERROR] [DATABASE] %s", err.Error())
@@ -90,7 +97,7 @@ func UserAuthenticate(c *gin.Context) {
 		return
 	}
 
-	userSHA := getSHA512Hash(createUser.Password1 + user.Salt)
+	userSHA := GetSHA512Hash(createUser.Password1 + user.Salt)
 
 	if userSHA != user.PassSHA512 {
 		log.Printf("[ERROR] [DATABASE] password was incorrect")
@@ -98,7 +105,7 @@ func UserAuthenticate(c *gin.Context) {
 		return
 	}
 
-	sessionKey := randomStringRunes(32)
+	sessionKey := GenerateStringRunes(32)
 	session := sessions.Default(c)
 	session.Set("auth-key", sessionKey)
 	session.Save()
@@ -113,7 +120,7 @@ func DeleteUser(c *gin.Context) {}
 
 var runes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+{}[]:;<>,.?/")
 
-func randomStringRunes(n int) string {
+func GenerateStringRunes(n int) string {
 	rand.Seed(time.Now().UnixNano())
 	b := make([]rune, n)
 	for i := range b {
@@ -122,7 +129,7 @@ func randomStringRunes(n int) string {
 	return string(b)
 }
 
-func getSHA512Hash(text string) string {
+func GetSHA512Hash(text string) string {
 	hash := sha512.Sum512([]byte(text))
 	return hex.EncodeToString(hash[:])
 }

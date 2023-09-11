@@ -13,6 +13,7 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/yaml.v2"
+	"gorm.io/gorm"
 	"html/template"
 	"log"
 	"os"
@@ -27,12 +28,14 @@ var (
 	resourceIDs     map[int]string
 	logFileLocation string
 	router          = gin.Default()
+	addAdmin        string
 )
 
 func init() {
 	flag.BoolVar(&migrate, "migrate", false, "")
 	flag.BoolVar(&reindex, "reindex", false, "")
 	flag.StringVar(&config, "config", "config/go-medialog.yml", "")
+	flag.StringVar(&addAdmin, "add-admin", "", "")
 }
 
 type GoMedialogConfig struct {
@@ -125,6 +128,30 @@ func main() {
 	}
 	log.Printf("[INFO] [DATABASE] connected to database")
 
+	//create an admin user
+	if addAdmin != "" {
+		salt := controllers.GenerateStringRunes(16)
+		pass := controllers.GetSHA512Hash(addAdmin)
+		admin := models.User{
+			Model:      gorm.Model{},
+			FirstName:  "admin",
+			LastName:   "admin",
+			Email:      "admin@medialog.dlib.nyu.edu",
+			PassSHA512: pass,
+			Salt:       salt,
+			IsAdmin:    true,
+		}
+
+		if err := controllers.CreateAdmin(&admin); err != nil {
+			log.Printf("[FATAL] [DATABASE] could not create admin user")
+			os.Exit(6)
+		}
+
+		log.Printf("[FATAL] [DATABASE] created an admin user")
+		fmt.Println("created admin user - exiting")
+		os.Exit(0)
+	}
+
 	//test archivesspace connection
 	if err := controllers.GetClient(); err != nil {
 		log.Printf("[FATAL] [ASPACE] archivesspace connection failed")
@@ -149,6 +176,7 @@ func main() {
 	//configure router
 	router.LoadHTMLGlob("templates/**/*.html")
 	router.StaticFile("/favicon.ico", "./public/favicon.ico")
+	router.Static("/public", "./public")
 	router.SetTrustedProxies([]string{"127.0.0.1"})
 
 	store := cookie.NewStore([]byte("secret"))
@@ -198,5 +226,3 @@ func getAccessionIdentifier(accessionID int) string { return accessionIDs[access
 func getResourceIdentifier(resourceID int) string { return resourceIDs[resourceID] }
 
 func isEqual(a string, b string) bool { return a == b }
-
-// Routes
