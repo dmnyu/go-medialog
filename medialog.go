@@ -11,7 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"gopkg.in/yaml.v2"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -48,7 +47,7 @@ func configure() {
 		panic(err)
 	}
 
-	configBytes, err := ioutil.ReadFile(config)
+	configBytes, err := os.ReadFile(config)
 	if err != nil {
 		panic(err)
 	}
@@ -160,13 +159,13 @@ func main() {
 
 }
 
-//global functions
+// global functions
 func formatAsDate(t time.Time) string {
 	year, month, day := t.Date()
 	return fmt.Sprintf("%d-%d-%d", year, month, day)
 }
 
-//turn this into a function that uses the db
+// turn this into a function that uses the db
 func getRepoName(i int) string {
 	switch i {
 	case 1:
@@ -200,7 +199,7 @@ func getIdentifiers() {
 
 func isEqual(a string, b string) bool { return a == b }
 
-//Routes
+// Routes
 func loadRoutes(router *gin.Engine) {
 
 	//Main Index
