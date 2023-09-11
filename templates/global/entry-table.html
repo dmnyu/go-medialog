@@ -10,6 +10,7 @@
         </tr>
         </thead>
         <tbody>
+        {{ .isAuthenticated }}
         {{ range $entry := .entries }}
         <tr>
             <td>{{ $entry.Source.MediaID }}</td>

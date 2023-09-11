@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/dmnyu/go-medialog/models"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"log"
 	"math/rand"
@@ -25,7 +26,9 @@ func GetUsers(c *gin.Context) {
 	})
 }
 
-func GetUser(c *gin.Context) {}
+func GetUser(c *gin.Context) {
+	c.JSON(400, "Hello")
+}
 
 func NewUser(c *gin.Context) {
 	c.HTML(http.StatusOK, "users-new.html", gin.H{})
@@ -64,6 +67,14 @@ func CreateUser(c *gin.Context) {
 
 func UserLogin(c *gin.Context) { c.HTML(http.StatusOK, "users-login.html", gin.H{}) }
 
+func UserLogout(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Delete("auth-key")
+	session.Save()
+	c.Redirect(302, "/")
+
+}
+
 func UserAuthenticate(c *gin.Context) {
 	var createUser = models.CreateUser{}
 	if err := c.Bind(&createUser); err != nil {
@@ -86,7 +97,12 @@ func UserAuthenticate(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, "password was incorrect")
 		return
 	}
-	c.JSON(http.StatusOK, user)
+
+	sessionKey := randomStringRunes(32)
+	session := sessions.Default(c)
+	session.Set("auth-key", sessionKey)
+	session.Save()
+	c.Redirect(302, "/")
 }
 
 func EditUser(c *gin.Context) {}

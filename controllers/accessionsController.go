@@ -3,9 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/dmnyu/go-medialog/database"
-	"github.com/dmnyu/go-medialog/index"
 	"github.com/dmnyu/go-medialog/models"
-	"github.com/dmnyu/go-medialog/shared"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -57,23 +55,26 @@ func GetAccession(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	pagination := shared.Pagination{
-		Limit: 10,
-		Page:  p,
-		Sort:  "id asc",
-	}
+	/*
+		pagination := shared.Pagination{
+			Limit: 10,
+			Page:  p,
+			Sort:  "id asc",
+		}
 
-	entries, err := index.FindByType(int(accession.ID), index.Accession, pagination)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
-		return
-	}
+
+			entries, err := index.FindByType(int(accession.ID), index.Accession, pagination)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, err.Error())
+				return
+			}
+	*/
 
 	c.HTML(http.StatusOK, "accessions-show.html", gin.H{
 		"accession":  accession,
 		"repository": repository,
 		"resource":   resource,
-		"entries":    entries,
+		"entries":    nil,
 		"mediaTypes": models.MediaNames,
 		"page":       p,
 	})

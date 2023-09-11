@@ -10,10 +10,9 @@ import (
 func LoadRoutes(router *gin.Engine) {
 
 	//Main Index
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{"title": "go-medialog"})
-	})
+	router.GET("", func(c *gin.Context) { controllers.Index(c) })
 
+	//Repository Routes
 	var repoRoutes = router.Group("/repositories")
 	repoRoutes.GET("", func(c *gin.Context) { controllers.GetRepositories(c) })
 	repoRoutes.GET("/:id/show", func(c *gin.Context) { controllers.GetRepository(c) })
@@ -23,6 +22,7 @@ func LoadRoutes(router *gin.Engine) {
 	repoRoutes.POST("/preview", func(c *gin.Context) { controllers.PreviewRepository(c) })
 	repoRoutes.POST("/create", func(c *gin.Context) { controllers.CreateRepository(c) })
 
+	//Resource Routes
 	var resourceRoutes = router.Group("/resources")
 	resourceRoutes.GET("", func(c *gin.Context) { controllers.GetResources(c) })
 	resourceRoutes.GET("/:id/show", func(c *gin.Context) { controllers.GetResource(c) })
@@ -66,6 +66,7 @@ func LoadRoutes(router *gin.Engine) {
 	userRoutes.GET("/new", func(c *gin.Context) { controllers.NewUser(c) })
 	userRoutes.POST("/create", func(c *gin.Context) { controllers.CreateUser(c) })
 	userRoutes.GET("/login", func(c *gin.Context) { controllers.UserLogin(c) })
+	userRoutes.GET("/logout", func(c *gin.Context) { controllers.UserLogout(c) })
 	userRoutes.POST("/authenticate", func(c *gin.Context) { controllers.UserAuthenticate(c) })
 
 	//Search Routes

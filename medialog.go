@@ -9,6 +9,8 @@ import (
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/dmnyu/go-medialog/routes"
 	"github.com/dmnyu/go-medialog/shared"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/yaml.v2"
 	"html/template"
@@ -148,6 +150,9 @@ func main() {
 	router.LoadHTMLGlob("templates/**/*.html")
 	router.StaticFile("/favicon.ico", "./public/favicon.ico")
 	router.SetTrustedProxies([]string{"127.0.0.1"})
+
+	store := cookie.NewStore([]byte("secret"))
+	router.Use(sessions.Sessions("mysession", store))
 
 	//Load Application Routes
 	routes.LoadRoutes(router)

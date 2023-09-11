@@ -3,9 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/dmnyu/go-medialog/database"
-	"github.com/dmnyu/go-medialog/index"
 	"github.com/dmnyu/go-medialog/models"
-	"github.com/dmnyu/go-medialog/shared"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
@@ -72,18 +70,20 @@ func GetResource(c *gin.Context) {
 			p = 1
 		}
 	}
+	/*
+		pagination := shared.Pagination{
+			Limit: 10,
+			Page:  p,
+			Sort:  "id asc",
+		}
 
-	pagination := shared.Pagination{
-		Limit: 10,
-		Page:  p,
-		Sort:  "id asc",
-	}
 
-	entries, err := index.FindByType(int(resource.ID), index.Accession, pagination)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
-		return
-	}
+			entries, err := index.FindByType(int(resource.ID), index.Accession, pagination)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, err.Error())
+				return
+			}
+	*/
 
 	c.HTML(http.StatusOK, "resources-show.html", gin.H{
 		"title":             "go-medialog - resources",
@@ -91,7 +91,7 @@ func GetResource(c *gin.Context) {
 		"resource":          resource,
 		"relatedAccessions": relatedAccessions,
 		"accessions":        accessions,
-		"entries":           entries,
+		"entries":           nil,
 	})
 }
 
