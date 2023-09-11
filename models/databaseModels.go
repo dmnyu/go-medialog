@@ -9,6 +9,12 @@ type Credentials struct {
 	Pass  string `json:"pass"`
 }
 
+type Session struct {
+	gorm.Model
+	UserID int    `json:"user_id"`
+	Key    string `json:"key"`
+}
+
 type User struct {
 	gorm.Model
 	FirstName  string `json:"first_name" form:"first_name"`

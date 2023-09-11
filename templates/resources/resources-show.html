@@ -38,6 +38,9 @@
         <div class="row">
             <a href="/accessions/{{ .resource.ID }}/new" class="btn btn-primary">Add Accession</a>
         </div>
+        <div class="row">
+            {{ template "entry-table.html" . }}
+        </div>
     </div>
 </div>
 {{ template "footer.html" .}}

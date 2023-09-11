@@ -2,9 +2,15 @@ package routes
 
 import (
 	"github.com/dmnyu/go-medialog/controllers"
+	mediacontrollers "github.com/dmnyu/go-medialog/controllers/media"
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/gin-gonic/gin"
 	"net/http"
+)
+
+var (
+	accessionIDs map[int]string
+	resourceIDs  map[int]string
 )
 
 func LoadRoutes(router *gin.Engine) {
@@ -41,24 +47,18 @@ func LoadRoutes(router *gin.Engine) {
 	accessionRoutes.GET("/:id/new", func(c *gin.Context) { controllers.AddAccession(c) })
 
 	var mediaRoutes = router.Group("/media")
-	mediaRoutes.GET("/entries", func(c *gin.Context) { controllers.GetEntries(c) })
-	mediaRoutes.POST("/new", func(c *gin.Context) { controllers.NewMedia(c) })
-	mediaRoutes.GET("/:id/show", func(c *gin.Context) { controllers.ShowMedia(c) })
-	mediaRoutes.GET("/:id/edit", func(c *gin.Context) { controllers.EditMedia(c) })
-	mediaRoutes.GET("/:id/delete", func(c *gin.Context) { controllers.DeleteMedia(c) })
+	mediaRoutes.GET("/entries", func(c *gin.Context) { mediacontrollers.GetEntries(c) })
+	mediaRoutes.POST("/new", func(c *gin.Context) { mediacontrollers.NewMedia(c) })
+	mediaRoutes.GET("/:id/show", func(c *gin.Context) { mediacontrollers.ShowMedia(c) })
+	mediaRoutes.GET("/:id/edit", func(c *gin.Context) { mediacontrollers.EditMedia(c) })
+	mediaRoutes.GET("/:id/delete", func(c *gin.Context) { mediacontrollers.DeleteMedia(c) })
 
 	//Optical Disc Routes
-	mediaRoutes.POST("/create/optical", func(c *gin.Context) { controllers.CreateOpticalDisc(c) })
-	mediaRoutes.POST("/:id/update/optical", func(c *gin.Context) { controllers.UpdateOpticalDisc(c) })
+	mediaRoutes.POST("/create/optical", func(c *gin.Context) { mediacontrollers.CreateOpticalDisc(c) })
+	mediaRoutes.POST("/:id/update/optical", func(c *gin.Context) { mediacontrollers.UpdateOpticalDisc(c) })
 
 	//Hard Disk Drive routes
-	mediaRoutes.POST("/create/hard-disk-drive", func(c *gin.Context) { controllers.CreateHardDiskDrive(c) })
-
-	//API Routes
-	var apiV0Routes = router.Group("/api/v0")
-	apiV0Routes.POST("/create-optical", func(c *gin.Context) { controllers.CreateOpticalDiscAPI(c) })
-	apiV0Routes.POST("/create-resource", func(c *gin.Context) { controllers.CreateResourceAPI(c) })
-	apiV0Routes.POST("/create-accession", func(c *gin.Context) { controllers.CreateAccessionAPI(c) })
+	mediaRoutes.POST("/create/hard-disk-drive", func(c *gin.Context) { mediacontrollers.CreateHardDiskDrive(c) })
 
 	//User Routes
 	var userRoutes = router.Group("/users")
@@ -68,6 +68,12 @@ func LoadRoutes(router *gin.Engine) {
 	userRoutes.GET("/login", func(c *gin.Context) { controllers.UserLogin(c) })
 	userRoutes.GET("/logout", func(c *gin.Context) { controllers.UserLogout(c) })
 	userRoutes.POST("/authenticate", func(c *gin.Context) { controllers.UserAuthenticate(c) })
+
+	//Session Routes
+	var sessionRoutes = router.Group("/sessions")
+	sessionRoutes.GET("/create", func(c *gin.Context) { controllers.CreateSession(c) })
+	sessionRoutes.DELETE("/:id/destroy", func(c *gin.Context) { controllers.CreateSession(c) })
+	sessionRoutes.GET("", func(c *gin.Context) { controllers.CreateSession(c) })
 
 	//Search Routes
 	var searchRoutes = router.Group("/search")
@@ -81,11 +87,6 @@ func LoadRoutes(router *gin.Engine) {
 func NullRoute(c *gin.Context) {
 	c.JSON(http.StatusInternalServerError, "Unsupported Route")
 }
-
-var (
-	accessionIDs map[int]string
-	resourceIDs  map[int]string
-)
 
 func getIdentifiers() {
 	accessionIDs = *database.GetAccessionIdentifiers()

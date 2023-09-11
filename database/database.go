@@ -50,6 +50,10 @@ func MigrateDatabase() error {
 		return err
 	}
 
+	if err := db.AutoMigrate(&models.Session{}); err != nil {
+		return err
+	}
+
 	return nil
 
 }

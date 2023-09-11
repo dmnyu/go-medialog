@@ -28,14 +28,16 @@ var (
 	resourceIDs     map[int]string
 	logFileLocation string
 	router          = gin.Default()
-	addAdmin        string
+	addAdmin        bool
+	adminPass       string
 )
 
 func init() {
 	flag.BoolVar(&migrate, "migrate", false, "")
 	flag.BoolVar(&reindex, "reindex", false, "")
 	flag.StringVar(&config, "config", "config/go-medialog.yml", "")
-	flag.StringVar(&addAdmin, "add-admin", "", "")
+	flag.BoolVar(&addAdmin, "add-admin", false, "")
+	flag.StringVar(&adminPass, "pass", "", "")
 }
 
 type GoMedialogConfig struct {
@@ -129,9 +131,13 @@ func main() {
 	log.Printf("[INFO] [DATABASE] connected to database")
 
 	//create an admin user
-	if addAdmin != "" {
+	if addAdmin {
+		if adminPass == "" {
+			log.Printf("[FATAL] [DATABASE] admin user creation requires a password being set with the --pass option")
+			os.Exit(6)
+		}
 		salt := controllers.GenerateStringRunes(16)
-		pass := controllers.GetSHA512Hash(addAdmin)
+		pass := controllers.GetSHA512Hash(adminPass + salt)
 		admin := models.User{
 			Model:      gorm.Model{},
 			FirstName:  "admin",
