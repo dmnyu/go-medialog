@@ -5,6 +5,7 @@ gomedialog.db
 go-medialog
 gomedialog.log
 gomedialog.sqlite3
+medialog
 build/*
 
 # Binaries for programs and plugins
