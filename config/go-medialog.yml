@@ -1,4 +1,0 @@
-log: /var/log/medialog/gomedialog.log
-database: /var/db/medialog/gomedialog.sqlite3
-aspace_config: /etc/sysconfig/go-aspace.yml
-aspace_env: dev
