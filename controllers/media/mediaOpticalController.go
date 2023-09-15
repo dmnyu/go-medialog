@@ -2,13 +2,14 @@ package mediacontrollers
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/dmnyu/go-medialog/index"
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
 	"github.com/nyudlts/bytemath"
-	"log"
-	"net/http"
 )
 
 func newOpticalDisc(c *gin.Context, entry models.MediaEntry) {
@@ -58,7 +59,7 @@ func CreateOpticalDisc(c *gin.Context) {
 	if optical.MediaID == 0 {
 		nextMediaID, err := index.FindNextMediaIDInResource(optical.ResourceID)
 		if err != nil {
-			log.Printf("[ERROR] [DATABASE] %s", err.Error())
+			log.Printf("\t[ERROR]\t[DATABASE]\t%s", err.Error())
 			c.JSON(http.StatusInternalServerError, err.Error())
 			return
 		}
@@ -66,7 +67,7 @@ func CreateOpticalDisc(c *gin.Context) {
 	}
 
 	if err := database.InsertOpticalDisc(&optical); err != nil {
-		log.Printf("[ERROR] [DATABASE] %s", err.Error())
+		log.Printf("\t[ERROR]\t[DATABASE]\t%s", err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
@@ -75,12 +76,12 @@ func CreateOpticalDisc(c *gin.Context) {
 	resp, err := index.AddToIndex(entry, nil)
 
 	if err != nil {
-		log.Printf("[ERROR] [INDEX] %s", err.Error())
+		log.Printf("\t[ERROR]\t[INDEX]\t%s", err.Error())
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	log.Printf("[INFO] [INDEX] %s", resp)
+	log.Printf("\t[INFO]\t[INDEX]\t%v", resp)
 
 	c.Redirect(http.StatusFound, fmt.Sprintf("/accessions/%d/show", optical.AccessionID))
 

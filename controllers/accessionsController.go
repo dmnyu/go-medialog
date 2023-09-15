@@ -2,13 +2,16 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/dmnyu/go-medialog/database"
-	"github.com/dmnyu/go-medialog/models"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/dmnyu/go-medialog/database"
+	"github.com/dmnyu/go-medialog/index"
+	"github.com/dmnyu/go-medialog/models"
+	"github.com/dmnyu/go-medialog/shared"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func GetAccessions(c *gin.Context) {
@@ -23,6 +26,7 @@ func GetAccession(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
+		return
 	}
 
 	//pagination
@@ -43,38 +47,40 @@ func GetAccession(c *gin.Context) {
 	accession, err := database.FindAccession(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	repository, err := database.FindRepository(accession.RepositoryID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	resource, err := database.FindResource(accession.ResourceID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
 
-	/*
-		pagination := shared.Pagination{
-			Limit: 10,
-			Page:  p,
-			Sort:  "id asc",
-		}
+	pagination := shared.Pagination{
+		Limit: 10,
+		Page:  p,
+		Sort:  "id asc",
+	}
 
+	entries, err := index.FindByType(int(accession.ID), index.Accession, pagination)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
 
-			entries, err := index.FindByType(int(accession.ID), index.Accession, pagination)
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, err.Error())
-				return
-			}
-	*/
+	log.Printf("\t[INFO]\t[DATABASE]\tfound %d entries", len(*entries))
 
 	c.HTML(http.StatusOK, "accessions-show.html", gin.H{
 		"accession":  accession,
 		"repository": repository,
 		"resource":   resource,
-		"entries":    nil,
+		"entries":    entries,
 		"mediaTypes": models.MediaNames,
 		"page":       p,
 	})

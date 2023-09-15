@@ -1,10 +1,11 @@
 package database
 
 import (
+	"log"
+
 	"github.com/dmnyu/go-medialog/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"log"
 )
 
 var db *gorm.DB
@@ -22,7 +23,7 @@ func ConnectDatabase() error {
 
 func MigrateDatabase() error {
 	ConnectDatabase()
-	log.Printf("[INFO] [DATABASE] migrating %s", DatabaseLoc)
+	log.Printf("\t[INFO]\t[DATABASE]\tmigrating %s", DatabaseLoc)
 
 	//core models
 	if err := db.AutoMigrate(&models.Repository{}); err != nil {

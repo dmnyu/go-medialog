@@ -2,12 +2,13 @@ package mediacontrollers
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/dmnyu/go-medialog/index"
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/gin-gonic/gin"
-	"log"
-	"net/http"
 )
 
 func GetEntries(c *gin.Context) { c.HTML(http.StatusOK, "entries-index.html", gin.H{}) }
@@ -52,7 +53,9 @@ func ShowMedia(c *gin.Context) {
 	entry, err := index.FindDoc(docID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
+	log.Printf("\t[INFO]\t[INDEX]\tfound %v", entry)
 
 	switch entry.ModelID {
 	case models.OpticalDisc:

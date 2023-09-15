@@ -3,6 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"html/template"
+	"log"
+	"os"
+	"time"
+
 	"github.com/dmnyu/go-medialog/controllers"
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/dmnyu/go-medialog/index"
@@ -14,10 +19,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"gopkg.in/yaml.v2"
 	"gorm.io/gorm"
-	"html/template"
-	"log"
-	"os"
-	"time"
 )
 
 var (
@@ -38,6 +39,126 @@ func init() {
 	flag.StringVar(&config, "config", "config/go-medialog.yml", "")
 	flag.BoolVar(&addAdmin, "add-admin", false, "")
 	flag.StringVar(&adminPass, "pass", "", "")
+}
+
+func main() {
+	flag.Parse()
+	configure()
+
+	logfile, err := os.OpenFile(logFileLocation, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		panic(err)
+	}
+	defer logfile.Close()
+	log.SetOutput(logfile)
+	log.Printf("\t[INFO]\t[APP]\tlogging to %s", logFileLocation)
+
+	//migrate the database if `migrate` flag is set
+	if migrate {
+		if err := database.MigrateDatabase(); err != nil {
+			log.Printf("\t[FATAL]\t[DATABASE]\tdatabase migration failed")
+			os.Exit(2)
+		}
+		log.Printf("\t[INFO]\t[APP]\tshutting down medialog")
+		os.Exit(0)
+	}
+
+	//reindex if `reindex` flag is set
+	if reindex {
+
+		if err := database.ConnectDatabase(); err != nil {
+			log.Printf("\t[FATAL]\t[DATABASE]\tdatabase connection failed")
+			os.Exit(1)
+		}
+
+		//delete the index entries
+		if err := index.DeleteAll(); err != nil {
+			log.Printf("\t[FATAL]\t[INDEX]\tshutting down medialog")
+			os.Exit(3)
+		}
+
+		if err := index.Reindex(); err != nil {
+			log.Printf("\t[FATAL]\t[INDEX]\tshutting down medialog")
+			os.Exit(3)
+		}
+
+		log.Printf("\t[INFO]\t[MEDIALOG]\tshutting down medialog")
+		os.Exit(0)
+
+	}
+
+	//connect to the database
+	if err := database.ConnectDatabase(); err != nil {
+		log.Printf("\t[FATAL]\t[DATABASE]\tdatabase connection failed")
+		os.Exit(1)
+	}
+	log.Printf("\t[INFO]\t[DATABASE]\tconnected to database")
+
+	//create an admin user
+	if addAdmin {
+		if adminPass == "" {
+			log.Printf("\t[FATAL]\t[DATABASE]\tadmin user creation requires a password being set with the --pass option")
+			os.Exit(6)
+		}
+		salt := controllers.GenerateStringRunes(16)
+		pass := controllers.GetSHA512Hash(adminPass + salt)
+		admin := models.User{
+			Model:      gorm.Model{},
+			FirstName:  "admin",
+			LastName:   "admin",
+			Email:      "admin@medialog.dlib.nyu.edu",
+			PassSHA512: pass,
+			Salt:       salt,
+			IsAdmin:    true,
+		}
+
+		if err := controllers.CreateAdmin(&admin); err != nil {
+			log.Printf("\t[FATAL]\t[DATABASE]\tcould not create admin user")
+			os.Exit(6)
+		}
+
+		log.Printf("\t[SUCCESS]\t[DATABASE]\tcreated an admin user")
+		fmt.Println("created admin user - exiting")
+		os.Exit(0)
+	}
+
+	log.Println("\t[INFO]\t[APP]\tstarting go-medialog")
+	//test archivesspace connection
+	if err := controllers.GetClient(); err != nil {
+		log.Printf("\t[FATAL]\t[ASPACE]\tarchivesspace connection failed")
+		os.Exit(4)
+	}
+	log.Printf("\t[INFO]\t[ASPACE]\tconnected to archivesspace instance")
+
+	//load functions
+	router.SetFuncMap(template.FuncMap{
+		"formatAsDate":           formatAsDate,
+		"getRepoName":            getRepoName,
+		"add":                    add,
+		"subtract":               subtract,
+		"getMediaType":           getMediaType,
+		"getAccessionIdentifier": getAccessionIdentifier,
+		"getResourceIdentifier":  getResourceIdentifier,
+		"isEqual":                isEqual,
+	})
+
+	//configure router
+	router.LoadHTMLGlob("templates/**/*.html")
+	router.StaticFile("/favicon.ico", "./public/favicon.ico")
+	router.Static("/public", "./public")
+	router.SetTrustedProxies([]string{"127.0.0.1"})
+
+	store := cookie.NewStore([]byte("secret"))
+	router.Use(sessions.Sessions("mysession", store))
+
+	//Load Application Routes
+	routes.LoadRoutes(router)
+
+	//run the application
+	if err := router.Run(); err != nil {
+		panic(err)
+	}
+
 }
 
 type GoMedialogConfig struct {
@@ -73,128 +194,6 @@ func configure() {
 	//setup aspace
 	controllers.AspaceConfig = goMedialogConfig.AspaceConfig
 	controllers.AspaceEnv = goMedialogConfig.AspaceEnv
-
-}
-
-func main() {
-	flag.Parse()
-	configure()
-
-	logfile, err := os.OpenFile(logFileLocation, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		panic(err)
-	}
-	defer logfile.Close()
-	log.SetOutput(logfile)
-	log.Printf("[INFO] [APP] logging to %s", logFileLocation)
-	log.Println("[INFO] [APP] starting go-medialog ☮")
-
-	//migrate the database if `migrate` flag is set
-	if migrate == true {
-		if err := database.MigrateDatabase(); err != nil {
-			log.Printf("[FATAL] [DATABASE] database migration failed")
-			os.Exit(2)
-		}
-		log.Printf("[INFO] [APP] shutting down medialog")
-		os.Exit(0)
-	}
-
-	//reindex if `reindex` flag is set
-	if reindex == true {
-
-		if err := database.ConnectDatabase(); err != nil {
-			log.Printf("[FATAL] [DATABASE] database connection failed")
-			os.Exit(1)
-		}
-
-		//delete the index entries
-		if err := index.DeleteAll(); err != nil {
-			log.Printf("[FATAL] [INDEX] shutting down medialog")
-			os.Exit(3)
-		}
-
-		if err := index.Reindex(); err != nil {
-			log.Printf("[FATAL] [INDEX] shutting down medialog")
-			os.Exit(3)
-		}
-
-		log.Printf("[INFO] [MEDIALOG] shutting down medialog")
-		os.Exit(0)
-
-	}
-
-	//connect to the database
-	if err := database.ConnectDatabase(); err != nil {
-		log.Printf("[FATAL] [DATABASE] database connection failed")
-		os.Exit(1)
-	}
-	log.Printf("[INFO] [DATABASE] connected to database")
-
-	//create an admin user
-	if addAdmin {
-		if adminPass == "" {
-			log.Printf("[FATAL] [DATABASE] admin user creation requires a password being set with the --pass option")
-			os.Exit(6)
-		}
-		salt := controllers.GenerateStringRunes(16)
-		pass := controllers.GetSHA512Hash(adminPass + salt)
-		admin := models.User{
-			Model:      gorm.Model{},
-			FirstName:  "admin",
-			LastName:   "admin",
-			Email:      "admin@medialog.dlib.nyu.edu",
-			PassSHA512: pass,
-			Salt:       salt,
-			IsAdmin:    true,
-		}
-
-		if err := controllers.CreateAdmin(&admin); err != nil {
-			log.Printf("[FATAL] [DATABASE] could not create admin user")
-			os.Exit(6)
-		}
-
-		log.Printf("[FATAL] [DATABASE] created an admin user")
-		fmt.Println("created admin user - exiting")
-		os.Exit(0)
-	}
-
-	//test archivesspace connection
-	if err := controllers.GetClient(); err != nil {
-		log.Printf("[FATAL] [ASPACE] archivesspace connection failed")
-		os.Exit(4)
-	}
-	log.Printf("[INFO] [ASPACE] connected to archivesspace instance")
-
-	//test index connection
-
-	//load functions
-	router.SetFuncMap(template.FuncMap{
-		"formatAsDate":           formatAsDate,
-		"getRepoName":            getRepoName,
-		"add":                    add,
-		"subtract":               subtract,
-		"getMediaType":           getMediaType,
-		"getAccessionIdentifier": getAccessionIdentifier,
-		"getResourceIdentifier":  getResourceIdentifier,
-		"isEqual":                isEqual,
-	})
-
-	//configure router
-	router.LoadHTMLGlob("templates/**/*.html")
-	router.StaticFile("/favicon.ico", "./public/favicon.ico")
-	router.Static("/public", "./public")
-	router.SetTrustedProxies([]string{"127.0.0.1"})
-
-	store := cookie.NewStore([]byte("secret"))
-	router.Use(sessions.Sessions("mysession", store))
-
-	//Load Application Routes
-	routes.LoadRoutes(router)
-
-	//run the application
-	if err := router.Run(); err != nil {
-		panic(err)
-	}
 
 }
 

@@ -3,20 +3,21 @@ package controllers
 import (
 	"crypto/sha512"
 	"encoding/hex"
-	"github.com/dmnyu/go-medialog/database"
-	"github.com/dmnyu/go-medialog/models"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-gonic/gin"
 	"log"
 	"math/rand"
 	"net/http"
 	"time"
+
+	"github.com/dmnyu/go-medialog/database"
+	"github.com/dmnyu/go-medialog/models"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 )
 
 func GetUsers(c *gin.Context) {
 	users, err := database.FindUsers()
 	if err != nil {
-		log.Printf("[ERROR] [DATABASE] %s", err.Error())
+		log.Printf("\t[ERROR]\t[DATABASE]\t%s", err.Error())
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -44,13 +45,13 @@ func CreateAdmin(user *models.User) error {
 func CreateUser(c *gin.Context) {
 	var createUser = models.CreateUser{}
 	if err := c.Bind(&createUser); err != nil {
-		log.Printf("[ERROR] [MEDIALOG] %s", err.Error())
+		log.Printf("\t[ERROR]\t[MEDIALOG] %s", err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
 	if createUser.Password1 != createUser.Password2 {
-		log.Println("[ERROR] [MEDIALOG] passwords do not match")
+		log.Println("\t[ERROR]\t[APP]\tpasswords do not match")
 		c.JSON(http.StatusBadRequest, "passwords do not match")
 		return
 	}
@@ -64,7 +65,7 @@ func CreateUser(c *gin.Context) {
 	user.PassSHA512 = GetSHA512Hash(createUser.Password1 + user.Salt)
 
 	if err := database.CreateUser(&user); err != nil {
-		log.Printf("[ERROR] [DATABASE] %s", err.Error())
+		log.Printf("\t[ERROR]\t[DATABASE]\t%s", err.Error())
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -85,14 +86,14 @@ func UserLogout(c *gin.Context) {
 func UserAuthenticate(c *gin.Context) {
 	var createUser = models.CreateUser{}
 	if err := c.Bind(&createUser); err != nil {
-		log.Printf("[ERROR] [MEDIALOG] %s", err.Error())
+		log.Printf("\t[ERROR]\t[MEDIALOG]\t%s", err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
 	user, err := database.FindUserByEmail(createUser.Email)
 	if err != nil {
-		log.Printf("[ERROR] [DATABASE] %s not found in database", createUser.Email)
+		log.Printf("\t[ERROR]\t[DATABASE]\t%s not found in database", createUser.Email)
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
@@ -100,7 +101,7 @@ func UserAuthenticate(c *gin.Context) {
 	userSHA := GetSHA512Hash(createUser.Password1 + user.Salt)
 
 	if userSHA != user.PassSHA512 {
-		log.Printf("[ERROR] [DATABASE] password was incorrect")
+		log.Printf("\t[ERROR\t[DATABASE] password was incorrect")
 		c.JSON(http.StatusBadRequest, "password was incorrect")
 		return
 	}

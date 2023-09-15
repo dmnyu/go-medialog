@@ -5,14 +5,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"strings"
+
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/dmnyu/go-medialog/shared"
 	elasticsearch7 "github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/elastic/go-elasticsearch/v7/estransport"
-	"io/ioutil"
-	"log"
-	"strings"
 )
 
 const index = "media"
@@ -120,7 +121,7 @@ func FindDoc(docID string) (*models.MediaEntry, error) {
 func FindByType(id int, objectTypeID ObjectID, pagination shared.Pagination) (*[]models.ESHit, error) {
 
 	q := fmt.Sprintf(`{"query": {"match": {"%s": %d}}}`, ObjectIds[objectTypeID], id)
-	log.Printf("%v", q)
+	log.Printf("\t[INFO]\t[INDEX]\t query: %v", q)
 	resp, err := esapi.SearchRequest{Index: indexes, Body: strings.NewReader(q)}.Do(context.Background(), es.Transport)
 	if err != nil {
 		return nil, err

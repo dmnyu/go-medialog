@@ -2,25 +2,28 @@ package controllers
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+	"strconv"
+
 	"github.com/dmnyu/go-medialog/database"
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/dmnyu/go-medialog/shared"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"log"
-	"net/http"
-	"strconv"
 )
 
 func CreateRepository(c *gin.Context) {
 	var input = models.Repository{}
 	if err := c.Bind(&input); err != nil {
+		log.Printf("\t[ERROR]\t[DATABASE]\t%s", err)
 		c.JSON(http.StatusBadRequest, err.Error())
 	}
 
 	asRepository, err := FindAspaceRepository(input.AspaceID)
 	if err != nil {
+		log.Printf("\t[ERROR]\t[DATABASE]\t%s", err)
 		c.JSON(http.StatusBadRequest, err)
 	}
 
@@ -32,10 +35,12 @@ func CreateRepository(c *gin.Context) {
 	}
 
 	if err := database.InsertRepository(repository); err != nil {
+		log.Printf("\t[ERROR]\t[DATABASE]\t%s", err)
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
+	log.Printf("\t[INFO]\t[DATABASE]\t%s:%v", "repository created", repository)
 	c.Redirect(http.StatusFound, "/repositories")
 
 }
@@ -108,10 +113,11 @@ func GetRepositories(c *gin.Context) {
 func AddRepository(c *gin.Context) {
 	repositories, err := GetASpaceRepositories()
 	if err != nil {
-		log.Printf("[ERROR] [ASPACE] %s", err)
+		log.Printf("\t[ERROR]\t[DATABASE]\t%s", err)
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
+
 	c.HTML(http.StatusOK, "repositories-new.html", gin.H{
 		"repositories": repositories,
 	})
