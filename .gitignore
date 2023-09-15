@@ -1,8 +1,10 @@
 config/go-aspace.yml
+config/go-medialog.yml
 gomedialog.db
 .idea/*
 go-medialog
 gomedialog.log
+gomedialog.sqlite3
 build/*
 
 # Binaries for programs and plugins
