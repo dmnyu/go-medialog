@@ -33,6 +33,8 @@ var (
 	adminPass       string
 )
 
+const version = "0.0.4-alpha"
+
 func init() {
 	flag.BoolVar(&migrate, "migrate", false, "")
 	flag.BoolVar(&reindex, "reindex", false, "")
@@ -122,7 +124,8 @@ func main() {
 		os.Exit(0)
 	}
 
-	log.Println("\t[INFO]\t[APP]\tstarting go-medialog")
+	log.Printf("\t[INFO]\t[APP]\tstarting go-medialog v%s", version)
+	fmt.Printf("go-medialog v%s", version)
 	//test archivesspace connection
 	if err := controllers.GetClient(); err != nil {
 		log.Printf("\t[FATAL]\t[ASPACE]\tarchivesspace connection failed")

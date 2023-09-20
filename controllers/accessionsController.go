@@ -10,11 +10,21 @@ import (
 	"github.com/dmnyu/go-medialog/index"
 	"github.com/dmnyu/go-medialog/models"
 	"github.com/dmnyu/go-medialog/shared"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 func GetAccessions(c *gin.Context) {
+	session := sessions.Default(c)
+	auth := session.Get("auth-key")
+	fmt.Println(auth)
+	if len(fmt.Sprintf("%v", auth)) != 32 {
+		fmt.Println(session)
+		c.JSON(http.StatusForbidden, "Must Authenticate")
+		return
+	}
+
 	accessions := database.FindAccessions()
 	c.HTML(http.StatusOK, "accessions-index.html", gin.H{
 		"title":      "go-medialog -- accessions",

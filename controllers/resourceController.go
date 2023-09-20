@@ -2,17 +2,28 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/dmnyu/go-medialog/database"
-	"github.com/dmnyu/go-medialog/models"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/dmnyu/go-medialog/database"
+	"github.com/dmnyu/go-medialog/models"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func GetResources(c *gin.Context) {
+	session := sessions.Default(c)
+	auth := session.Get("auth-key")
+	fmt.Println(auth)
+	if len(fmt.Sprintf("%v", auth)) != 32 {
+		fmt.Println(session)
+		c.JSON(http.StatusForbidden, "Must Authenticate")
+		return
+	}
+
 	resources, err := database.FindResources()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
